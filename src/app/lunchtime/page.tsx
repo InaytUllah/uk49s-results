@@ -10,10 +10,10 @@ export const metadata: Metadata = {
   description: PAGE_SEO.lunchtime.description,
 };
 
-export const revalidate = 300;
+export const revalidate = 60;
 
-export default function LunchtimePage() {
-  const results = getLatestResults('lunchtime');
+export default async function LunchtimePage() {
+  const results = await getLatestResults('lunchtime');
   const latest = results[0];
 
   return (

@@ -8,10 +8,10 @@ export const metadata: Metadata = {
   description: PAGE_SEO.blog.description,
 };
 
-export const revalidate = 300;
+export const revalidate = 60;
 
-export default function BlogPage() {
-  const results = getLatestResults();
+export default async function BlogPage() {
+  const results = await getLatestResults();
 
   // Auto-generate blog posts from recent results
   const posts = results.slice(0, 10).map(result => {
@@ -61,10 +61,10 @@ export default function BlogPage() {
               {post.excerpt}
             </p>
             <Link
-              href={`/${post.drawType}/results/${post.date}`}
+              href={`/blog/${post.slug}`}
               className="inline-block mt-3 text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 text-sm font-medium"
             >
-              View Full Results &rarr;
+              Read Full Analysis &rarr;
             </Link>
           </article>
         ))}

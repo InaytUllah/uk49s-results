@@ -1,9 +1,12 @@
 import { MetadataRoute } from 'next';
-import { getRecentDates } from '@/lib/data/draws';
+import { getRecentDates, getLatestResults } from '@/lib/data/draws';
 import { SITE_URL } from '@/lib/data/seo';
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const dates = getRecentDates();
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const [dates, allResults] = await Promise.all([
+    getRecentDates(),
+    getLatestResults(),
+  ]);
 
   const staticPages = [
     { url: SITE_URL, changeFrequency: 'hourly' as const, priority: 1.0 },
@@ -31,5 +34,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
-  return [...staticPages, ...lunchtimeResultPages, ...teatimeResultPages];
+  // Blog post pages (one per draw result)
+  const blogPostPages = allResults.map(result => ({
+    url: `${SITE_URL}/blog/uk-49s-${result.drawType}-results-${result.date}`,
+    lastModified: new Date(result.date),
+    changeFrequency: 'never' as const,
+    priority: 0.6,
+  }));
+
+  return [...staticPages, ...lunchtimeResultPages, ...teatimeResultPages, ...blogPostPages];
 }

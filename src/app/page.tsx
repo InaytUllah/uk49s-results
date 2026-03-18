@@ -10,10 +10,10 @@ export const metadata: Metadata = {
   description: PAGE_SEO.home.description,
 };
 
-export const revalidate = 300; // Revalidate every 5 minutes
+export const revalidate = 60; // Revalidate every 1 minute
 
-export default function HomePage() {
-  const allResults = getLatestResults();
+export default async function HomePage() {
+  const allResults = await getLatestResults();
   const latestLunchtime = allResults.find(r => r.drawType === 'lunchtime');
   const latestTeatime = allResults.find(r => r.drawType === 'teatime');
   const recentResults = allResults.slice(0, 10);
@@ -76,7 +76,7 @@ export default function HomePage() {
         </div>
         <div className="space-y-4">
           {recentResults.map((result, i) => (
-            <ResultCard key={`${result.date}-${result.drawType}`} result={result} />
+            <ResultCard key={`recent-${i}-${result.date}-${result.drawType}`} result={result} />
           ))}
         </div>
       </section>

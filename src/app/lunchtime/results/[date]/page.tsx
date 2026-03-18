@@ -20,13 +20,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+export const revalidate = 60;
+export const dynamicParams = true; // Allow new dates to be generated on-demand via ISR
+
 export async function generateStaticParams() {
-  return getRecentDates().map(date => ({ date }));
+  const dates = await getRecentDates();
+  return dates.map(date => ({ date }));
 }
 
 export default async function LunchtimeResultPage({ params }: Props) {
   const { date } = await params;
-  const result = getResultByDate(date, 'lunchtime');
+  const result = await getResultByDate(date, 'lunchtime');
 
   const formattedDate = new Date(date + 'T00:00:00').toLocaleDateString('en-GB', {
     weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',

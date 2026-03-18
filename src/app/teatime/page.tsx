@@ -10,10 +10,10 @@ export const metadata: Metadata = {
   description: PAGE_SEO.teatime.description,
 };
 
-export const revalidate = 300;
+export const revalidate = 60;
 
-export default function TeatimePage() {
-  const results = getLatestResults('teatime');
+export default async function TeatimePage() {
+  const results = await getLatestResults('teatime');
   const latest = results[0];
 
   return (

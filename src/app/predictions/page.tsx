@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   description: PAGE_SEO.predictions.description,
 };
 
-export const revalidate = 300;
+export const revalidate = 60;
 
 function generatePrediction(hot: number[], cold: number[]): { numbers: number[]; booster: number } {
   // Mix of hot numbers (60%) and random (40%) for "predictions"
@@ -35,8 +35,8 @@ function generatePrediction(hot: number[], cold: number[]): { numbers: number[];
   return { numbers: selected, booster };
 }
 
-export default function PredictionsPage() {
-  const allResults = getLatestResults();
+export default async function PredictionsPage() {
+  const allResults = await getLatestResults();
   const lunchtimeResults = allResults.filter(r => r.drawType === 'lunchtime');
   const teatimeResults = allResults.filter(r => r.drawType === 'teatime');
 

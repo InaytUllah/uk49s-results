@@ -8,10 +8,10 @@ export const metadata: Metadata = {
   description: PAGE_SEO.hotCold.description,
 };
 
-export const revalidate = 300;
+export const revalidate = 60;
 
-export default function HotColdPage() {
-  const allResults = getLatestResults();
+export default async function HotColdPage() {
+  const allResults = await getLatestResults();
   const lunchtimeResults = allResults.filter(r => r.drawType === 'lunchtime');
   const teatimeResults = allResults.filter(r => r.drawType === 'teatime');
 
