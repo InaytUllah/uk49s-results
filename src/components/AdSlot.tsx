@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface AdSlotProps {
   slot: string;
@@ -17,20 +17,26 @@ declare global {
 export default function AdSlot({ slot, format = 'auto', className = '' }: AdSlotProps) {
   const adRef = useRef<HTMLDivElement>(null);
   const pushed = useRef(false);
+  const [adsLoaded, setAdsLoaded] = useState(false);
 
   useEffect(() => {
-    if (!pushed.current && typeof window !== 'undefined') {
+    // Only render ad if AdSense script is loaded
+    if (!pushed.current && typeof window !== 'undefined' && window.adsbygoogle) {
       try {
         (window.adsbygoogle = window.adsbygoogle || []).push({});
         pushed.current = true;
+        setAdsLoaded(true);
       } catch {
         // AdSense not loaded yet
       }
     }
   }, []);
 
+  // Don't render anything if AdSense isn't active
+  if (!adsLoaded) return null;
+
   return (
-    <div className={`ad-container my-4 text-center ${className}`} ref={adRef}>
+    <div className={`text-center ${className}`} ref={adRef}>
       <ins
         className="adsbygoogle"
         style={{ display: 'block' }}

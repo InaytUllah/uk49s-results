@@ -27,11 +27,6 @@ body {
   animation: bounce 0.6s ease-in-out;
 }
 
-/* Ad slot placeholder styling */
-.ad-container {
-  min-height: 90px;
-}
-
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
