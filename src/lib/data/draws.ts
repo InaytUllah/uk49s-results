@@ -249,6 +249,82 @@ export function getColdNumbers(results: UK49sResult[], count: number = 10): numb
 }
 
 // ============================================================
+// Prediction date logic
+// After today's teatime results are announced, predictions
+// should show tomorrow's date instead of today
+// ============================================================
+
+export function getPredictionDate(latestResults: UK49sResult[]): { date: string; formatted: string } {
+  // Get current time in UK timezone
+  const nowUK = new Date(new Date().toLocaleString('en-US', { timeZone: 'Europe/London' }));
+  const todayISO = nowUK.toISOString().substring(0, 10);
+
+  // Check if we have today's teatime result already
+  const hasTodayTeatime = latestResults.some(
+    r => r.date === todayISO && r.drawType === 'teatime'
+  );
+
+  // Check if we have today's lunchtime result already
+  const hasTodayLunchtime = latestResults.some(
+    r => r.date === todayISO && r.drawType === 'lunchtime'
+  );
+
+  // If teatime results are in (both draws done for today), show tomorrow
+  // Also show tomorrow if it's after 6:30 PM UK time (results should be in by then)
+  const ukHour = nowUK.getHours();
+  const ukMinute = nowUK.getMinutes();
+  const isAfterTeatime = ukHour > 18 || (ukHour === 18 && ukMinute >= 30);
+
+  let predictionDate: Date;
+  if (hasTodayTeatime || isAfterTeatime) {
+    // Show tomorrow's predictions
+    predictionDate = new Date(nowUK);
+    predictionDate.setDate(predictionDate.getDate() + 1);
+  } else {
+    // Show today's predictions
+    predictionDate = nowUK;
+  }
+
+  const dateISO = predictionDate.toISOString().substring(0, 10);
+  const formatted = predictionDate.toLocaleDateString('en-GB', {
+    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+  });
+
+  return { date: dateISO, formatted };
+}
+
+export function getPredictionDateForLunchtime(latestResults: UK49sResult[]): { date: string; formatted: string; showTodayTeatime: boolean } {
+  const nowUK = new Date(new Date().toLocaleString('en-US', { timeZone: 'Europe/London' }));
+  const todayISO = nowUK.toISOString().substring(0, 10);
+
+  const hasTodayLunchtime = latestResults.some(
+    r => r.date === todayISO && r.drawType === 'lunchtime'
+  );
+  const hasTodayTeatime = latestResults.some(
+    r => r.date === todayISO && r.drawType === 'teatime'
+  );
+
+  const ukHour = nowUK.getHours();
+  const isAfterTeatime = ukHour >= 19 || hasTodayTeatime;
+
+  // Lunchtime prediction: if today's lunchtime results are in, show tomorrow
+  let lunchDate: Date;
+  if (hasTodayLunchtime) {
+    lunchDate = new Date(nowUK);
+    lunchDate.setDate(lunchDate.getDate() + 1);
+  } else {
+    lunchDate = nowUK;
+  }
+
+  const dateISO = lunchDate.toISOString().substring(0, 10);
+  const formatted = lunchDate.toLocaleDateString('en-GB', {
+    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+  });
+
+  return { date: dateISO, formatted, showTodayTeatime: !hasTodayTeatime };
+}
+
+// ============================================================
 // Fallback data (real results, used if scraping fails)
 // ============================================================
 

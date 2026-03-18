@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import LotteryBalls from '@/components/LotteryBalls';
-import { getLatestResults, getHotNumbers, getColdNumbers } from '@/lib/data/draws';
+import { getLatestResults, getHotNumbers, getColdNumbers, getPredictionDate, getPredictionDateForLunchtime } from '@/lib/data/draws';
 import { PAGE_SEO } from '@/lib/data/seo';
 
 export const metadata: Metadata = {
@@ -10,8 +10,17 @@ export const metadata: Metadata = {
 
 export const revalidate = 60;
 
-function generatePrediction(hot: number[], cold: number[]): { numbers: number[]; booster: number } {
-  // Mix of hot numbers (60%) and random (40%) for "predictions"
+// Use date-based seed for consistent predictions (don't change on every page load)
+function seededRandom(seed: number): () => number {
+  let s = seed;
+  return () => {
+    s = (s * 1664525 + 1013904223) & 0x7fffffff;
+    return s / 0x7fffffff;
+  };
+}
+
+function generatePrediction(hot: number[], cold: number[], seed: number): { numbers: number[]; booster: number } {
+  const random = seededRandom(seed);
   const pool = Array.from({ length: 49 }, (_, i) => i + 1);
   const selected: number[] = [];
 
@@ -24,13 +33,13 @@ function generatePrediction(hot: number[], cold: number[]): { numbers: number[];
   // Fill remaining with randoms (avoiding already selected)
   const remaining = pool.filter(n => !selected.includes(n));
   while (selected.length < 6) {
-    const idx = Math.floor(Math.random() * remaining.length);
+    const idx = Math.floor(random() * remaining.length);
     selected.push(remaining[idx]);
     remaining.splice(idx, 1);
   }
 
   selected.sort((a, b) => a - b);
-  const booster = remaining[Math.floor(Math.random() * remaining.length)];
+  const booster = remaining[Math.floor(random() * remaining.length)];
 
   return { numbers: selected, booster };
 }
@@ -45,21 +54,25 @@ export default async function PredictionsPage() {
   const hotTea = getHotNumbers(teatimeResults, 10);
   const coldTea = getColdNumbers(teatimeResults, 10);
 
+  // Smart date: shows tomorrow if today's results are already announced
+  const predInfo = getPredictionDate(allResults);
+  const lunchInfo = getPredictionDateForLunchtime(allResults);
+
+  // Use date as seed so predictions stay consistent for the same day
+  const dateSeed = parseInt(predInfo.date.replace(/-/g, ''), 10);
+  const lunchDateSeed = parseInt(lunchInfo.date.replace(/-/g, ''), 10);
+
   const lunchPredictions = [
-    generatePrediction(hotLunch, coldLunch),
-    generatePrediction(hotLunch, coldLunch),
-    generatePrediction(hotLunch, coldLunch),
+    generatePrediction(hotLunch, coldLunch, lunchDateSeed + 1),
+    generatePrediction(hotLunch, coldLunch, lunchDateSeed + 2),
+    generatePrediction(hotLunch, coldLunch, lunchDateSeed + 3),
   ];
 
   const teaPredictions = [
-    generatePrediction(hotTea, coldTea),
-    generatePrediction(hotTea, coldTea),
-    generatePrediction(hotTea, coldTea),
+    generatePrediction(hotTea, coldTea, dateSeed + 4),
+    generatePrediction(hotTea, coldTea, dateSeed + 5),
+    generatePrediction(hotTea, coldTea, dateSeed + 6),
   ];
-
-  const today = new Date().toLocaleDateString('en-GB', {
-    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
-  });
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
@@ -67,7 +80,7 @@ export default async function PredictionsPage() {
         UK 49s Predictions Today
       </h1>
       <p className="text-gray-600 dark:text-gray-400 mb-2">
-        Statistical predictions for {today}
+        Statistical predictions updated after every draw
       </p>
       <p className="text-xs text-yellow-600 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg px-3 py-2 mb-8">
         Disclaimer: These predictions are based on statistical analysis of past results. Lottery draws are random and no prediction can guarantee a win.
@@ -75,9 +88,12 @@ export default async function PredictionsPage() {
 
       {/* Lunchtime Predictions */}
       <section className="mb-10">
-        <h2 className="text-2xl font-bold text-amber-700 dark:text-amber-400 mb-4">
+        <h2 className="text-2xl font-bold text-amber-700 dark:text-amber-400 mb-1">
           Lunchtime Predictions
         </h2>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+          For {lunchInfo.formatted} — Draw at 12:49 PM UK
+        </p>
         <div className="space-y-4">
           {lunchPredictions.map((pred, i) => (
             <div key={i} className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-xl p-4">
@@ -92,9 +108,12 @@ export default async function PredictionsPage() {
 
       {/* Teatime Predictions */}
       <section className="mb-10">
-        <h2 className="text-2xl font-bold text-indigo-700 dark:text-indigo-400 mb-4">
+        <h2 className="text-2xl font-bold text-indigo-700 dark:text-indigo-400 mb-1">
           Teatime Predictions
         </h2>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+          For {predInfo.formatted} — Draw at 5:49 PM UK
+        </p>
         <div className="space-y-4">
           {teaPredictions.map((pred, i) => (
             <div key={i} className="bg-indigo-50 dark:bg-indigo-950/20 border border-indigo-200 dark:border-indigo-800 rounded-xl p-4">
@@ -128,6 +147,10 @@ export default async function PredictionsPage() {
           Our predictions are generated using statistical analysis of recent UK 49s draw results.
           We analyze number frequency patterns, hot and cold numbers, and overdue numbers to
           produce prediction sets for both Lunchtime and Teatime draws.
+        </p>
+        <p>
+          Predictions are automatically updated after each draw is announced — once lunchtime
+          results are in, lunchtime predictions switch to the next day. Same for teatime.
         </p>
         <p>
           Remember: The UK 49s lottery is a game of chance. No prediction system can guarantee

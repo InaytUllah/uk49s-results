@@ -2,18 +2,68 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import ResultCard from '@/components/ResultCard';
 import LotteryBalls from '@/components/LotteryBalls';
-import { getLatestResults, getResultByDate, getHotNumbers, getColdNumbers } from '@/lib/data/draws';
+import { getLatestResults, getResultByDate, getHotNumbers, getColdNumbers, getPredictionDate } from '@/lib/data/draws';
 import { SITE_NAME } from '@/lib/data/seo';
 
 interface Props {
   params: Promise<{ slug: string }>;
 }
 
-function parseSlug(slug: string): { drawType: 'lunchtime' | 'teatime'; date: string } | null {
-  // slug format: uk-49s-lunchtime-results-2026-03-18
-  const match = slug.match(/^uk-49s-(lunchtime|teatime)-results-(\d{4}-\d{2}-\d{2})$/);
-  if (!match) return null;
-  return { drawType: match[1] as 'lunchtime' | 'teatime', date: match[2] };
+type SlugInfo =
+  | { type: 'result'; drawType: 'lunchtime' | 'teatime'; date: string }
+  | { type: 'prediction'; date: string };
+
+function parseSlug(slug: string): SlugInfo | null {
+  // Result slug: uk-49s-lunchtime-results-2026-03-18
+  const resultMatch = slug.match(/^uk-49s-(lunchtime|teatime)-results-(\d{4}-\d{2}-\d{2})$/);
+  if (resultMatch) {
+    return { type: 'result', drawType: resultMatch[1] as 'lunchtime' | 'teatime', date: resultMatch[2] };
+  }
+
+  // Prediction slug: uk-49s-predictions-2026-03-19
+  const predMatch = slug.match(/^uk-49s-predictions-(\d{4}-\d{2}-\d{2})$/);
+  if (predMatch) {
+    return { type: 'prediction', date: predMatch[1] };
+  }
+
+  return null;
+}
+
+function formatDate(date: string): string {
+  return new Date(date + 'T00:00:00').toLocaleDateString('en-GB', {
+    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+  });
+}
+
+// Seeded random for consistent predictions
+function seededRandom(seed: number): () => number {
+  let s = seed;
+  return () => {
+    s = (s * 1664525 + 1013904223) & 0x7fffffff;
+    return s / 0x7fffffff;
+  };
+}
+
+function generatePrediction(hot: number[], seed: number): { numbers: number[]; booster: number } {
+  const random = seededRandom(seed);
+  const pool = Array.from({ length: 49 }, (_, i) => i + 1);
+  const selected: number[] = [];
+
+  const hotPicks = hot.slice(0, 4);
+  for (const num of hotPicks) {
+    if (selected.length < 4) selected.push(num);
+  }
+
+  const remaining = pool.filter(n => !selected.includes(n));
+  while (selected.length < 6) {
+    const idx = Math.floor(random() * remaining.length);
+    selected.push(remaining[idx]);
+    remaining.splice(idx, 1);
+  }
+
+  selected.sort((a, b) => a - b);
+  const booster = remaining[Math.floor(random() * remaining.length)];
+  return { numbers: selected, booster };
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -21,12 +71,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const parsed = parseSlug(slug);
   if (!parsed) return { title: `Blog Post | ${SITE_NAME}` };
 
+  if (parsed.type === 'prediction') {
+    const formattedDate = formatDate(parsed.date);
+    return {
+      title: `UK 49s Predictions for ${formattedDate} | ${SITE_NAME}`,
+      description: `UK 49s Lunchtime and Teatime predictions for ${formattedDate}. Statistical analysis based on hot & cold numbers from recent draws.`,
+    };
+  }
+
   const { drawType, date } = parsed;
   const drawLabel = drawType === 'lunchtime' ? 'Lunchtime' : 'Teatime';
-  const formattedDate = new Date(date + 'T00:00:00').toLocaleDateString('en-GB', {
-    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
-  });
-
+  const formattedDate = formatDate(date);
   const result = await getResultByDate(date, drawType);
   const numbersText = result ? `${result.numbers.join(', ')} + Booster ${result.booster}` : '';
 
@@ -41,9 +96,26 @@ export const dynamicParams = true;
 
 export async function generateStaticParams() {
   const results = await getLatestResults();
-  return results.map(r => ({
+
+  // Result blog posts
+  const resultSlugs = results.map(r => ({
     slug: `uk-49s-${r.drawType}-results-${r.date}`,
   }));
+
+  // Prediction blog posts (for dates we have results + next day)
+  const dates = [...new Set(results.map(r => r.date))].sort((a, b) => b.localeCompare(a));
+  const predictionSlugs = dates.slice(0, 5).map(date => {
+    const nextDay = new Date(date + 'T00:00:00');
+    nextDay.setDate(nextDay.getDate() + 1);
+    const nextDateISO = nextDay.toISOString().substring(0, 10);
+    return { slug: `uk-49s-predictions-${nextDateISO}` };
+  });
+
+  // Also add today's and tomorrow's prediction
+  const predDate = getPredictionDate(results);
+  predictionSlugs.push({ slug: `uk-49s-predictions-${predDate.date}` });
+
+  return [...resultSlugs, ...predictionSlugs];
 }
 
 export default async function BlogPostPage({ params }: Props) {
@@ -59,11 +131,138 @@ export default async function BlogPostPage({ params }: Props) {
     );
   }
 
+  // ======== PREDICTION POST ========
+  if (parsed.type === 'prediction') {
+    const formattedDate = formatDate(parsed.date);
+    const allResults = await getLatestResults();
+    const lunchtimeResults = allResults.filter(r => r.drawType === 'lunchtime');
+    const teatimeResults = allResults.filter(r => r.drawType === 'teatime');
+    const hotLunch = getHotNumbers(lunchtimeResults, 10);
+    const hotTea = getHotNumbers(teatimeResults, 10);
+
+    const dateSeed = parseInt(parsed.date.replace(/-/g, ''), 10);
+    const lunchPreds = [
+      generatePrediction(hotLunch, dateSeed + 1),
+      generatePrediction(hotLunch, dateSeed + 2),
+      generatePrediction(hotLunch, dateSeed + 3),
+    ];
+    const teaPreds = [
+      generatePrediction(hotTea, dateSeed + 4),
+      generatePrediction(hotTea, dateSeed + 5),
+      generatePrediction(hotTea, dateSeed + 6),
+    ];
+
+    return (
+      <div className="max-w-4xl mx-auto px-4 py-8">
+        <nav className="text-sm text-gray-500 dark:text-gray-400 mb-6">
+          <Link href="/" className="hover:text-emerald-600">Home</Link>
+          <span className="mx-2">/</span>
+          <Link href="/blog" className="hover:text-emerald-600">Blog</Link>
+          <span className="mx-2">/</span>
+          <span className="text-gray-900 dark:text-white">Predictions {parsed.date}</span>
+        </nav>
+
+        <article>
+          <header className="mb-8">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300">
+                Predictions
+              </span>
+              <time className="text-sm text-gray-500 dark:text-gray-400">{formattedDate}</time>
+            </div>
+            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-2">
+              UK 49s Predictions for {formattedDate}
+            </h1>
+            <p className="text-gray-600 dark:text-gray-400">
+              Statistical predictions for both Lunchtime and Teatime draws based on recent number analysis.
+            </p>
+          </header>
+
+          <p className="text-xs text-yellow-600 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg px-3 py-2 mb-8">
+            Disclaimer: These predictions are based on statistical analysis of past results. Lottery draws are random and no prediction can guarantee a win.
+          </p>
+
+          <section className="mb-8">
+            <h2 className="text-2xl font-bold text-amber-700 dark:text-amber-400 mb-4">
+              Lunchtime Predictions — {formattedDate}
+            </h2>
+            <div className="space-y-4">
+              {lunchPreds.map((pred, i) => (
+                <div key={i} className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-xl p-4">
+                  <p className="text-sm font-semibold text-amber-700 dark:text-amber-400 mb-3">
+                    Prediction Set {i + 1}
+                  </p>
+                  <LotteryBalls numbers={pred.numbers} booster={pred.booster} size="md" animated={false} />
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section className="mb-8">
+            <h2 className="text-2xl font-bold text-indigo-700 dark:text-indigo-400 mb-4">
+              Teatime Predictions — {formattedDate}
+            </h2>
+            <div className="space-y-4">
+              {teaPreds.map((pred, i) => (
+                <div key={i} className="bg-indigo-50 dark:bg-indigo-950/20 border border-indigo-200 dark:border-indigo-800 rounded-xl p-4">
+                  <p className="text-sm font-semibold text-indigo-700 dark:text-indigo-400 mb-3">
+                    Prediction Set {i + 1}
+                  </p>
+                  <LotteryBalls numbers={pred.numbers} booster={pred.booster} size="md" animated={false} />
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section className="prose dark:prose-invert max-w-none mb-8">
+            <h2>How These Predictions Are Made</h2>
+            <p>
+              Our UK 49s predictions for {formattedDate} are generated using statistical analysis of
+              the most recent draws. We identify hot numbers (frequently drawn) and use a weighted
+              selection algorithm to produce three unique prediction sets for each draw.
+            </p>
+            <p>
+              The UK 49s Lunchtime draw takes place at 12:49 PM UK time, and the Teatime draw at
+              5:49 PM UK time. Check back after each draw to see the actual results and updated
+              predictions for the next day.
+            </p>
+          </section>
+
+          <div className="flex flex-wrap gap-3">
+            <Link href="/predictions" className="px-4 py-2 bg-emerald-500 text-white rounded-lg font-medium hover:bg-emerald-600 transition-colors">
+              Live Predictions Page
+            </Link>
+            <Link href="/lunchtime" className="px-4 py-2 bg-amber-500 text-white rounded-lg font-medium hover:bg-amber-600 transition-colors">
+              Lunchtime Results
+            </Link>
+            <Link href="/teatime" className="px-4 py-2 bg-indigo-500 text-white rounded-lg font-medium hover:bg-indigo-600 transition-colors">
+              Teatime Results
+            </Link>
+          </div>
+        </article>
+
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'Article',
+              headline: `UK 49s Predictions for ${formattedDate}`,
+              datePublished: parsed.date,
+              dateModified: parsed.date,
+              description: `Statistical predictions for UK 49s Lunchtime and Teatime draws on ${formattedDate}`,
+              author: { '@type': 'Organization', name: 'UK49s Results' },
+            }),
+          }}
+        />
+      </div>
+    );
+  }
+
+  // ======== RESULT POST ========
   const { drawType, date } = parsed;
   const drawLabel = drawType === 'lunchtime' ? 'Lunchtime' : 'Teatime';
-  const formattedDate = new Date(date + 'T00:00:00').toLocaleDateString('en-GB', {
-    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
-  });
+  const formattedDate = formatDate(date);
 
   const result = await getResultByDate(date, drawType);
   const allResults = await getLatestResults(drawType);
@@ -176,7 +375,6 @@ export default async function BlogPostPage({ params }: Props) {
         </div>
       </article>
 
-      {/* Schema.org Article markup for SEO */}
       {result && (
         <script
           type="application/ld+json"

@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next';
-import { getRecentDates, getLatestResults } from '@/lib/data/draws';
+import { getRecentDates, getLatestResults, getPredictionDate } from '@/lib/data/draws';
 import { SITE_URL } from '@/lib/data/seo';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -7,6 +7,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     getRecentDates(),
     getLatestResults(),
   ]);
+
+  const predInfo = getPredictionDate(allResults);
 
   const staticPages = [
     { url: SITE_URL, changeFrequency: 'hourly' as const, priority: 1.0 },
@@ -42,5 +44,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }));
 
-  return [...staticPages, ...lunchtimeResultPages, ...teatimeResultPages, ...blogPostPages];
+  // Prediction blog posts (next prediction + recent dates)
+  const uniqueDates = [...new Set(allResults.map(r => r.date))].sort((a, b) => b.localeCompare(a));
+  const predictionPages = [predInfo.date, ...uniqueDates.slice(0, 5)].map(date => ({
+    url: `${SITE_URL}/blog/uk-49s-predictions-${date}`,
+    lastModified: new Date(),
+    changeFrequency: 'daily' as const,
+    priority: 0.7,
+  }));
+
+  return [...staticPages, ...lunchtimeResultPages, ...teatimeResultPages, ...blogPostPages, ...predictionPages];
 }
