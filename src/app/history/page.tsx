@@ -1,8 +1,8 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import ResultCard from '@/components/ResultCard';
 import { getLatestResults } from '@/lib/data/draws';
 import { PAGE_SEO } from '@/lib/data/seo';
+import HistoryResults from './HistoryResults';
 
 export const metadata: Metadata = {
   title: PAGE_SEO.history.title,
@@ -13,8 +13,6 @@ export const revalidate = 60;
 
 export default async function HistoryPage() {
   const allResults = await getLatestResults();
-  const lunchtimeResults = allResults.filter(r => r.drawType === 'lunchtime');
-  const teatimeResults = allResults.filter(r => r.drawType === 'teatime');
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
@@ -38,14 +36,7 @@ export default async function HistoryPage() {
         </Link>
       </div>
 
-      {/* Results */}
-      <div className="space-y-4">
-        {allResults.map((result, i) => (
-          <div key={`${result.date}-${result.drawType}`}>
-            <ResultCard result={result} />
-          </div>
-        ))}
-      </div>
+      <HistoryResults results={allResults} />
 
       <section className="prose dark:prose-invert max-w-none mt-10">
         <h2>UK 49s Results Archive</h2>

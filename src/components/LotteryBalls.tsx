@@ -22,23 +22,31 @@ export default function LotteryBalls({ numbers, booster, size = 'md', animated =
     lg: 'w-18 h-18 text-2xl',
   };
 
+  const numbersLabel = numbers.join(', ') + (booster !== undefined ? ` + Booster ${booster}` : '');
+
   return (
-    <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+    <div
+      className="flex flex-wrap items-center gap-2 sm:gap-3"
+      role="img"
+      aria-label={`Lottery balls: ${numbersLabel}`}
+    >
       {numbers.map((num, i) => (
         <div
           key={`${num}-${i}`}
-          className={`${sizeClasses[size]} rounded-full bg-gradient-to-br ${getBallColor(num)} text-white font-bold flex items-center justify-center shadow-lg ${animated ? 'animate-bounce' : ''}`}
+          className={`${sizeClasses[size]} rounded-full bg-gradient-to-br ${getBallColor(num)} text-white font-bold flex items-center justify-center shadow-lg ${animated ? 'motion-safe:animate-bounce' : ''}`}
           style={animated ? { animationDelay: `${i * 0.1}s`, animationDuration: '0.6s', animationIterationCount: '1' } : undefined}
+          aria-label={`Ball number ${num}`}
         >
           {num}
         </div>
       ))}
       {booster !== undefined && (
         <>
-          <span className="text-gray-400 font-bold text-lg mx-1">+</span>
+          <span className="text-gray-400 font-bold text-lg mx-1" aria-hidden="true">+</span>
           <div
-            className={`${sizeClasses[size]} rounded-full bg-gradient-to-br from-purple-500 to-purple-700 text-white font-bold flex items-center justify-center shadow-lg ring-2 ring-purple-300 ${animated ? 'animate-bounce' : ''}`}
+            className={`${sizeClasses[size]} rounded-full bg-gradient-to-br from-purple-500 to-purple-700 text-white font-bold flex items-center justify-center shadow-lg ring-2 ring-purple-300 ${animated ? 'motion-safe:animate-bounce' : ''}`}
             style={animated ? { animationDelay: `${numbers.length * 0.1}s`, animationDuration: '0.6s', animationIterationCount: '1' } : undefined}
+            aria-label={`Booster ball number ${booster}`}
           >
             {booster}
           </div>

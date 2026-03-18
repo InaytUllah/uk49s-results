@@ -6,13 +6,18 @@ export default function Footer() {
   return (
     <footer className="bg-gray-900 text-gray-400 mt-16">
       <div className="max-w-7xl mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8">
           {/* About */}
-          <div>
+          <div className="lg:col-span-2">
             <h3 className="text-white font-semibold text-lg mb-4">UK49s Results</h3>
             <p className="text-sm leading-relaxed">
               Your trusted source for the latest UK 49s Lunchtime and Teatime results. Updated daily with winning numbers, statistics, and analysis.
             </p>
+            <div className="flex items-center gap-4 mt-4">
+              <Link href="/about" className="text-sm hover:text-white transition-colors">About Us</Link>
+              <Link href="/contact" className="text-sm hover:text-white transition-colors">Contact</Link>
+              <Link href="/faq" className="text-sm hover:text-white transition-colors">FAQ</Link>
+            </div>
           </div>
 
           {/* Quick Links */}
@@ -22,7 +27,9 @@ export default function Footer() {
               <li><Link href="/lunchtime" className="hover:text-white transition-colors">Lunchtime Results</Link></li>
               <li><Link href="/teatime" className="hover:text-white transition-colors">Teatime Results</Link></li>
               <li><Link href="/history" className="hover:text-white transition-colors">Past Results</Link></li>
-              <li><Link href="/hot-cold-numbers" className="hover:text-white transition-colors">Hot & Cold Numbers</Link></li>
+              <li><Link href="/hot-cold-numbers" className="hover:text-white transition-colors">Hot &amp; Cold Numbers</Link></li>
+              <li><Link href="/predictions" className="hover:text-white transition-colors">Predictions</Link></li>
+              <li><Link href="/odds" className="hover:text-white transition-colors">Odds &amp; Payouts</Link></li>
             </ul>
           </div>
 
@@ -31,16 +38,26 @@ export default function Footer() {
             <h3 className="text-white font-semibold mb-4">Tools</h3>
             <ul className="space-y-2 text-sm">
               <li><Link href="/number-generator" className="hover:text-white transition-colors">Number Generator</Link></li>
-              <li><Link href="/predictions" className="hover:text-white transition-colors">Predictions</Link></li>
+              <li><Link href="/numbers" className="hover:text-white transition-colors">Number Stats</Link></li>
+              <li><Link href="/lunchtime-vs-teatime" className="hover:text-white transition-colors">Lunchtime vs Teatime</Link></li>
               <li><Link href="/how-to-play" className="hover:text-white transition-colors">How to Play</Link></li>
               <li><Link href="/blog" className="hover:text-white transition-colors">Blog</Link></li>
             </ul>
           </div>
 
-          {/* Draw Schedule */}
+          {/* Legal */}
           <div>
-            <h3 className="text-white font-semibold mb-4">Draw Times (UK)</h3>
-            <div className="space-y-3 text-sm">
+            <h3 className="text-white font-semibold mb-4">Legal</h3>
+            <ul className="space-y-2 text-sm">
+              <li><Link href="/privacy-policy" className="hover:text-white transition-colors">Privacy Policy</Link></li>
+              <li><Link href="/terms" className="hover:text-white transition-colors">Terms &amp; Conditions</Link></li>
+              <li><Link href="/disclaimer" className="hover:text-white transition-colors">Disclaimer</Link></li>
+              <li><Link href="/responsible-gaming" className="hover:text-white transition-colors">Responsible Gaming</Link></li>
+            </ul>
+
+            {/* Draw Times */}
+            <h3 className="text-white font-semibold mb-3 mt-6">Draw Times (UK)</h3>
+            <div className="space-y-2 text-sm">
               <div className="flex items-center gap-2">
                 <span className="w-3 h-3 rounded-full bg-amber-500"></span>
                 <span>Lunchtime: 12:49 PM</span>
@@ -49,12 +66,46 @@ export default function Footer() {
                 <span className="w-3 h-3 rounded-full bg-indigo-500"></span>
                 <span>Teatime: 5:49 PM</span>
               </div>
-              <p className="text-xs text-gray-500 mt-2">Draws take place 7 days a week</p>
+              <p className="text-xs text-gray-500 mt-1">Draws take place 7 days a week</p>
             </div>
           </div>
         </div>
 
-        <div className="border-t border-gray-800 mt-8 pt-8 text-center text-sm">
+        {/* Responsible Gaming Badge */}
+        <div className="border-t border-gray-800 mt-8 pt-6">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-sm mb-4">
+            <Link
+              href="/responsible-gaming"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg text-white transition-colors font-medium"
+            >
+              <span className="text-red-500 font-bold text-base">18+</span>
+              <span>Only. Please play responsibly.</span>
+            </Link>
+          </div>
+          <div className="flex flex-wrap items-center justify-center gap-4 text-xs text-gray-500 mb-6">
+            <a
+              href="https://www.begambleaware.org"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-white transition-colors"
+            >
+              BeGambleAware.org
+            </a>
+            <span className="hidden sm:inline">|</span>
+            <a
+              href="https://www.gamcare.org.uk"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-white transition-colors"
+            >
+              GamCare
+            </a>
+            <span className="hidden sm:inline">|</span>
+            <span>Gambling can be addictive. Play responsibly.</span>
+          </div>
+        </div>
+
+        <div className="border-t border-gray-800 pt-6 text-center text-sm">
           <p>&copy; {currentYear} UK49s Results. All rights reserved.</p>
           <p className="mt-2 text-xs text-gray-600">
             This site is not affiliated with UK 49s or any lottery operator. For entertainment and informational purposes only.

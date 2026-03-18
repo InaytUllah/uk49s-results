@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import Link from 'next/link';
 import LotteryBalls from '@/components/LotteryBalls';
 import { getLatestResults, getHotNumbers, getColdNumbers, calculateFrequency } from '@/lib/data/draws';
 import { PAGE_SEO } from '@/lib/data/seo';
@@ -98,7 +99,9 @@ export default async function HotColdPage() {
                 const width = (count / maxCount) * 100;
                 return (
                   <tr key={num} className="border-b border-gray-100 dark:border-gray-800">
-                    <td className="py-2 px-2 font-bold">{num}</td>
+                    <td className="py-2 px-2 font-bold">
+                      <Link href={`/numbers/${num}`} className="text-emerald-600 dark:text-emerald-400 hover:underline">{num}</Link>
+                    </td>
                     <td className="py-2 px-2">{count}</td>
                     <td className="py-2 px-2">
                       <div className="w-full bg-gray-100 dark:bg-gray-800 rounded-full h-4">
@@ -121,7 +124,35 @@ export default async function HotColdPage() {
         <p>
           Hot numbers are those that have been drawn most frequently in recent UK 49s draws.
           Cold numbers are those drawn least often. While past frequency does not guarantee
-          future results, many players use this analysis to inform their number selections.
+          future results, many players use this analysis to inform their number selections
+          for both the <Link href="/lunchtime">Lunchtime</Link> and <Link href="/teatime">Teatime</Link> draws.
+        </p>
+
+        <h3>How to Use Number Frequency Data</h3>
+        <p>
+          Some players prefer to pick hot numbers, reasoning that frequently drawn numbers may
+          continue their streak. Others favour cold numbers, believing they are &quot;due&quot; to
+          appear. A balanced approach might combine both hot and cold numbers in a single bet.
+          Remember that every draw is an independent event and each number has an equal probability
+          of being drawn regardless of past performance.
+        </p>
+
+        <h3>Analyse Individual Numbers</h3>
+        <p>
+          Click on any number in the frequency table above to see detailed statistics for that
+          specific number, including how often it has appeared as a main ball or Booster, its
+          most recent appearances, and which draw type it favours. Visit our{' '}
+          <Link href="/numbers">number stats hub</Link> for a complete overview of all 49 numbers.
+        </p>
+
+        <h3>Combine Data with Other Tools</h3>
+        <p>
+          For the best analysis experience, combine hot and cold number data with our other tools.
+          Check the <Link href="/predictions">predictions page</Link> for statistically informed
+          suggestions, review the <Link href="/odds">odds and payouts</Link> to understand your
+          potential returns, or use the <Link href="/number-generator">random number generator</Link> for
+          unbiased quick picks. Our <Link href="/lunchtime-vs-teatime">Lunchtime vs Teatime comparison</Link> also
+          shows whether certain numbers perform differently across the two daily draws.
         </p>
       </section>
     </div>

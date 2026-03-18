@@ -1,0 +1,270 @@
+import { Metadata } from 'next';
+import { notFound } from 'next/navigation';
+import Link from 'next/link';
+import LotteryBalls from '@/components/LotteryBalls';
+import { getLatestResults, calculateFrequency } from '@/lib/data/draws';
+import { SITE_NAME, SITE_URL } from '@/lib/data/seo';
+
+export const revalidate = 60;
+
+interface PageProps {
+  params: Promise<{ number: string }>;
+}
+
+export async function generateStaticParams() {
+  return Array.from({ length: 49 }, (_, i) => ({
+    number: String(i + 1),
+  }));
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { number } = await params;
+  const num = parseInt(number, 10);
+  if (isNaN(num) || num < 1 || num > 49) return {};
+
+  return {
+    title: `Number ${num} - UK 49s Statistics & History | ${SITE_NAME}`,
+    description: `Number ${num} frequency analysis for UK 49s. See how often number ${num} appears in Lunchtime and Teatime draws, last drawn dates, and prediction data.`,
+    alternates: {
+      canonical: `${SITE_URL}/numbers/${num}`,
+    },
+  };
+}
+
+function getNumberStatus(count: number, avgCount: number): { label: string; color: string; bgColor: string } {
+  if (count >= avgCount * 1.2) return { label: 'Hot', color: 'text-red-700 dark:text-red-400', bgColor: 'bg-red-100 dark:bg-red-900/30' };
+  if (count <= avgCount * 0.8) return { label: 'Cold', color: 'text-blue-700 dark:text-blue-400', bgColor: 'bg-blue-100 dark:bg-blue-900/30' };
+  return { label: 'Neutral', color: 'text-gray-700 dark:text-gray-400', bgColor: 'bg-gray-100 dark:bg-gray-800' };
+}
+
+export default async function NumberPage({ params }: PageProps) {
+  const { number } = await params;
+  const num = parseInt(number, 10);
+
+  if (isNaN(num) || num < 1 || num > 49) {
+    notFound();
+  }
+
+  const allResults = await getLatestResults();
+  const lunchtimeResults = allResults.filter(r => r.drawType === 'lunchtime');
+  const teatimeResults = allResults.filter(r => r.drawType === 'teatime');
+
+  const freqAll = calculateFrequency(allResults);
+  const freqLunch = calculateFrequency(lunchtimeResults);
+  const freqTea = calculateFrequency(teatimeResults);
+
+  const totalDraws = allResults.length;
+  const countAll = freqAll.get(num) || 0;
+  const countLunch = freqLunch.get(num) || 0;
+  const countTea = freqTea.get(num) || 0;
+
+  const percentageAll = totalDraws > 0 ? ((countAll / totalDraws) * 100).toFixed(1) : '0.0';
+  const percentageLunch = lunchtimeResults.length > 0 ? ((countLunch / lunchtimeResults.length) * 100).toFixed(1) : '0.0';
+  const percentageTea = teatimeResults.length > 0 ? ((countTea / teatimeResults.length) * 100).toFixed(1) : '0.0';
+
+  // Calculate average count for hot/cold status
+  const allCounts = [...freqAll.values()];
+  const avgCount = allCounts.reduce((a, b) => a + b, 0) / allCounts.length;
+  const status = getNumberStatus(countAll, avgCount);
+
+  // Find max count for bar width
+  const maxCount = Math.max(...allCounts, 1);
+
+  // Last 5 dates this number appeared
+  const appearedIn = allResults
+    .filter(r => r.numbers.includes(num) || r.booster === num)
+    .slice(0, 5);
+
+  // Rank among all numbers
+  const sortedFreq = [...freqAll.entries()].sort((a, b) => b[1] - a[1]);
+  const rank = sortedFreq.findIndex(([n]) => n === num) + 1;
+
+  // Schema.org Article markup
+  const schemaMarkup = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: `Number ${num} - UK 49s Statistics & History`,
+    description: `Number ${num} frequency analysis for UK 49s. See how often number ${num} appears in Lunchtime and Teatime draws.`,
+    author: { '@type': 'Organization', name: SITE_NAME },
+    publisher: { '@type': 'Organization', name: SITE_NAME },
+    mainEntityOfPage: `${SITE_URL}/numbers/${num}`,
+  };
+
+  return (
+    <div className="max-w-4xl mx-auto px-4 py-8">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaMarkup) }}
+      />
+
+      {/* Breadcrumb */}
+      <nav className="text-sm text-gray-500 dark:text-gray-400 mb-6" aria-label="Breadcrumb">
+        <ol className="flex items-center gap-2">
+          <li><Link href="/" className="hover:text-blue-600 dark:hover:text-blue-400">Home</Link></li>
+          <li>/</li>
+          <li><Link href="/numbers" className="hover:text-blue-600 dark:hover:text-blue-400">Numbers</Link></li>
+          <li>/</li>
+          <li className="text-gray-900 dark:text-white font-medium">Number {num}</li>
+        </ol>
+      </nav>
+
+      {/* Header with large ball display */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 mb-8">
+        <LotteryBalls numbers={[num]} size="lg" animated={false} />
+        <div>
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white">
+            Number {num}
+          </h1>
+          <p className="text-gray-600 dark:text-gray-400 mt-1">
+            UK 49s Statistics & Frequency Analysis
+          </p>
+          <span className={`inline-block mt-2 px-3 py-1 rounded-full text-sm font-semibold ${status.color} ${status.bgColor}`}>
+            {status.label} Number
+          </span>
+        </div>
+      </div>
+
+      {/* Stats Cards */}
+      <section className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 text-center">
+          <p className="text-2xl font-bold text-gray-900 dark:text-white">{countAll}</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">Total Draws</p>
+        </div>
+        <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-xl p-4 text-center">
+          <p className="text-2xl font-bold text-amber-700 dark:text-amber-400">{countLunch}</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">Lunchtime</p>
+        </div>
+        <div className="bg-indigo-50 dark:bg-indigo-950/20 border border-indigo-200 dark:border-indigo-800 rounded-xl p-4 text-center">
+          <p className="text-2xl font-bold text-indigo-700 dark:text-indigo-400">{countTea}</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">Teatime</p>
+        </div>
+        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 text-center">
+          <p className="text-2xl font-bold text-gray-900 dark:text-white">#{rank}</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">Rank</p>
+        </div>
+      </section>
+
+      {/* Frequency Bar */}
+      <section className="mb-8">
+        <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Frequency Overview</h2>
+        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 space-y-4">
+          <div>
+            <div className="flex justify-between text-sm mb-1">
+              <span className="text-gray-600 dark:text-gray-400">Overall ({percentageAll}%)</span>
+              <span className="font-semibold text-gray-900 dark:text-white">{countAll} / {totalDraws} draws</span>
+            </div>
+            <div className="w-full bg-gray-100 dark:bg-gray-700 rounded-full h-5">
+              <div
+                className="h-5 rounded-full bg-gradient-to-r from-emerald-500 to-emerald-600 transition-all"
+                style={{ width: `${(countAll / maxCount) * 100}%` }}
+              />
+            </div>
+          </div>
+          <div>
+            <div className="flex justify-between text-sm mb-1">
+              <span className="text-gray-600 dark:text-gray-400">Lunchtime ({percentageLunch}%)</span>
+              <span className="font-semibold text-amber-700 dark:text-amber-400">{countLunch} draws</span>
+            </div>
+            <div className="w-full bg-gray-100 dark:bg-gray-700 rounded-full h-4">
+              <div
+                className="h-4 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 transition-all"
+                style={{ width: `${maxCount > 0 ? (countLunch / maxCount) * 100 : 0}%` }}
+              />
+            </div>
+          </div>
+          <div>
+            <div className="flex justify-between text-sm mb-1">
+              <span className="text-gray-600 dark:text-gray-400">Teatime ({percentageTea}%)</span>
+              <span className="font-semibold text-indigo-700 dark:text-indigo-400">{countTea} draws</span>
+            </div>
+            <div className="w-full bg-gray-100 dark:bg-gray-700 rounded-full h-4">
+              <div
+                className="h-4 rounded-full bg-gradient-to-r from-indigo-500 to-indigo-600 transition-all"
+                style={{ width: `${maxCount > 0 ? (countTea / maxCount) * 100 : 0}%` }}
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Last 5 Appearances */}
+      <section className="mb-8">
+        <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Last 5 Appearances</h2>
+        {appearedIn.length > 0 ? (
+          <div className="space-y-3">
+            {appearedIn.map((result, i) => {
+              const isBooster = result.booster === num;
+              const dateFormatted = new Date(result.date + 'T12:00:00').toLocaleDateString('en-GB', {
+                weekday: 'short', year: 'numeric', month: 'short', day: 'numeric',
+              });
+              return (
+                <div key={i} className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center gap-3">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <span className={`text-xs font-semibold px-2 py-1 rounded ${result.drawType === 'lunchtime' ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400' : 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400'}`}>
+                      {result.drawType === 'lunchtime' ? 'Lunch' : 'Tea'}
+                    </span>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">{dateFormatted}</span>
+                    {isBooster && (
+                      <span className="text-xs font-semibold px-2 py-1 rounded bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400">
+                        Booster
+                      </span>
+                    )}
+                  </div>
+                  <div className="sm:ml-auto">
+                    <LotteryBalls numbers={result.numbers} booster={result.booster} size="sm" animated={false} />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <p className="text-gray-500 dark:text-gray-400">Number {num} has not appeared in recent draws.</p>
+        )}
+      </section>
+
+      {/* Internal Links */}
+      <section className="mb-8">
+        <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Explore More</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <Link href="/predictions" className="block bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800 rounded-xl p-4 hover:shadow-md transition-shadow">
+            <h3 className="font-semibold text-emerald-700 dark:text-emerald-400">Today&apos;s Predictions</h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">See predicted numbers for upcoming draws</p>
+          </Link>
+          <Link href="/hot-cold-numbers" className="block bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800 rounded-xl p-4 hover:shadow-md transition-shadow">
+            <h3 className="font-semibold text-red-700 dark:text-red-400">Hot & Cold Numbers</h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">See which numbers are drawn most and least often</p>
+          </Link>
+          <Link href="/numbers" className="block bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 hover:shadow-md transition-shadow">
+            <h3 className="font-semibold text-gray-700 dark:text-gray-300">All Number Statistics</h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Browse stats for all 49 numbers</p>
+          </Link>
+          <Link href="/number-generator" className="block bg-purple-50 dark:bg-purple-950/20 border border-purple-200 dark:border-purple-800 rounded-xl p-4 hover:shadow-md transition-shadow">
+            <h3 className="font-semibold text-purple-700 dark:text-purple-400">Number Generator</h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Generate random numbers for your next bet</p>
+          </Link>
+        </div>
+      </section>
+
+      {/* SEO Content */}
+      <section className="prose dark:prose-invert max-w-none">
+        <h2>About Number {num} in UK 49s</h2>
+        <p>
+          Number {num} has been drawn {countAll} time{countAll !== 1 ? 's' : ''} across
+          all recent UK 49s draws, appearing in {percentageAll}% of draws. In Lunchtime
+          draws specifically, it has appeared {countLunch} time{countLunch !== 1 ? 's' : ''},
+          while in Teatime draws it has been drawn {countTea} time{countTea !== 1 ? 's' : ''}.
+        </p>
+        <p>
+          Currently ranked #{rank} out of 49 numbers, number {num} is classified as
+          a <strong>{status.label.toLowerCase()}</strong> number. This classification is based
+          on how its draw frequency compares to the average across all numbers.
+        </p>
+        <p>
+          While historical frequency data can be interesting for analysis, remember that each
+          UK 49s draw is independent and random. Past performance does not predict future results.
+          Always play responsibly.
+        </p>
+      </section>
+    </div>
+  );
+}

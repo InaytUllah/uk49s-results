@@ -39,9 +39,23 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const websiteSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'UK49s Results',
+    url: 'https://uk49sresults.co.uk',
+    description: 'Get the latest UK 49s Lunchtime and Teatime results updated daily. Check winning numbers, hot & cold numbers, predictions, and past results.',
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: 'https://uk49sresults.co.uk/numbers/{search_term_string}',
+      'query-input': 'required name=search_term_string',
+    },
+  };
+
   return (
     <html lang="en">
       <head>
+        <meta name="theme-color" content="#059669" />
         {/* Google AdSense - replace with your publisher ID */}
         <Script
           async
@@ -51,11 +65,22 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen flex flex-col">
+        {/* Skip to content link for accessibility */}
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:px-4 focus:py-2 focus:bg-emerald-600 focus:text-white focus:rounded-md focus:outline-none"
+        >
+          Skip to main content
+        </a>
         <Header />
-        <main className="flex-1">
+        <main id="main-content" className="flex-1">
           {children}
         </main>
         <Footer />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+        />
       </body>
     </html>
   );
