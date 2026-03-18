@@ -1,5 +1,5 @@
 export const SITE_NAME = 'UK49s Results';
-export const SITE_URL = 'https://uk49sresults.com'; // placeholder - will be updated
+export const SITE_URL = 'https://uk49sresults.co.uk';
 export const SITE_DESCRIPTION = 'Get the latest UK 49s Lunchtime and Teatime results. Updated daily with winning numbers, hot & cold numbers, predictions, and number generator.';
 
 export function generateTitle(page: string): string {
