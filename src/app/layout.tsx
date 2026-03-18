@@ -56,6 +56,20 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <meta name="theme-color" content="#059669" />
+        {/* Google Analytics */}
+        <Script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-K99JQQHR9G"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-K99JQQHR9G');
+          `}
+        </Script>
         {/* Google AdSense - replace with your publisher ID */}
         <Script
           async
