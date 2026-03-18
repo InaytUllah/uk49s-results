@@ -2,7 +2,6 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import ResultCard from '@/components/ResultCard';
 import Countdown from '@/components/Countdown';
-import AdSlot from '@/components/AdSlot';
 import { getLatestResults } from '@/lib/data/draws';
 import { PAGE_SEO } from '@/lib/data/seo';
 
@@ -37,8 +36,6 @@ export default function HomePage() {
         <Countdown drawType="teatime" />
       </section>
 
-      <AdSlot slot="1234567890" format="horizontal" />
-
       {/* Latest Results */}
       <section className="mb-10">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
@@ -64,8 +61,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      <AdSlot slot="1234567891" format="auto" />
-
       {/* Recent Results Table */}
       <section className="mb-10">
         <div className="flex items-center justify-between mb-6">
@@ -85,8 +80,6 @@ export default function HomePage() {
           ))}
         </div>
       </section>
-
-      <AdSlot slot="1234567892" format="auto" />
 
       {/* Quick Links Grid */}
       <section className="mb-10">

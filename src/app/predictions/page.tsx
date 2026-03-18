@@ -1,6 +1,5 @@
 import { Metadata } from 'next';
 import LotteryBalls from '@/components/LotteryBalls';
-import AdSlot from '@/components/AdSlot';
 import { getLatestResults, getHotNumbers, getColdNumbers } from '@/lib/data/draws';
 import { PAGE_SEO } from '@/lib/data/seo';
 
@@ -74,8 +73,6 @@ export default function PredictionsPage() {
         Disclaimer: These predictions are based on statistical analysis of past results. Lottery draws are random and no prediction can guarantee a win.
       </p>
 
-      <AdSlot slot="8901234567" className="mb-6" />
-
       {/* Lunchtime Predictions */}
       <section className="mb-10">
         <h2 className="text-2xl font-bold text-amber-700 dark:text-amber-400 mb-4">
@@ -93,8 +90,6 @@ export default function PredictionsPage() {
         </div>
       </section>
 
-      <AdSlot slot="8901234568" className="my-6" />
-
       {/* Teatime Predictions */}
       <section className="mb-10">
         <h2 className="text-2xl font-bold text-indigo-700 dark:text-indigo-400 mb-4">
@@ -111,8 +106,6 @@ export default function PredictionsPage() {
           ))}
         </div>
       </section>
-
-      <AdSlot slot="8901234569" className="my-6" />
 
       {/* Hot Numbers Used */}
       <section className="mb-10">

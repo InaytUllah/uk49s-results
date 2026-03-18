@@ -1,7 +1,6 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import ResultCard from '@/components/ResultCard';
-import AdSlot from '@/components/AdSlot';
 import { getResultByDate, getRecentDates } from '@/lib/data/draws';
 import { SITE_NAME } from '@/lib/data/seo';
 
@@ -47,8 +46,6 @@ export default async function LunchtimeResultPage({ params }: Props) {
         UK 49s Lunchtime Results — {formattedDate}
       </h1>
 
-      <AdSlot slot="4567890123" className="mb-6" />
-
       {result ? (
         <ResultCard result={result} featured showDate={false} />
       ) : (
@@ -58,8 +55,6 @@ export default async function LunchtimeResultPage({ params }: Props) {
           </p>
         </div>
       )}
-
-      <AdSlot slot="4567890124" className="my-6" />
 
       <div className="mt-8 flex gap-4">
         <Link

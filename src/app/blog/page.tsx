@@ -1,6 +1,5 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import AdSlot from '@/components/AdSlot';
 import { getLatestResults } from '@/lib/data/draws';
 import { PAGE_SEO } from '@/lib/data/seo';
 
@@ -39,8 +38,6 @@ export default function BlogPage() {
         Latest results, analysis, tips and news about UK 49s
       </p>
 
-      <AdSlot slot="1122334455" className="mb-6" />
-
       <div className="space-y-6">
         {posts.map((post, i) => (
           <article
@@ -69,12 +66,10 @@ export default function BlogPage() {
             >
               View Full Results &rarr;
             </Link>
-            {i > 0 && i % 3 === 0 && <AdSlot slot={`112233445${i}`} className="mt-4" />}
           </article>
         ))}
       </div>
 
-      <AdSlot slot="1122334456" className="my-6" />
     </div>
   );
 }

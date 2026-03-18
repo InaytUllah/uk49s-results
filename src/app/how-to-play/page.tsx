@@ -1,5 +1,4 @@
 import { Metadata } from 'next';
-import AdSlot from '@/components/AdSlot';
 import { PAGE_SEO } from '@/lib/data/seo';
 
 export const metadata: Metadata = {
@@ -13,8 +12,6 @@ export default function HowToPlayPage() {
       <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-8">
         How to Play UK 49s
       </h1>
-
-      <AdSlot slot="0123456789" className="mb-6" />
 
       <div className="prose dark:prose-invert max-w-none">
         <h2>What is UK 49s?</h2>
@@ -112,8 +109,6 @@ export default function HowToPlayPage() {
           <li>Remember that each draw is independent — past results don&apos;t affect future draws</li>
         </ul>
       </div>
-
-      <AdSlot slot="0123456790" className="my-6" />
 
       {/* FAQ Schema */}
       <script

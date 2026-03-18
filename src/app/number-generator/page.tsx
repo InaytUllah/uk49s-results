@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import LotteryBalls from '@/components/LotteryBalls';
-import AdSlot from '@/components/AdSlot';
 
 export default function NumberGeneratorPage() {
   const [numbers, setNumbers] = useState<number[]>([]);
@@ -42,8 +41,6 @@ export default function NumberGeneratorPage() {
       <p className="text-gray-600 dark:text-gray-400 mb-8">
         Generate random numbers for your next UK 49s Lunchtime or Teatime bet
       </p>
-
-      <AdSlot slot="7890123456" className="mb-6" />
 
       {/* Generator Controls */}
       <div className="bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-200 dark:border-gray-700 p-6 mb-8">
@@ -93,8 +90,6 @@ export default function NumberGeneratorPage() {
           </div>
         )}
       </div>
-
-      <AdSlot slot="7890123457" className="my-6" />
 
       {/* History */}
       {history.length > 0 && (

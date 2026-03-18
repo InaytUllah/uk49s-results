@@ -1,7 +1,6 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import ResultCard from '@/components/ResultCard';
-import AdSlot from '@/components/AdSlot';
 import { getLatestResults } from '@/lib/data/draws';
 import { PAGE_SEO } from '@/lib/data/seo';
 
@@ -26,8 +25,6 @@ export default function HistoryPage() {
         Complete history of Lunchtime and Teatime draw results
       </p>
 
-      <AdSlot slot="9012345678" className="mb-6" />
-
       {/* Filter Tabs */}
       <div className="flex gap-2 mb-6">
         <span className="px-4 py-2 bg-emerald-500 text-white rounded-lg text-sm font-medium">
@@ -46,12 +43,9 @@ export default function HistoryPage() {
         {allResults.map((result, i) => (
           <div key={`${result.date}-${result.drawType}`}>
             <ResultCard result={result} />
-            {i > 0 && i % 5 === 0 && <AdSlot slot={`901234567${i}`} className="my-4" />}
           </div>
         ))}
       </div>
-
-      <AdSlot slot="9012345679" className="my-6" />
 
       <section className="prose dark:prose-invert max-w-none mt-10">
         <h2>UK 49s Results Archive</h2>

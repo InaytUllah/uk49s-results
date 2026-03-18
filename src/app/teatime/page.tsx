@@ -2,7 +2,6 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import ResultCard from '@/components/ResultCard';
 import Countdown from '@/components/Countdown';
-import AdSlot from '@/components/AdSlot';
 import { getLatestResults } from '@/lib/data/draws';
 import { PAGE_SEO } from '@/lib/data/seo';
 
@@ -28,16 +27,12 @@ export default function TeatimePage() {
 
       <Countdown drawType="teatime" />
 
-      <AdSlot slot="3456789012" className="my-6" />
-
       {latest && (
         <section className="mb-8">
           <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Latest Teatime Result</h2>
           <ResultCard result={latest} featured />
         </section>
       )}
-
-      <AdSlot slot="3456789013" className="my-6" />
 
       <section className="mb-8">
         <div className="flex items-center justify-between mb-4">
@@ -52,8 +47,6 @@ export default function TeatimePage() {
           ))}
         </div>
       </section>
-
-      <AdSlot slot="3456789014" className="my-6" />
 
       <section className="prose dark:prose-invert max-w-none">
         <h2>About UK 49s Teatime Draw</h2>

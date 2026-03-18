@@ -2,7 +2,6 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import ResultCard from '@/components/ResultCard';
 import Countdown from '@/components/Countdown';
-import AdSlot from '@/components/AdSlot';
 import { getLatestResults } from '@/lib/data/draws';
 import { PAGE_SEO } from '@/lib/data/seo';
 
@@ -28,8 +27,6 @@ export default function LunchtimePage() {
 
       <Countdown drawType="lunchtime" />
 
-      <AdSlot slot="2345678901" className="my-6" />
-
       {/* Latest Result */}
       {latest && (
         <section className="mb-8">
@@ -37,8 +34,6 @@ export default function LunchtimePage() {
           <ResultCard result={latest} featured />
         </section>
       )}
-
-      <AdSlot slot="2345678902" className="my-6" />
 
       {/* Past Lunchtime Results */}
       <section className="mb-8">
@@ -54,8 +49,6 @@ export default function LunchtimePage() {
           ))}
         </div>
       </section>
-
-      <AdSlot slot="2345678903" className="my-6" />
 
       {/* SEO Content */}
       <section className="prose dark:prose-invert max-w-none">

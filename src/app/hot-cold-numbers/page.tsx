@@ -1,6 +1,5 @@
 import { Metadata } from 'next';
 import LotteryBalls from '@/components/LotteryBalls';
-import AdSlot from '@/components/AdSlot';
 import { getLatestResults, getHotNumbers, getColdNumbers, calculateFrequency } from '@/lib/data/draws';
 import { PAGE_SEO } from '@/lib/data/seo';
 
@@ -35,8 +34,6 @@ export default function HotColdPage() {
         Most and least frequently drawn numbers based on recent results
       </p>
 
-      <AdSlot slot="6789012345" className="mb-6" />
-
       {/* Overall Hot & Cold */}
       <section className="mb-10">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Overall (All Draws)</h2>
@@ -51,8 +48,6 @@ export default function HotColdPage() {
           </div>
         </div>
       </section>
-
-      <AdSlot slot="6789012346" className="my-6" />
 
       {/* By Draw Type */}
       <section className="mb-10">
@@ -84,8 +79,6 @@ export default function HotColdPage() {
           </div>
         </div>
       </section>
-
-      <AdSlot slot="6789012347" className="my-6" />
 
       {/* Frequency Table */}
       <section className="mb-10">
