@@ -53,9 +53,10 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="en">
+    <html lang="en" className="light" style={{ colorScheme: 'light' }}>
       <head>
         <meta name="theme-color" content="#059669" />
+        <meta name="color-scheme" content="light" />
         {/* Google Analytics */}
         <Script
           async

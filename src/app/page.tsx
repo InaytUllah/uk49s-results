@@ -30,14 +30,8 @@ export default async function HomePage() {
         </p>
       </section>
 
-      {/* Countdown Timers */}
-      <section className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-        <Countdown drawType="lunchtime" />
-        <Countdown drawType="teatime" />
-      </section>
-
-      {/* Latest Results */}
-      <section className="mb-10">
+      {/* Latest Results — shown FIRST so users see results without scrolling */}
+      <section className="mb-8">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
           Latest UK 49s Results
         </h2>
@@ -59,6 +53,12 @@ export default async function HomePage() {
             </div>
           )}
         </div>
+      </section>
+
+      {/* Countdown Timers — after results */}
+      <section className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+        <Countdown drawType="lunchtime" />
+        <Countdown drawType="teatime" />
       </section>
 
       {/* Recent Results Table */}

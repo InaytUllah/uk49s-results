@@ -3,13 +3,12 @@
 :root {
   --color-background: #f8fafc;
   --color-foreground: #0f172a;
+  color-scheme: light;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-background: #0f172a;
-    --color-foreground: #f8fafc;
-  }
+/* Force light mode everywhere - no dark mode to avoid inconsistent colors */
+html {
+  color-scheme: light !important;
 }
 
 body {
