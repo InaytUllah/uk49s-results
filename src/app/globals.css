@@ -1,12 +1,15 @@
 @import "tailwindcss";
 
+/* Force dark mode to only activate with .dark class (which we never add) */
+/* This prevents dark: classes from activating on phones with dark mode OS */
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   --color-background: #f8fafc;
   --color-foreground: #0f172a;
   color-scheme: light;
 }
 
-/* Force light mode everywhere - no dark mode to avoid inconsistent colors */
 html {
   color-scheme: light !important;
 }
