@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import ResultCard from '@/components/ResultCard';
 import Countdown from '@/components/Countdown';
+import UpcomingDraw from '@/components/UpcomingDraw';
 import { getLatestResults } from '@/lib/data/draws';
 import { PAGE_SEO } from '@/lib/data/seo';
 
@@ -28,6 +29,12 @@ export default async function HomePage() {
         <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
           Latest Lunchtime and Teatime winning numbers, updated daily
         </p>
+      </section>
+
+      {/* Upcoming Draw Placeholders - show ? balls before results are announced */}
+      <section className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
+        <UpcomingDraw drawType="lunchtime" latestDate={latestLunchtime?.date || ''} />
+        <UpcomingDraw drawType="teatime" latestDate={latestTeatime?.date || ''} />
       </section>
 
       {/* Latest Results — shown FIRST so users see results without scrolling */}

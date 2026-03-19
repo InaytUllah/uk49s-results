@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import ResultCard from '@/components/ResultCard';
 import Countdown from '@/components/Countdown';
+import UpcomingDraw from '@/components/UpcomingDraw';
 import { getLatestResults } from '@/lib/data/draws';
 import { PAGE_SEO } from '@/lib/data/seo';
 
@@ -33,6 +34,9 @@ export default async function TeatimePage() {
       <p className="text-gray-600 dark:text-gray-400 mb-6">
         Today&apos;s winning numbers drawn at 5:49 PM UK time
       </p>
+
+      {/* Upcoming Draw Placeholder - shows ? balls + countdown before results */}
+      <UpcomingDraw drawType="teatime" latestDate={latest?.date || ''} />
 
       <Countdown drawType="teatime" />
 
