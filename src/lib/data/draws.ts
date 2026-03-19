@@ -106,42 +106,48 @@ async function scrapeResults(drawType: 'lunchtime' | 'teatime'): Promise<UK49sRe
   const html = await response.text();
   const results: UK49sResult[] = [];
 
-  // Extract dates
+  // Split HTML into sections by date headers
+  // Each section contains a date followed by its ball numbers
   const dateRegex = /(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)\s+\d+(?:st|nd|rd|th)\s+\w+\s+\d{4}/g;
-  const dates = html.match(dateRegex) || [];
-
-  // Extract all ball numbers in order
-  const ballRegex = /class="result\s+(ball|bonus-ball)\s+pngfix">(\d+)/g;
-  const balls: { type: string; number: number }[] = [];
-  let match;
-  while ((match = ballRegex.exec(html)) !== null) {
-    balls.push({ type: match[1], number: parseInt(match[2]) });
+  const dateMatches: { date: string; index: number }[] = [];
+  let dateMatch;
+  while ((dateMatch = dateRegex.exec(html)) !== null) {
+    dateMatches.push({ date: dateMatch[0], index: dateMatch.index });
   }
 
-  // Group balls into draws (7 balls per draw: 6 main + 1 bonus)
-  let ballIndex = 0;
-  for (const dateStr of dates) {
-    const isoDate = parseDateString(dateStr);
+  // Process each date section individually to avoid misalignment
+  for (let i = 0; i < dateMatches.length; i++) {
+    const isoDate = parseDateString(dateMatches[i].date);
     if (!isoDate) continue;
+
+    // Get the HTML chunk between this date and the next date (or end)
+    const sectionStart = dateMatches[i].index;
+    const sectionEnd = i + 1 < dateMatches.length ? dateMatches[i + 1].index : html.length;
+    const section = html.substring(sectionStart, sectionEnd);
+
+    // Extract balls from THIS section only
+    const ballRegex = /class="result\s+(ball|bonus-ball)\s+pngfix">(\d+)/g;
+    const balls: { type: string; number: number }[] = [];
+    let match;
+    while ((match = ballRegex.exec(section)) !== null) {
+      balls.push({ type: match[1], number: parseInt(match[2]) });
+    }
+
+    // Skip sections with no balls (future/placeholder dates)
+    if (balls.length === 0) continue;
 
     const mainNumbers: number[] = [];
     let booster = 0;
 
-    // Collect 6 main balls + 1 bonus ball
-    while (ballIndex < balls.length && mainNumbers.length < 6) {
-      if (balls[ballIndex].type === 'ball') {
-        mainNumbers.push(balls[ballIndex].number);
+    for (const ball of balls) {
+      if (ball.type === 'ball' && mainNumbers.length < 6) {
+        mainNumbers.push(ball.number);
+      } else if (ball.type === 'bonus-ball' && booster === 0) {
+        booster = ball.number;
       }
-      ballIndex++;
     }
 
-    // Next should be the bonus ball
-    if (ballIndex < balls.length && balls[ballIndex].type === 'bonus-ball') {
-      booster = balls[ballIndex].number;
-      ballIndex++;
-    }
-
-    // Only add valid results (6 numbers + booster, all valid)
+    // Only add valid results (6 numbers + booster)
     if (mainNumbers.length === 6 && booster > 0) {
       results.push({
         date: isoDate,
