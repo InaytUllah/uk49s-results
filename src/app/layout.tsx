@@ -71,13 +71,6 @@ export default function RootLayout({
             gtag('config', 'G-K99JQQHR9G');
           `}
         </Script>
-        {/* Google AdSense - replace with your publisher ID */}
-        <Script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX"
-          crossOrigin="anonymous"
-          strategy="lazyOnload"
-        />
       </head>
       <body className="min-h-screen flex flex-col">
         {/* Skip to content link for accessibility */}

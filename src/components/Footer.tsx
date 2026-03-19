@@ -107,9 +107,6 @@ export default function Footer() {
 
         <div className="border-t border-gray-800 pt-6 text-center text-sm">
           <p>&copy; {currentYear} UK49s Results. All rights reserved.</p>
-          <p className="mt-2 text-xs text-gray-600">
-            This site is not affiliated with UK 49s or any lottery operator. For entertainment and informational purposes only.
-          </p>
         </div>
       </div>
     </footer>
