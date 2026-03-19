@@ -115,10 +115,28 @@ async function scrapeResults(drawType: 'lunchtime' | 'teatime'): Promise<UK49sRe
     dateMatches.push({ date: dateMatch[0], index: dateMatch.index });
   }
 
+  // Get current UK date/time to filter out future draws
+  const nowUK = new Date(new Date().toLocaleString('en-US', { timeZone: 'Europe/London' }));
+  const todayISO = nowUK.toISOString().substring(0, 10);
+  const ukHour = nowUK.getHours();
+  const ukMinute = nowUK.getMinutes();
+  // Draw times: lunchtime 12:49, teatime 17:49
+  // Add 15 min buffer for results to appear on source site
+  const drawHour = drawType === 'lunchtime' ? 12 : 17;
+  const drawMinute = 49;
+  const hasTodayDrawHappened = ukHour > drawHour || (ukHour === drawHour && ukMinute >= drawMinute + 15);
+
   // Process each date section individually to avoid misalignment
   for (let i = 0; i < dateMatches.length; i++) {
     const isoDate = parseDateString(dateMatches[i].date);
     if (!isoDate) continue;
+
+    // CRITICAL: Skip today's date if the draw hasn't happened yet
+    // 49s.events shows previous results as placeholders for upcoming draws
+    if (isoDate === todayISO && !hasTodayDrawHappened) continue;
+
+    // Also skip any future dates (shouldn't happen, but safety check)
+    if (isoDate > todayISO) continue;
 
     // Get the HTML chunk between this date and the next date (or end)
     const sectionStart = dateMatches[i].index;
@@ -133,7 +151,7 @@ async function scrapeResults(drawType: 'lunchtime' | 'teatime'): Promise<UK49sRe
       balls.push({ type: match[1], number: parseInt(match[2]) });
     }
 
-    // Skip sections with no balls (future/placeholder dates)
+    // Skip sections with no balls
     if (balls.length === 0) continue;
 
     const mainNumbers: number[] = [];
