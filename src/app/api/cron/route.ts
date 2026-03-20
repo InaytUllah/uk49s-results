@@ -4,18 +4,17 @@ import { revalidateTag } from 'next/cache';
 export const dynamic = 'force-dynamic';
 
 export async function GET(request: Request) {
-  // Verify cron secret (Vercel sends this header)
+  // Verify the request is from Vercel Cron or has valid secret
   const authHeader = request.headers.get('authorization');
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-    // Allow in development
-    if (process.env.NODE_ENV === 'production') {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+  const cronSecret = process.env.CRON_SECRET;
+
+  if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
   try {
-    // Revalidate the cached results so pages fetch fresh data from 49s.events
-    revalidateTag('results', 'default');
+    // Revalidate the cached results so pages fetch fresh data
+    revalidateTag('results', { expire: 0 });
 
     return NextResponse.json({
       success: true,

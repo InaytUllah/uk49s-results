@@ -8,7 +8,93 @@ export const DRAW_SCHEDULE = {
 };
 
 // ============================================================
-// PRIMARY: Official 49s.co.uk JSON-LD schema data
+// FASTEST SOURCE: za.national-lottery.com
+// Updates within minutes of draw, correct dates, no date-shift
+// ============================================================
+
+function parseZADate(dateStr: string): string {
+  // Convert "Friday, 20 March 2026" to "2026-03-20"
+  const months: Record<string, string> = {
+    January: '01', February: '02', March: '03', April: '04',
+    May: '05', June: '06', July: '07', August: '08',
+    September: '09', October: '10', November: '11', December: '12',
+  };
+  const cleaned = dateStr.replace(/,/g, '').trim();
+  const parts = cleaned.split(/\s+/);
+  // parts: ["Friday", "20", "March", "2026"]
+  if (parts.length < 4) return '';
+  const day = parts[1].padStart(2, '0');
+  const month = months[parts[2]] || '01';
+  const year = parts[3];
+  return `${year}-${month}-${day}`;
+}
+
+async function scrapeZANationalLottery(drawType: 'lunchtime' | 'teatime'): Promise<UK49sResult[]> {
+  try {
+    const url = `https://za.national-lottery.com/uk-49s/results/${drawType}`;
+    const response = await fetch(url, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+      },
+      next: { revalidate: 60 },
+    });
+
+    if (!response.ok) return [];
+
+    const html = await response.text();
+    const results: UK49sResult[] = [];
+
+    // Find date headers: <span class="h2 fluid">Friday, 20 March 2026</span>
+    const dateRegex = /class="h2 fluid">([^<]+\d{4})<\/span>/g;
+    const dateMatches: { date: string; index: number }[] = [];
+    let dateMatch;
+    while ((dateMatch = dateRegex.exec(html)) !== null) {
+      const parsed = parseZADate(dateMatch[1]);
+      if (parsed) {
+        dateMatches.push({ date: parsed, index: dateMatch.index });
+      }
+    }
+
+    for (let i = 0; i < dateMatches.length; i++) {
+      const sectionStart = dateMatches[i].index;
+      const sectionEnd = i + 1 < dateMatches.length ? dateMatches[i + 1].index : html.length;
+      const section = html.substring(sectionStart, sectionEnd);
+
+      // Extract balls: <li class="result ball uk49s ball fluid">18</li>
+      // Extract bonus: <li class="result ball uk49s bonus-ball fluid">39</li>
+      const mainNumbers: number[] = [];
+      let booster = 0;
+
+      const ballRegex = /class="result ball uk49s (ball|bonus-ball) fluid">(\d+)/g;
+      let match;
+      while ((match = ballRegex.exec(section)) !== null) {
+        if (match[1] === 'ball' && mainNumbers.length < 6) {
+          mainNumbers.push(parseInt(match[2]));
+        } else if (match[1] === 'bonus-ball' && booster === 0) {
+          booster = parseInt(match[2]);
+        }
+      }
+
+      if (mainNumbers.length === 6 && booster > 0) {
+        results.push({
+          date: dateMatches[i].date,
+          drawType,
+          numbers: mainNumbers,
+          booster,
+          drawTime: drawType === 'lunchtime' ? '12:49 PM' : '5:49 PM',
+        });
+      }
+    }
+
+    return results;
+  } catch (error) {
+    console.error('za.national-lottery.com scrape failed:', error);
+    return [];
+  }
+}
+
+// ============================================================
+// SECONDARY: Official 49s.co.uk JSON-LD schema data
 // The official site serves structured data to crawlers/bots
 // ============================================================
 
@@ -179,21 +265,38 @@ async function scrapeResults(drawType: 'lunchtime' | 'teatime'): Promise<UK49sRe
   return results;
 }
 
-// Cached version with multi-source fallback
-// Note: 49s.events is primary because the official 49s.co.uk SSR response
-// has incorrect dates in JSON-LD (all dates show as the same value).
-// Both sources serve the same official draw numbers.
+// Cached version with multi-source merge
+// za.national-lottery.com = fastest for latest result (only returns 1)
+// 49s.events = full history (10+ results, but slower to update)
+// Strategy: fetch both in parallel, merge, deduplicate by date
 const getCachedResults = unstable_cache(
   async (drawType: 'lunchtime' | 'teatime') => {
-    // 1. Primary: 49s.events (server-rendered HTML with accurate dates)
-    try {
-      const results = await scrapeResults(drawType);
-      if (results.length > 0) return results;
-    } catch (error) {
-      console.error('49s.events source failed:', error);
+    // Fetch fastest source and history source in parallel
+    const [zaResults, eventsResults] = await Promise.all([
+      scrapeZANationalLottery(drawType).catch(err => {
+        console.error('za.national-lottery.com failed:', err);
+        return [] as UK49sResult[];
+      }),
+      scrapeResults(drawType).catch(err => {
+        console.error('49s.events failed:', err);
+        return [] as UK49sResult[];
+      }),
+    ]);
+
+    // Merge: za.national-lottery.com results take priority (faster updates)
+    const merged = new Map<string, UK49sResult>();
+    for (const r of eventsResults) {
+      merged.set(r.date, r);
+    }
+    for (const r of zaResults) {
+      merged.set(r.date, r); // Overwrites 49s.events if same date
     }
 
-    // 2. Fallback: official 49s.co.uk JSON-LD (dates may be inaccurate in SSR)
+    if (merged.size > 0) {
+      return [...merged.values()].sort((a, b) => b.date.localeCompare(a.date));
+    }
+
+    // Fallback: official 49s.co.uk JSON-LD
     try {
       const official = await scrapeOfficial();
       const filtered = official.filter(r => r.drawType === drawType);
@@ -202,7 +305,7 @@ const getCachedResults = unstable_cache(
       console.error('Official 49s.co.uk fallback failed:', error);
     }
 
-    // 3. Last resort: hardcoded verified real data
+    // Last resort: hardcoded verified real data
     return fallbackResults.filter(r => r.drawType === drawType);
   },
   ['uk49s-results'],
