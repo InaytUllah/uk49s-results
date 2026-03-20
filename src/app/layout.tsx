@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import ResponsibleGamingPopup from '@/components/ResponsibleGamingPopup';
 import { PAGE_SEO, SITE_URL } from '@/lib/data/seo';
 import Script from 'next/script';
 
@@ -85,6 +86,7 @@ export default function RootLayout({
           {children}
         </main>
         <Footer />
+        <ResponsibleGamingPopup />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
