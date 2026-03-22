@@ -164,23 +164,45 @@ export default async function NumbersIndexPage() {
       </section>
 
       {/* SEO Content */}
-      <section className="prose dark:prose-invert max-w-none">
-        <h2>Understanding UK 49s Number Frequency</h2>
-        <p>
-          This page shows the draw frequency for all 49 numbers in the UK 49s lottery.
-          Numbers are ranked from most frequently drawn to least frequently drawn, based
-          on recent Lunchtime and Teatime results.
-        </p>
-        <p>
-          Each number is classified as Hot (drawn more than 20% above average), Cold
-          (drawn more than 20% below average), or Neutral. Click on any number to see
-          its full statistics including separate Lunchtime and Teatime breakdowns, last
-          drawn dates, and more.
-        </p>
-        <p>
-          Remember that lottery draws are random events. While frequency analysis can be
-          interesting, past results do not influence future draws. Always gamble responsibly.
-        </p>
+      <section>
+        <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 sm:p-8">
+          <div className="space-y-6">
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Understanding UK 49s Number Frequency</h2>
+              <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                This page shows the draw frequency for all <strong className="text-gray-900 dark:text-white">49 numbers</strong> in the UK 49s lottery.
+                Numbers are ranked from most frequently drawn to least frequently drawn, based
+                on recent <Link href="/lunchtime" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">Lunchtime</Link> and <Link href="/teatime" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">Teatime</Link> results.
+              </p>
+            </div>
+
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Number Classifications</h3>
+              <div className="flex flex-wrap gap-3">
+                <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 text-sm font-semibold">
+                  <span className="w-2 h-2 rounded-full bg-red-500"></span> Hot — drawn 20%+ above average
+                </span>
+                <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 text-sm font-semibold">
+                  <span className="w-2 h-2 rounded-full bg-blue-500"></span> Cold — drawn 20%+ below average
+                </span>
+                <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-400 text-sm font-semibold">
+                  <span className="w-2 h-2 rounded-full bg-gray-500"></span> Neutral — around average frequency
+                </span>
+              </div>
+              <p className="text-gray-600 dark:text-gray-400 leading-relaxed mt-3">
+                Click on any number to see its full statistics including separate Lunchtime and Teatime breakdowns, last
+                drawn dates, and more.
+              </p>
+            </div>
+
+            <div className="bg-yellow-50 dark:bg-yellow-900/20 rounded-lg p-4 border border-yellow-200 dark:border-yellow-800">
+              <p className="text-sm text-yellow-800 dark:text-yellow-300 flex items-start gap-2">
+                <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01M12 3a9 9 0 110 18 9 9 0 010-18z" /></svg>
+                <span>Lottery draws are random events. While frequency analysis can be interesting, past results do not influence future draws. Always gamble responsibly.</span>
+              </p>
+            </div>
+          </div>
+        </div>
       </section>
     </div>
   );

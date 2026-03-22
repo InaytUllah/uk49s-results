@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import Link from 'next/link';
 import LotteryBalls from '@/components/LotteryBalls';
 import { getLatestResults, getHotNumbers, getColdNumbers, getPredictionDate, getPredictionDateForLunchtime } from '@/lib/data/draws';
 import { PAGE_SEO } from '@/lib/data/seo';
@@ -141,21 +142,44 @@ export default async function PredictionsPage() {
         </div>
       </section>
 
-      <section className="prose dark:prose-invert max-w-none">
-        <h2>How Our UK 49s Predictions Work</h2>
-        <p>
-          Our predictions are generated using statistical analysis of recent UK 49s draw results.
-          We analyze number frequency patterns, hot and cold numbers, and overdue numbers to
-          produce prediction sets for both Lunchtime and Teatime draws.
-        </p>
-        <p>
-          Predictions are automatically updated after each draw is announced — once lunchtime
-          results are in, lunchtime predictions switch to the next day. Same for teatime.
-        </p>
-        <p>
-          Remember: The UK 49s lottery is a game of chance. No prediction system can guarantee
-          winning numbers. Always play responsibly and within your means.
-        </p>
+      <section>
+        <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 sm:p-8">
+          <div className="space-y-6">
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">How Our UK 49s Predictions Work</h2>
+              <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                Our predictions are generated using <strong className="text-gray-900 dark:text-white">statistical analysis</strong> of recent UK 49s draw results.
+                We analyze number frequency patterns, <Link href="/hot-cold-numbers" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">hot and cold numbers</Link>, and overdue numbers to
+                produce prediction sets for both <span className="inline-flex items-center gap-1"><span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300">Lunchtime</span></span> and <span className="inline-flex items-center gap-1"><span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-indigo-100 text-indigo-800 dark:bg-indigo-900/50 dark:text-indigo-300">Teatime</span></span> draws.
+              </p>
+            </div>
+
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Auto-Updated Predictions</h3>
+              <ul className="space-y-2">
+                <li className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
+                  <svg className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                  <span>Predictions refresh automatically after each draw is announced</span>
+                </li>
+                <li className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
+                  <svg className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                  <span>Once lunchtime results are in, lunchtime predictions switch to the next day</span>
+                </li>
+                <li className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
+                  <svg className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                  <span>Same automatic rollover happens for teatime predictions</span>
+                </li>
+              </ul>
+            </div>
+
+            <div className="bg-yellow-50 dark:bg-yellow-900/20 rounded-lg p-4 border border-yellow-200 dark:border-yellow-800">
+              <p className="text-sm text-yellow-800 dark:text-yellow-300 flex items-start gap-2">
+                <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01M12 3a9 9 0 110 18 9 9 0 010-18z" /></svg>
+                <span>The <strong>UK 49s lottery</strong> is a game of chance. No prediction system can guarantee winning numbers. Always play responsibly and within your means.</span>
+              </p>
+            </div>
+          </div>
+        </div>
       </section>
     </div>
   );

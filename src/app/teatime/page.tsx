@@ -80,51 +80,82 @@ export default async function TeatimePage() {
         </div>
       </section>
 
-      <section className="prose dark:prose-invert max-w-none mb-8">
-        <h2>About UK 49s Teatime Draw</h2>
-        <p>
-          The UK 49s Teatime draw takes place every day at 5:49 PM UK time (GMT/BST), offering players
-          a second daily opportunity to win. Six main numbers are drawn from a pool of 1 to 49, followed
-          by a Booster ball. This page is updated immediately after each draw so you can check your
-          teatime results today as quickly as possible.
-        </p>
+      <section className="mb-8">
+        <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 sm:p-8">
+          <div className="space-y-6">
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">About UK 49s Teatime Draw</h2>
+              <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                The <strong className="text-gray-900 dark:text-white">UK 49s Teatime draw</strong> takes place every day at <strong className="text-gray-900 dark:text-white">5:49 PM UK time</strong> (GMT/BST), offering players
+                a second daily opportunity to win. Six main numbers are drawn from a pool of 1 to 49, followed
+                by a <strong className="text-gray-900 dark:text-white">Booster ball</strong>. This page is updated immediately after each draw so you can check your
+                teatime results today as quickly as possible.
+              </p>
+            </div>
 
-        <h3>Teatime Draw Schedule and Format</h3>
-        <ul>
-          <li><strong>Time:</strong> 5:49 PM UK time (every day, including weekends and holidays)</li>
-          <li><strong>Numbers drawn:</strong> 6 main numbers + 1 Booster ball</li>
-          <li><strong>Number range:</strong> 1 to 49</li>
-          <li><strong>Betting options:</strong> Choose 1 to 5 numbers, with or without the Booster</li>
-        </ul>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Teatime Draw Schedule and Format</h3>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm border-collapse">
+                  <thead>
+                    <tr className="bg-gray-50 dark:bg-gray-700/50">
+                      <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700">Detail</th>
+                      <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700">Info</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td className="py-2 px-4 border border-gray-200 dark:border-gray-700 font-medium text-gray-900 dark:text-white">Time</td><td className="py-2 px-4 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400">5:49 PM UK time (daily, including weekends)</td></tr>
+                    <tr className="bg-gray-50 dark:bg-gray-700/30"><td className="py-2 px-4 border border-gray-200 dark:border-gray-700 font-medium text-gray-900 dark:text-white">Numbers drawn</td><td className="py-2 px-4 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400">6 main numbers + 1 Booster ball</td></tr>
+                    <tr><td className="py-2 px-4 border border-gray-200 dark:border-gray-700 font-medium text-gray-900 dark:text-white">Number range</td><td className="py-2 px-4 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400">1 to 49</td></tr>
+                    <tr className="bg-gray-50 dark:bg-gray-700/30"><td className="py-2 px-4 border border-gray-200 dark:border-gray-700 font-medium text-gray-900 dark:text-white">Betting options</td><td className="py-2 px-4 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400">Choose 1 to 5 numbers, with or without the Booster</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
 
-        <h3>How to Use Teatime Results</h3>
-        <p>
-          After the 5:49 PM draw, compare your selected numbers against the results displayed above.
-          If your numbers match any of the 6 drawn balls (or the Booster if you opted in), you win
-          according to the payout structure set by your bookmaker. The Teatime draw is completely
-          independent from the Lunchtime draw, so the same numbers can appear in both draws on the
-          same day.
-        </p>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">How to Use Teatime Results</h3>
+              <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                After the 5:49 PM draw, compare your selected numbers against the results displayed above.
+                If your numbers match any of the 6 drawn balls (or the Booster if you opted in), you win
+                according to the payout structure set by your bookmaker. The <span className="inline-flex items-center gap-1"><span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-indigo-100 text-indigo-800 dark:bg-indigo-900/50 dark:text-indigo-300">Teatime</span></span> draw is completely
+                independent from the <span className="inline-flex items-center gap-1"><span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300">Lunchtime</span></span> draw.
+              </p>
+            </div>
 
-        <h3>Teatime Draw Strategy</h3>
-        <p>
-          While every draw is random, many players study past teatime results to make informed choices.
-          Our <Link href="/hot-cold-numbers">hot and cold numbers</Link> analysis shows which numbers
-          have appeared most and least often in Teatime draws specifically. You can also review{' '}
-          <Link href="/predictions">our predictions</Link> or use the{' '}
-          <Link href="/number-generator">number generator</Link> to select random numbers. For a
-          detailed look at how Teatime compares to Lunchtime, visit our{' '}
-          <Link href="/lunchtime-vs-teatime">comparison page</Link>.
-        </p>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Teatime Draw Strategy</h3>
+              <ul className="space-y-2">
+                <li className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
+                  <svg className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                  <span>Check <Link href="/hot-cold-numbers" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">hot and cold numbers</Link> for Teatime-specific frequency data</span>
+                </li>
+                <li className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
+                  <svg className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                  <span>Review <Link href="/predictions" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">our predictions</Link> for data-driven suggestions</span>
+                </li>
+                <li className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
+                  <svg className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                  <span>Use the <Link href="/number-generator" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">number generator</Link> for quick random picks</span>
+                </li>
+                <li className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
+                  <svg className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                  <span>Visit our <Link href="/lunchtime-vs-teatime" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">comparison page</Link> for statistical differences</span>
+                </li>
+              </ul>
+            </div>
 
-        <h3>Why Play the Teatime Draw?</h3>
-        <p>
-          The Teatime draw at 5:49 PM is popular among players who prefer an evening betting opportunity.
-          If you missed the <Link href="/lunchtime">Lunchtime draw</Link> at 12:49 PM, the Teatime draw
-          gives you another chance. Some players bet on both draws daily, while others prefer to focus
-          exclusively on the Teatime draw and study its historical patterns. Whatever your approach,
-          always remember to gamble responsibly and within your means.
-        </p>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Why Play the Teatime Draw?</h3>
+              <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                The Teatime draw at 5:49 PM is popular among players who prefer an evening betting opportunity.
+                If you missed the <Link href="/lunchtime" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">Lunchtime draw</Link> at 12:49 PM, the Teatime draw
+                gives you another chance. Whatever your approach,
+                always remember to gamble responsibly and within your means.
+              </p>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* FAQ Schema for Teatime */}

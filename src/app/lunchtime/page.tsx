@@ -83,51 +83,85 @@ export default async function LunchtimePage() {
       </section>
 
       {/* SEO Content */}
-      <section className="prose dark:prose-invert max-w-none mb-8">
-        <h2>About UK 49s Lunchtime Draw</h2>
-        <p>
-          The UK 49s Lunchtime draw takes place every day at 12:49 PM UK time (GMT/BST), making it one
-          of the earliest daily lottery-style draws available. Six main numbers are drawn from a pool of
-          1 to 49, followed by a Booster ball. This page is updated immediately after each draw with the
-          latest winning numbers, so you can check your lunchtime results today within minutes.
-        </p>
+      <section className="mb-8">
+        <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 sm:p-8">
+          <div className="space-y-6">
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">About UK 49s Lunchtime Draw</h2>
+              <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                The <strong className="text-gray-900 dark:text-white">UK 49s Lunchtime draw</strong> takes place every day at <strong className="text-gray-900 dark:text-white">12:49 PM UK time</strong> (GMT/BST), making it one
+                of the earliest daily lottery-style draws available. Six main numbers are drawn from a pool of
+                1 to 49, followed by a <strong className="text-gray-900 dark:text-white">Booster ball</strong>. This page is updated immediately after each draw with the
+                latest winning numbers, so you can check your lunchtime results today within minutes.
+              </p>
+            </div>
 
-        <h3>Lunchtime Draw Schedule and Format</h3>
-        <ul>
-          <li><strong>Time:</strong> 12:49 PM UK time (every day, including weekends and holidays)</li>
-          <li><strong>Numbers drawn:</strong> 6 main numbers + 1 Booster ball</li>
-          <li><strong>Number range:</strong> 1 to 49</li>
-          <li><strong>Betting options:</strong> Choose 1 to 5 numbers, with or without the Booster</li>
-        </ul>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Lunchtime Draw Schedule and Format</h3>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm border-collapse">
+                  <thead>
+                    <tr className="bg-gray-50 dark:bg-gray-700/50">
+                      <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700">Detail</th>
+                      <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700">Info</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td className="py-2 px-4 border border-gray-200 dark:border-gray-700 font-medium text-gray-900 dark:text-white">Time</td><td className="py-2 px-4 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400">12:49 PM UK time (daily, including weekends)</td></tr>
+                    <tr className="bg-gray-50 dark:bg-gray-700/30"><td className="py-2 px-4 border border-gray-200 dark:border-gray-700 font-medium text-gray-900 dark:text-white">Numbers drawn</td><td className="py-2 px-4 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400">6 main numbers + 1 Booster ball</td></tr>
+                    <tr><td className="py-2 px-4 border border-gray-200 dark:border-gray-700 font-medium text-gray-900 dark:text-white">Number range</td><td className="py-2 px-4 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400">1 to 49</td></tr>
+                    <tr className="bg-gray-50 dark:bg-gray-700/30"><td className="py-2 px-4 border border-gray-200 dark:border-gray-700 font-medium text-gray-900 dark:text-white">Betting options</td><td className="py-2 px-4 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400">Choose 1 to 5 numbers, with or without the Booster</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
 
-        <h3>How to Use Lunchtime Results</h3>
-        <p>
-          After each draw, check your selected numbers against the results shown above. If your chosen
-          numbers match any of the 6 drawn balls (or the Booster if included), you win. The payout depends
-          on how many numbers you picked and the odds set by your bookmaker. Many players analyse past
-          lunchtime results to identify trends, hot numbers, and patterns. Visit our{' '}
-          <Link href="/hot-cold-numbers">hot and cold numbers</Link> page to see which numbers appear
-          most frequently in the Lunchtime draw specifically.
-        </p>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">How to Use Lunchtime Results</h3>
+              <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                After each draw, check your selected numbers against the results shown above. If your chosen
+                numbers match any of the 6 drawn balls (or the Booster if included), you win. The payout depends
+                on how many numbers you picked and the odds set by your bookmaker. Many players analyse past
+                lunchtime results to identify trends, hot numbers, and patterns. Visit our{' '}
+                <Link href="/hot-cold-numbers" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">hot and cold numbers</Link> page to see which numbers appear
+                most frequently in the Lunchtime draw specifically.
+              </p>
+            </div>
 
-        <h3>Lunchtime vs Teatime</h3>
-        <p>
-          The Lunchtime draw is the first of two daily UK 49s draws. The second draw, the{' '}
-          <Link href="/teatime">Teatime draw</Link>, takes place at 5:49 PM. Both draws use the same
-          format and number pool, but they are independent events with separate results. Some players
-          prefer to bet on both draws for more chances, while others focus on one. Check our{' '}
-          <Link href="/lunchtime-vs-teatime">Lunchtime vs Teatime comparison</Link> to see statistical
-          differences between the two draws.
-        </p>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Lunchtime vs Teatime</h3>
+              <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                The <span className="inline-flex items-center gap-1"><span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300">Lunchtime</span></span> draw is the first of two daily UK 49s draws. The second draw, the{' '}
+                <Link href="/teatime" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">Teatime draw</Link>, takes place at 5:49 PM. Both draws use the same
+                format and number pool, but they are independent events with separate results. Check our{' '}
+                <Link href="/lunchtime-vs-teatime" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">Lunchtime vs Teatime comparison</Link> to see statistical
+                differences between the two draws.
+              </p>
+            </div>
 
-        <h3>Tips for Lunchtime Players</h3>
-        <p>
-          While UK 49s is a game of chance and no strategy can guarantee a win, many players find
-          it useful to review statistical data before placing bets. Consider checking the{' '}
-          <Link href="/predictions">predictions</Link> page for data-driven suggestions, or use
-          our <Link href="/number-generator">random number generator</Link> for a quick pick. Always
-          remember to gamble responsibly and within your budget.
-        </p>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Tips for Lunchtime Players</h3>
+              <ul className="space-y-2">
+                <li className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
+                  <svg className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                  <span>Check the <Link href="/predictions" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">predictions</Link> page for data-driven suggestions</span>
+                </li>
+                <li className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
+                  <svg className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                  <span>Use our <Link href="/number-generator" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">random number generator</Link> for a quick pick</span>
+                </li>
+                <li className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
+                  <svg className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                  <span>Review <Link href="/hot-cold-numbers" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">hot and cold numbers</Link> for frequency insights</span>
+                </li>
+                <li className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
+                  <svg className="w-5 h-5 text-amber-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01M12 3a9 9 0 110 18 9 9 0 010-18z" /></svg>
+                  <span>Always gamble responsibly and within your budget</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* FAQ Schema for Lunchtime */}

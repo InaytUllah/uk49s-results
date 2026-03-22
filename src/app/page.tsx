@@ -143,67 +143,132 @@ export default async function HomePage() {
       </section>
 
       {/* SEO Content Section */}
-      <section className="prose dark:prose-invert max-w-none mb-10">
-        <h2>About UK 49s Lottery</h2>
-        <p>
-          UK 49s is one of the most popular lottery-style betting games in the United Kingdom and South Africa.
-          Unlike traditional lotteries such as the National Lottery or EuroMillions, UK 49s gives players the
-          unique flexibility to choose how many numbers they want to bet on — from 1 to 5 numbers — plus a
-          Booster ball option. This flexibility means you control your own odds and potential payout, making
-          UK 49s an appealing choice for those who want more control over their betting strategy.
-        </p>
+      <section className="mb-10">
+        <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 sm:p-8">
+          <div className="space-y-6">
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">About UK 49s Lottery</h2>
+              <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                <strong className="text-gray-900 dark:text-white">UK 49s</strong> is one of the most popular lottery-style betting games in the <strong className="text-gray-900 dark:text-white">United Kingdom</strong> and <strong className="text-gray-900 dark:text-white">South Africa</strong>.
+                Unlike traditional lotteries such as the National Lottery or EuroMillions, UK 49s gives players the
+                unique flexibility to choose how many numbers they want to bet on — from 1 to 5 numbers — plus a
+                <strong className="text-gray-900 dark:text-white"> Booster ball</strong> option. This flexibility means you control your own odds and potential payout, making
+                UK 49s an appealing choice for those who want more control over their betting strategy.
+              </p>
+            </div>
 
-        <h3>UK 49s Results Today</h3>
-        <p>
-          Our site provides the fastest UK 49s results today for both the Lunchtime and Teatime draws. We update
-          our lunchtime results today within minutes of the draw taking place at 12:49 PM, and our teatime results
-          are available shortly after the 5:49 PM draw. Bookmark this page to check today&apos;s winning numbers
-          as soon as they are released. We also maintain a comprehensive archive of past results so you can review
-          historical data and identify trends.
-        </p>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">UK 49s Results Today</h3>
+              <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                Our site provides the fastest <strong className="text-gray-900 dark:text-white">UK 49s results today</strong> for both the <Link href="/lunchtime" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">Lunchtime</Link> and <Link href="/teatime" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">Teatime</Link> draws. We update
+                our lunchtime results today within minutes of the draw taking place at 12:49 PM, and our teatime results
+                are available shortly after the 5:49 PM draw. Bookmark this page to check today&apos;s winning numbers
+                as soon as they are released. We also maintain a comprehensive <Link href="/history" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">archive of past results</Link> so you can review
+                historical data and identify trends.
+              </p>
+            </div>
 
-        <h3>UK 49s Draw Times</h3>
-        <p>
-          There are two draws every single day, 7 days a week, including weekends and bank holidays:
-        </p>
-        <ul>
-          <li><strong>Lunchtime Draw:</strong> 12:49 PM (UK time) — one of the earliest daily lottery draws available</li>
-          <li><strong>Teatime Draw:</strong> 5:49 PM (UK time) — the evening draw for a second daily chance</li>
-        </ul>
-        <p>
-          Draw times may shift by one hour during BST (British Summer Time) changeovers, so always check
-          our <Link href="/how-to-play">How to Play</Link> page for the most accurate schedule.
-        </p>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">UK 49s Draw Times</h3>
+              <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-3">
+                There are two draws every single day, 7 days a week, including weekends and bank holidays:
+              </p>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm border-collapse">
+                  <thead>
+                    <tr className="bg-gray-50 dark:bg-gray-700/50">
+                      <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700">Draw</th>
+                      <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700">UK Time</th>
+                      <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700">SA Time</th>
+                      <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700">Frequency</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td className="py-2 px-4 border border-gray-200 dark:border-gray-700"><span className="inline-flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-amber-500"></span> <strong className="text-gray-900 dark:text-white">Lunchtime</strong></span></td>
+                      <td className="py-2 px-4 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400">12:49 PM</td>
+                      <td className="py-2 px-4 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400">2:49 PM</td>
+                      <td className="py-2 px-4 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400">Daily</td>
+                    </tr>
+                    <tr className="bg-gray-50 dark:bg-gray-700/30">
+                      <td className="py-2 px-4 border border-gray-200 dark:border-gray-700"><span className="inline-flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-indigo-500"></span> <strong className="text-gray-900 dark:text-white">Teatime</strong></span></td>
+                      <td className="py-2 px-4 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400">5:49 PM</td>
+                      <td className="py-2 px-4 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400">7:49 PM</td>
+                      <td className="py-2 px-4 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400">Daily</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <p className="text-gray-600 dark:text-gray-400 leading-relaxed mt-3 text-sm">
+                Draw times may shift by one hour during BST (British Summer Time) changeovers. Check
+                our <Link href="/how-to-play" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">How to Play</Link> page for the most accurate schedule.
+              </p>
+            </div>
 
-        <h3>How UK 49s Works</h3>
-        <p>
-          In each draw, 6 main numbers are drawn from a pool of 1 to 49, plus a 7th number known as the
-          Booster ball. Players can choose to bet on anywhere from 1 to 5 numbers. The more numbers you
-          pick, the higher the potential payout, but the harder it is to win. You can also choose whether
-          to include the Booster ball in your bet, which changes the odds. For example, betting on 1 number
-          from 6 gives odds of approximately 7.33 to 1, while betting on 5 numbers from 6 offers odds of
-          around 96,454 to 1. See our <Link href="/odds">odds and payouts page</Link> for full details.
-        </p>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">How UK 49s Works</h3>
+              <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-3">
+                In each draw, <strong className="text-gray-900 dark:text-white">6 main numbers</strong> are drawn from a pool of 1 to 49, plus a 7th number known as the
+                <strong className="text-gray-900 dark:text-white"> Booster ball</strong>. Players can choose to bet on anywhere from 1 to 5 numbers.
+              </p>
+              <ul className="space-y-2">
+                <li className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
+                  <svg className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                  <span>The more numbers you pick, the higher the potential payout, but the harder it is to win</span>
+                </li>
+                <li className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
+                  <svg className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                  <span>Choose whether to include the Booster ball in your bet, which changes the odds</span>
+                </li>
+                <li className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
+                  <svg className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                  <span>Betting on 1 number from 6 gives odds of approximately <strong className="text-gray-900 dark:text-white">7.33 to 1</strong></span>
+                </li>
+                <li className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
+                  <svg className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                  <span>Betting on 5 numbers from 6 offers odds of around <strong className="text-gray-900 dark:text-white">96,454 to 1</strong></span>
+                </li>
+              </ul>
+              <p className="text-gray-600 dark:text-gray-400 leading-relaxed mt-3 text-sm">
+                See our <Link href="/odds" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">odds and payouts page</Link> for full details.
+              </p>
+            </div>
 
-        <h3>UK 49s Predictions and Statistics</h3>
-        <p>
-          Many players look for UK49s predictions to help guide their number selections. While no prediction
-          method can guarantee a win — every draw is random and independent — statistical analysis can reveal
-          interesting patterns. Our <Link href="/hot-cold-numbers">hot and cold numbers</Link> page shows which
-          numbers have been drawn most and least frequently in recent results. You can also use our
-          free <Link href="/number-generator">random number generator</Link> for quick picks, or explore
-          our <Link href="/predictions">predictions page</Link> for statistically informed suggestions.
-        </p>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">UK 49s Predictions and Statistics</h3>
+              <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                Many players look for <strong className="text-gray-900 dark:text-white">UK49s predictions</strong> to help guide their number selections. While no prediction
+                method can guarantee a win — every draw is random and independent — statistical analysis can reveal
+                interesting patterns. Our <Link href="/hot-cold-numbers" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">hot and cold numbers</Link> page shows which
+                numbers have been drawn most and least frequently in recent results. You can also use our
+                free <Link href="/number-generator" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">random number generator</Link> for quick picks, or explore
+                our <Link href="/predictions" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">predictions page</Link> for statistically informed suggestions.
+              </p>
+            </div>
 
-        <h3>Why Check UK 49s Results Here?</h3>
-        <p>
-          We are dedicated to providing the fastest, most accurate UK 49s results available online. Our
-          platform is designed for speed, updated within minutes of each draw, and optimised for all devices
-          so you can check results on your phone, tablet, or desktop. In addition to the latest winning
-          numbers, we offer a suite of tools including number frequency analysis, a random number generator,
-          draw comparisons between Lunchtime and Teatime, and educational guides on how the game works.
-          Whether you are a first-time player or a seasoned enthusiast, our site has everything you need.
-        </p>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Why Check UK 49s Results Here?</h3>
+              <ul className="space-y-2">
+                <li className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
+                  <svg className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                  <span><strong className="text-gray-900 dark:text-white">Fastest updates</strong> — results within minutes of each draw</span>
+                </li>
+                <li className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
+                  <svg className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                  <span><strong className="text-gray-900 dark:text-white">Mobile optimised</strong> — check results on phone, tablet, or desktop</span>
+                </li>
+                <li className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
+                  <svg className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                  <span><strong className="text-gray-900 dark:text-white">Complete toolkit</strong> — frequency analysis, number generator, draw comparisons</span>
+                </li>
+                <li className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
+                  <svg className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                  <span><strong className="text-gray-900 dark:text-white">Educational guides</strong> — learn how the game works before you play</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* Responsible Gaming Notice */}

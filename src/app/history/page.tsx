@@ -38,13 +38,25 @@ export default async function HistoryPage() {
 
       <HistoryResults results={allResults} />
 
-      <section className="prose dark:prose-invert max-w-none mt-10">
-        <h2>UK 49s Results Archive</h2>
-        <p>
-          Browse our complete archive of UK 49s results for both Lunchtime and Teatime draws.
-          Results are updated daily after each draw. Use the filter options above to view
-          only Lunchtime or Teatime results.
-        </p>
+      <section className="mt-10">
+        <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 sm:p-8">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">UK 49s Results Archive</h2>
+          <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+            Browse our complete archive of <strong className="text-gray-900 dark:text-white">UK 49s results</strong> for both <span className="inline-flex items-center gap-1"><span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300">Lunchtime</span></span> and <span className="inline-flex items-center gap-1"><span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-indigo-100 text-indigo-800 dark:bg-indigo-900/50 dark:text-indigo-300">Teatime</span></span> draws.
+            Results are updated daily after each draw. Use the filter options above to view
+            only Lunchtime or Teatime results.
+          </p>
+          <ul className="space-y-2">
+            <li className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
+              <svg className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+              <span>Use <Link href="/hot-cold-numbers" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">Hot & Cold Numbers</Link> to analyse frequency from these results</span>
+            </li>
+            <li className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
+              <svg className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+              <span>Click any number to view its <Link href="/numbers" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">individual stats page</Link></span>
+            </li>
+          </ul>
+        </div>
       </section>
     </div>
   );

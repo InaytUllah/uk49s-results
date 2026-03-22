@@ -246,24 +246,36 @@ export default async function NumberPage({ params }: PageProps) {
       </section>
 
       {/* SEO Content */}
-      <section className="prose dark:prose-invert max-w-none">
-        <h2>About Number {num} in UK 49s</h2>
-        <p>
-          Number {num} has been drawn {countAll} time{countAll !== 1 ? 's' : ''} across
-          all recent UK 49s draws, appearing in {percentageAll}% of draws. In Lunchtime
-          draws specifically, it has appeared {countLunch} time{countLunch !== 1 ? 's' : ''},
-          while in Teatime draws it has been drawn {countTea} time{countTea !== 1 ? 's' : ''}.
-        </p>
-        <p>
-          Currently ranked #{rank} out of 49 numbers, number {num} is classified as
-          a <strong>{status.label.toLowerCase()}</strong> number. This classification is based
-          on how its draw frequency compares to the average across all numbers.
-        </p>
-        <p>
-          While historical frequency data can be interesting for analysis, remember that each
-          UK 49s draw is independent and random. Past performance does not predict future results.
-          Always play responsibly.
-        </p>
+      <section>
+        <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 sm:p-8">
+          <div className="space-y-6">
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">About Number {num} in UK 49s</h2>
+              <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                Number <strong className="text-gray-900 dark:text-white">{num}</strong> has been drawn <strong className="text-gray-900 dark:text-white">{countAll} time{countAll !== 1 ? 's' : ''}</strong> across
+                all recent UK 49s draws, appearing in <strong className="text-gray-900 dark:text-white">{percentageAll}%</strong> of draws. In <Link href="/lunchtime" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">Lunchtime</Link>{' '}
+                draws specifically, it has appeared {countLunch} time{countLunch !== 1 ? 's' : ''},
+                while in <Link href="/teatime" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">Teatime</Link> draws it has been drawn {countTea} time{countTea !== 1 ? 's' : ''}.
+              </p>
+            </div>
+
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Current Status</h3>
+              <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                Currently ranked <strong className="text-gray-900 dark:text-white">#{rank}</strong> out of 49 numbers, number {num} is classified as
+                a <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold ${status.bgColor} ${status.color}`}>{status.label}</span> number. This classification is based
+                on how its draw frequency compares to the average across all numbers.
+              </p>
+            </div>
+
+            <div className="bg-yellow-50 dark:bg-yellow-900/20 rounded-lg p-4 border border-yellow-200 dark:border-yellow-800">
+              <p className="text-sm text-yellow-800 dark:text-yellow-300 flex items-start gap-2">
+                <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01M12 3a9 9 0 110 18 9 9 0 010-18z" /></svg>
+                <span>Each UK 49s draw is independent and random. Past performance does not predict future results. Always play responsibly.</span>
+              </p>
+            </div>
+          </div>
+        </div>
       </section>
     </div>
   );

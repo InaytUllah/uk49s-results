@@ -119,41 +119,73 @@ export default async function HotColdPage() {
         </div>
       </section>
 
-      <section className="prose dark:prose-invert max-w-none">
-        <h2>Understanding Hot and Cold Numbers</h2>
-        <p>
-          Hot numbers are those that have been drawn most frequently in recent UK 49s draws.
-          Cold numbers are those drawn least often. While past frequency does not guarantee
-          future results, many players use this analysis to inform their number selections
-          for both the <Link href="/lunchtime">Lunchtime</Link> and <Link href="/teatime">Teatime</Link> draws.
-        </p>
+      <section>
+        <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 sm:p-8">
+          <div className="space-y-6">
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Understanding Hot and Cold Numbers</h2>
+              <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                <strong className="text-gray-900 dark:text-white">Hot numbers</strong> are those drawn most frequently in recent UK 49s draws.
+                <strong className="text-gray-900 dark:text-white"> Cold numbers</strong> are those drawn least often. While past frequency does not guarantee
+                future results, many players use this analysis to inform their number selections
+                for both the <Link href="/lunchtime" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">Lunchtime</Link> and <Link href="/teatime" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">Teatime</Link> draws.
+              </p>
+            </div>
 
-        <h3>How to Use Number Frequency Data</h3>
-        <p>
-          Some players prefer to pick hot numbers, reasoning that frequently drawn numbers may
-          continue their streak. Others favour cold numbers, believing they are &quot;due&quot; to
-          appear. A balanced approach might combine both hot and cold numbers in a single bet.
-          Remember that every draw is an independent event and each number has an equal probability
-          of being drawn regardless of past performance.
-        </p>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">How to Use Number Frequency Data</h3>
+              <ul className="space-y-2">
+                <li className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
+                  <span className="w-6 h-6 rounded-full bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">1</span>
+                  <span><strong className="text-gray-900 dark:text-white">Follow the hot streak</strong> — pick frequently drawn numbers, reasoning they may continue</span>
+                </li>
+                <li className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
+                  <span className="w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">2</span>
+                  <span><strong className="text-gray-900 dark:text-white">Target cold numbers</strong> — choose rarely drawn numbers, believing they are &quot;due&quot;</span>
+                </li>
+                <li className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
+                  <span className="w-6 h-6 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">3</span>
+                  <span><strong className="text-gray-900 dark:text-white">Balanced approach</strong> — combine both hot and cold numbers in a single bet</span>
+                </li>
+              </ul>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-3">
+                Every draw is an independent event — each number has an equal probability of being drawn regardless of past performance.
+              </p>
+            </div>
 
-        <h3>Analyse Individual Numbers</h3>
-        <p>
-          Click on any number in the frequency table above to see detailed statistics for that
-          specific number, including how often it has appeared as a main ball or Booster, its
-          most recent appearances, and which draw type it favours. Visit our{' '}
-          <Link href="/numbers">number stats hub</Link> for a complete overview of all 49 numbers.
-        </p>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Analyse Individual Numbers</h3>
+              <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                Click on any number in the frequency table above to see detailed statistics for that
+                specific number, including how often it has appeared as a main ball or Booster, its
+                most recent appearances, and which draw type it favours. Visit our{' '}
+                <Link href="/numbers" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">number stats hub</Link> for a complete overview of all 49 numbers.
+              </p>
+            </div>
 
-        <h3>Combine Data with Other Tools</h3>
-        <p>
-          For the best analysis experience, combine hot and cold number data with our other tools.
-          Check the <Link href="/predictions">predictions page</Link> for statistically informed
-          suggestions, review the <Link href="/odds">odds and payouts</Link> to understand your
-          potential returns, or use the <Link href="/number-generator">random number generator</Link> for
-          unbiased quick picks. Our <Link href="/lunchtime-vs-teatime">Lunchtime vs Teatime comparison</Link> also
-          shows whether certain numbers perform differently across the two daily draws.
-        </p>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Combine Data with Other Tools</h3>
+              <ul className="space-y-2">
+                <li className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
+                  <svg className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                  <span><Link href="/predictions" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">Predictions page</Link> — statistically informed suggestions</span>
+                </li>
+                <li className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
+                  <svg className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                  <span><Link href="/odds" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">Odds and payouts</Link> — understand your potential returns</span>
+                </li>
+                <li className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
+                  <svg className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                  <span><Link href="/number-generator" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">Random number generator</Link> — unbiased quick picks</span>
+                </li>
+                <li className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
+                  <svg className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                  <span><Link href="/lunchtime-vs-teatime" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">Lunchtime vs Teatime</Link> — see if numbers differ across draws</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </section>
     </div>
   );

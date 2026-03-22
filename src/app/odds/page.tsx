@@ -247,24 +247,36 @@ export default function OddsPage() {
       </section>
 
       {/* SEO Content */}
-      <section className="prose dark:prose-invert max-w-none">
-        <h2>Understanding Your Chances</h2>
-        <p>
-          UK 49s offers a unique betting structure compared to traditional lotteries. Because
-          you choose how many numbers to bet on, you have more control over the risk-reward
-          balance. A Pick 1 bet gives you roughly a 1 in 49 chance, while a Pick 5 bet
-          has much longer odds but correspondingly higher payouts.
-        </p>
-        <p>
-          The Booster ball option adds strategic depth to the game. By opting in, you slightly
-          improve your odds at the cost of somewhat lower payouts. Whether to include the
-          Booster depends on your personal preference for risk versus reward.
-        </p>
-        <p>
-          Remember to always gamble responsibly and only bet what you can afford to lose.
-          The odds shown on this page are mathematical probabilities and do not change
-          based on past results.
-        </p>
+      <section>
+        <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 sm:p-8">
+          <div className="space-y-6">
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Understanding Your Chances</h2>
+              <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                <strong className="text-gray-900 dark:text-white">UK 49s</strong> offers a unique betting structure compared to traditional lotteries. Because
+                you choose how many numbers to bet on, you have more control over the <strong className="text-gray-900 dark:text-white">risk-reward
+                balance</strong>. A Pick 1 bet gives you roughly a 1 in 49 chance, while a Pick 5 bet
+                has much longer odds but correspondingly higher payouts.
+              </p>
+            </div>
+
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">The Booster Ball Advantage</h3>
+              <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                The <strong className="text-gray-900 dark:text-white">Booster ball</strong> option adds strategic depth to the game. By opting in, you slightly
+                improve your odds at the cost of somewhat lower payouts. Whether to include the
+                Booster depends on your personal preference for risk versus reward.
+              </p>
+            </div>
+
+            <div className="bg-yellow-50 dark:bg-yellow-900/20 rounded-lg p-4 border border-yellow-200 dark:border-yellow-800">
+              <p className="text-sm text-yellow-800 dark:text-yellow-300 flex items-start gap-2">
+                <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01M12 3a9 9 0 110 18 9 9 0 010-18z" /></svg>
+                <span>Always gamble responsibly and only bet what you can afford to lose. The odds shown are <strong>mathematical probabilities</strong> and do not change based on past results.</span>
+              </p>
+            </div>
+          </div>
+        </div>
       </section>
     </div>
   );

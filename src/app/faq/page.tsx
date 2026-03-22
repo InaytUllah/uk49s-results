@@ -165,19 +165,21 @@ export default function FAQPage() {
       </section>
 
       {/* SEO Content */}
-      <section className="prose dark:prose-invert max-w-none">
-        <h2>About UK 49s Lottery</h2>
-        <p>
-          UK 49s is one of the most popular lottery-style betting games, with draws happening
-          twice daily at lunchtime and teatime. Unlike traditional national lotteries, UK 49s
-          gives players the flexibility to choose how many numbers to play and how much to
-          stake, making it accessible and customizable for different playing styles.
-        </p>
-        <p>
-          If you have a question that is not answered above, feel free to explore our other
-          guides or <Link href="/how-to-play">read our complete how-to-play guide</Link> for
-          more detailed information.
-        </p>
+      <section>
+        <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 sm:p-8">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">About UK 49s Lottery</h2>
+          <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+            <strong className="text-gray-900 dark:text-white">UK 49s</strong> is one of the most popular lottery-style betting games, with draws happening
+            twice daily at <span className="inline-flex items-center gap-1"><span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300">Lunchtime</span></span> and <span className="inline-flex items-center gap-1"><span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-indigo-100 text-indigo-800 dark:bg-indigo-900/50 dark:text-indigo-300">Teatime</span></span>. Unlike traditional national lotteries, UK 49s
+            gives players the flexibility to choose how many numbers to play and how much to
+            stake, making it accessible and customizable for different playing styles.
+          </p>
+          <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+            If you have a question that is not answered above, feel free to explore our other
+            guides or <Link href="/how-to-play" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">read our complete how-to-play guide</Link> for
+            more detailed information.
+          </p>
+        </div>
       </section>
     </div>
   );

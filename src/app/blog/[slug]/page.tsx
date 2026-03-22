@@ -214,18 +214,22 @@ export default async function BlogPostPage({ params }: Props) {
             </div>
           </section>
 
-          <section className="prose dark:prose-invert max-w-none mb-8">
-            <h2>How These Predictions Are Made</h2>
-            <p>
-              Our UK 49s predictions for {formattedDate} are generated using statistical analysis of
-              the most recent draws. We identify hot numbers (frequently drawn) and use a weighted
-              selection algorithm to produce three unique prediction sets for each draw.
-            </p>
-            <p>
-              The UK 49s Lunchtime draw takes place at 12:49 PM UK time, and the Teatime draw at
-              5:49 PM UK time. Check back after each draw to see the actual results and updated
-              predictions for the next day.
-            </p>
+          <section className="mb-8">
+            <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 sm:p-8">
+              <div className="space-y-4">
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">How These Predictions Are Made</h2>
+                <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                  Our <strong className="text-gray-900 dark:text-white">UK 49s predictions</strong> for {formattedDate} are generated using statistical analysis of
+                  the most recent draws. We identify <Link href="/hot-cold-numbers" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">hot numbers</Link> (frequently drawn) and use a weighted
+                  selection algorithm to produce three unique prediction sets for each draw.
+                </p>
+                <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                  The UK 49s <span className="inline-flex items-center gap-1"><span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300">Lunchtime</span></span> draw takes place at <strong className="text-gray-900 dark:text-white">12:49 PM</strong> UK time, and the <span className="inline-flex items-center gap-1"><span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-indigo-100 text-indigo-800 dark:bg-indigo-900/50 dark:text-indigo-300">Teatime</span></span> draw at
+                  <strong className="text-gray-900 dark:text-white"> 5:49 PM</strong> UK time. Check back after each draw to see the actual results and updated
+                  predictions for the next day.
+                </p>
+              </div>
+            </div>
           </section>
 
           <div className="flex flex-wrap gap-3">
@@ -303,18 +307,20 @@ export default async function BlogPostPage({ params }: Props) {
               <ResultCard result={result} featured />
             </section>
 
-            <section className="prose dark:prose-invert max-w-none mb-8">
-              <h2>Draw Summary</h2>
-              <p>
-                The UK 49s {drawLabel} draw on {formattedDate} produced the winning numbers{' '}
-                <strong>{result.numbers.join(', ')}</strong> with Booster ball <strong>{result.booster}</strong>.
-                The draw took place at {result.drawTime} UK time as scheduled.
-              </p>
-              <p>
-                Players who matched all 6 numbers would have won the top prize. The Booster ball
-                ({result.booster}) provides additional winning opportunities for players who included
-                the Booster option in their bet.
-              </p>
+            <section className="mb-8">
+              <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 sm:p-8">
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Draw Summary</h2>
+                <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-3">
+                  The <strong className="text-gray-900 dark:text-white">UK 49s {drawLabel}</strong> draw on <strong className="text-gray-900 dark:text-white">{formattedDate}</strong> produced the winning numbers{' '}
+                  <strong className="text-gray-900 dark:text-white">{result.numbers.join(', ')}</strong> with Booster ball <strong className="text-gray-900 dark:text-white">{result.booster}</strong>.
+                  The draw took place at {result.drawTime} UK time as scheduled.
+                </p>
+                <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                  Players who matched all 6 numbers would have won the top prize. The Booster ball
+                  ({result.booster}) provides additional winning opportunities for players who included
+                  the Booster option in their bet.
+                </p>
+              </div>
             </section>
 
             <section className="mb-8">
@@ -341,14 +347,16 @@ export default async function BlogPostPage({ params }: Props) {
           </div>
         )}
 
-        <section className="prose dark:prose-invert max-w-none mb-8">
-          <h2>About UK 49s {drawLabel} Draw</h2>
-          <p>
-            The UK 49s {drawLabel} draw takes place every day at{' '}
-            {drawType === 'lunchtime' ? '12:49 PM' : '5:49 PM'} UK time. Six main numbers
-            are drawn from a pool of 1 to 49, followed by a Booster ball. Players can choose
-            to bet on 1 to 5 numbers with various prize tiers.
-          </p>
+        <section className="mb-8">
+          <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 sm:p-8">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">About UK 49s {drawLabel} Draw</h2>
+            <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+              The <strong className="text-gray-900 dark:text-white">UK 49s {drawLabel}</strong> draw takes place every day at{' '}
+              <strong className="text-gray-900 dark:text-white">{drawType === 'lunchtime' ? '12:49 PM' : '5:49 PM'}</strong> UK time. Six main numbers
+              are drawn from a pool of 1 to 49, followed by a <strong className="text-gray-900 dark:text-white">Booster ball</strong>. Players can choose
+              to bet on 1 to 5 numbers with various prize tiers. Check our <Link href="/odds" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">odds and payouts</Link> page for full details.
+            </p>
+          </div>
         </section>
 
         <div className="flex flex-wrap gap-3">

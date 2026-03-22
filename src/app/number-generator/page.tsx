@@ -110,22 +110,49 @@ export default function NumberGeneratorPage() {
         </section>
       )}
 
-      <section className="prose dark:prose-invert max-w-none">
-        <h2>How to Use the UK 49s Number Generator</h2>
-        <p>
-          This tool generates random numbers for your UK 49s bets. Select how many numbers
-          you want to pick (1-6) and whether to include a Booster ball. The numbers are
-          generated completely at random from the pool of 1 to 49.
-        </p>
-        <h3>UK 49s Betting Options</h3>
-        <ul>
-          <li><strong>Pick 1:</strong> Choose 1 number — highest odds of winning</li>
-          <li><strong>Pick 2:</strong> Choose 2 numbers</li>
-          <li><strong>Pick 3:</strong> Choose 3 numbers</li>
-          <li><strong>Pick 4:</strong> Choose 4 numbers</li>
-          <li><strong>Pick 5:</strong> Choose 5 numbers</li>
-          <li><strong>Pick 6:</strong> Choose 6 numbers — highest potential payout</li>
-        </ul>
+      <section>
+        <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 sm:p-8">
+          <div className="space-y-6">
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">How to Use the UK 49s Number Generator</h2>
+              <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                This tool generates random numbers for your <strong className="text-gray-900 dark:text-white">UK 49s</strong> bets. Select how many numbers
+                you want to pick (1-6) and whether to include a <strong className="text-gray-900 dark:text-white">Booster ball</strong>. The numbers are
+                generated completely at random from the pool of 1 to 49.
+              </p>
+            </div>
+
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">UK 49s Betting Options</h3>
+              <ul className="space-y-2">
+                <li className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
+                  <span className="w-6 h-6 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">1</span>
+                  <span><strong className="text-gray-900 dark:text-white">Pick 1:</strong> Choose 1 number — highest odds of winning</span>
+                </li>
+                <li className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
+                  <span className="w-6 h-6 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">2</span>
+                  <span><strong className="text-gray-900 dark:text-white">Pick 2:</strong> Choose 2 numbers</span>
+                </li>
+                <li className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
+                  <span className="w-6 h-6 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">3</span>
+                  <span><strong className="text-gray-900 dark:text-white">Pick 3:</strong> Choose 3 numbers</span>
+                </li>
+                <li className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
+                  <span className="w-6 h-6 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">4</span>
+                  <span><strong className="text-gray-900 dark:text-white">Pick 4:</strong> Choose 4 numbers</span>
+                </li>
+                <li className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
+                  <span className="w-6 h-6 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">5</span>
+                  <span><strong className="text-gray-900 dark:text-white">Pick 5:</strong> Choose 5 numbers</span>
+                </li>
+                <li className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
+                  <span className="w-6 h-6 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">6</span>
+                  <span><strong className="text-gray-900 dark:text-white">Pick 6:</strong> Choose 6 numbers — highest potential payout</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </section>
     </div>
   );

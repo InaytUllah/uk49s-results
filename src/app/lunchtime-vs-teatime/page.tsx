@@ -297,25 +297,48 @@ export default async function LunchtimeVsTeatimePage() {
       </section>
 
       {/* SEO Content */}
-      <section className="prose dark:prose-invert max-w-none">
-        <h2>Lunchtime vs Teatime: Key Differences</h2>
-        <p>
-          While both the Lunchtime and Teatime UK 49s draws use the same format and number pool,
-          the results are completely independent of each other. Over time, certain numbers may
-          show patterns of appearing more in one draw than the other, though this is due to
-          random variation rather than any systematic bias.
-        </p>
-        <p>
-          Both draws offer identical odds. The mathematical probability of any number being
-          drawn is the same whether it is a Lunchtime or Teatime draw. The differences shown
-          on this page reflect the natural variation that occurs in random processes over
-          a limited sample of draws.
-        </p>
-        <p>
-          Many players enjoy analysing both draws separately to find their preferred betting
-          strategies. Whether you focus on one draw or play both, the key is to bet responsibly
-          and within your means.
-        </p>
+      <section>
+        <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 sm:p-8">
+          <div className="space-y-6">
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Lunchtime vs Teatime: Key Differences</h2>
+              <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                While both the <span className="inline-flex items-center gap-1"><span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300">Lunchtime</span></span> and <span className="inline-flex items-center gap-1"><span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-indigo-100 text-indigo-800 dark:bg-indigo-900/50 dark:text-indigo-300">Teatime</span></span> UK 49s draws use the same format and number pool,
+                the results are <strong className="text-gray-900 dark:text-white">completely independent</strong> of each other. Over time, certain numbers may
+                show patterns of appearing more in one draw than the other, though this is due to
+                random variation rather than any systematic bias.
+              </p>
+            </div>
+
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Identical Odds</h3>
+              <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                Both draws offer <strong className="text-gray-900 dark:text-white">identical odds</strong>. The mathematical probability of any number being
+                drawn is the same whether it is a Lunchtime or Teatime draw. The differences shown
+                on this page reflect the natural variation that occurs in random processes over
+                a limited sample of draws.
+              </p>
+            </div>
+
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Playing Strategy</h3>
+              <ul className="space-y-2">
+                <li className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
+                  <svg className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                  <span>Analyse both draws separately using <Link href="/hot-cold-numbers" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">hot and cold numbers</Link></span>
+                </li>
+                <li className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
+                  <svg className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                  <span>Focus on one draw or play both — it&apos;s your choice</span>
+                </li>
+                <li className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
+                  <svg className="w-5 h-5 text-amber-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01M12 3a9 9 0 110 18 9 9 0 010-18z" /></svg>
+                  <span>Always bet responsibly and within your means</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </section>
     </div>
   );
