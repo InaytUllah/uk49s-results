@@ -5,6 +5,7 @@ import { PAGE_SEO, SITE_NAME } from '@/lib/data/seo';
 export const metadata: Metadata = {
   title: PAGE_SEO.responsibleGaming.title,
   description: PAGE_SEO.responsibleGaming.description,
+  alternates: { canonical: '/responsible-gaming' },
 };
 
 export default function ResponsibleGamingPage() {

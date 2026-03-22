@@ -5,6 +5,7 @@ import { PAGE_SEO, SITE_NAME } from '@/lib/data/seo';
 export const metadata: Metadata = {
   title: PAGE_SEO.disclaimer.title,
   description: PAGE_SEO.disclaimer.description,
+  alternates: { canonical: '/disclaimer' },
 };
 
 export default function DisclaimerPage() {

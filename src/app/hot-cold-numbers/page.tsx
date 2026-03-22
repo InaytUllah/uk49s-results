@@ -7,6 +7,7 @@ import { PAGE_SEO } from '@/lib/data/seo';
 export const metadata: Metadata = {
   title: PAGE_SEO.hotCold.title,
   description: PAGE_SEO.hotCold.description,
+  alternates: { canonical: '/hot-cold-numbers' },
 };
 
 export const revalidate = 60;

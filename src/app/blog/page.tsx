@@ -6,6 +6,7 @@ import { PAGE_SEO } from '@/lib/data/seo';
 export const metadata: Metadata = {
   title: PAGE_SEO.blog.title,
   description: PAGE_SEO.blog.description,
+  alternates: { canonical: '/blog' },
 };
 
 export const revalidate = 60;

@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:49s.events)",
+      "WebFetch(domain:za.national-lottery.com)",
+      "WebFetch(domain:www.49s.co.uk)"
+    ]
+  }
+}

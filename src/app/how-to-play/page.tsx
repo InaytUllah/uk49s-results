@@ -4,6 +4,7 @@ import { PAGE_SEO } from '@/lib/data/seo';
 export const metadata: Metadata = {
   title: PAGE_SEO.howToPlay.title,
   description: PAGE_SEO.howToPlay.description,
+  alternates: { canonical: '/how-to-play' },
 };
 
 export default function HowToPlayPage() {

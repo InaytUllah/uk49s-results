@@ -5,6 +5,7 @@ import { PAGE_SEO, SITE_NAME } from '@/lib/data/seo';
 export const metadata: Metadata = {
   title: PAGE_SEO.about.title,
   description: PAGE_SEO.about.description,
+  alternates: { canonical: '/about' },
 };
 
 export default function AboutPage() {

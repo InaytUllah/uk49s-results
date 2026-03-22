@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import ResultCard from '@/components/ResultCard';
 import { getResultByDate, getRecentDates } from '@/lib/data/draws';
-import { SITE_NAME } from '@/lib/data/seo';
+import { SITE_NAME, SITE_URL } from '@/lib/data/seo';
 
 interface Props {
   params: Promise<{ date: string }>;
@@ -17,6 +17,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `UK 49s Teatime Results ${formattedDate} | ${SITE_NAME}`,
     description: `UK 49s Teatime winning numbers for ${formattedDate}. Check the draw results and Booster ball.`,
+    alternates: {
+      canonical: `${SITE_URL}/teatime/results/${date}`,
+    },
   };
 }
 

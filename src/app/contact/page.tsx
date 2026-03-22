@@ -5,6 +5,7 @@ import { PAGE_SEO, SITE_NAME } from '@/lib/data/seo';
 export const metadata: Metadata = {
   title: PAGE_SEO.contact.title,
   description: PAGE_SEO.contact.description,
+  alternates: { canonical: '/contact' },
 };
 
 export default function ContactPage() {

@@ -3,7 +3,7 @@ import Link from 'next/link';
 import ResultCard from '@/components/ResultCard';
 import LotteryBalls from '@/components/LotteryBalls';
 import { getLatestResults, getResultByDate, getHotNumbers, getColdNumbers, getPredictionDate } from '@/lib/data/draws';
-import { SITE_NAME } from '@/lib/data/seo';
+import { SITE_NAME, SITE_URL } from '@/lib/data/seo';
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -76,6 +76,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return {
       title: `UK 49s Predictions for ${formattedDate} | ${SITE_NAME}`,
       description: `UK 49s Lunchtime and Teatime predictions for ${formattedDate}. Statistical analysis based on hot & cold numbers from recent draws.`,
+      alternates: { canonical: `${SITE_URL}/blog/${slug}` },
     };
   }
 
@@ -88,6 +89,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `UK 49s ${drawLabel} Results for ${formattedDate} | ${SITE_NAME}`,
     description: `UK 49s ${drawLabel} draw results for ${formattedDate}. Winning numbers: ${numbersText}. Full analysis, hot & cold numbers, and predictions.`,
+    alternates: { canonical: `${SITE_URL}/blog/${slug}` },
   };
 }
 

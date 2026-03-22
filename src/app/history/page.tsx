@@ -7,6 +7,7 @@ import HistoryResults from './HistoryResults';
 export const metadata: Metadata = {
   title: PAGE_SEO.history.title,
   description: PAGE_SEO.history.description,
+  alternates: { canonical: '/history' },
 };
 
 export const revalidate = 60;

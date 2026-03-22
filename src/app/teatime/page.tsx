@@ -9,6 +9,7 @@ import { PAGE_SEO } from '@/lib/data/seo';
 export const metadata: Metadata = {
   title: PAGE_SEO.teatime.title,
   description: PAGE_SEO.teatime.description,
+  alternates: { canonical: '/teatime' },
 };
 
 export const revalidate = 60;

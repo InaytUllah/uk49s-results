@@ -5,6 +5,7 @@ import { PAGE_SEO, SITE_NAME } from '@/lib/data/seo';
 export const metadata: Metadata = {
   title: PAGE_SEO.terms.title,
   description: PAGE_SEO.terms.description,
+  alternates: { canonical: '/terms' },
 };
 
 export default function TermsPage() {
