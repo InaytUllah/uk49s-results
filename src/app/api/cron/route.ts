@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
-import { revalidateTag } from 'next/cache';
+import { revalidatePath } from 'next/cache';
+import { notifyGoogleIndexing, buildNotificationUrls } from '@/lib/api/google-indexing';
 
 export const dynamic = 'force-dynamic';
 
@@ -13,12 +14,21 @@ export async function GET(request: Request) {
   }
 
   try {
-    // Revalidate the cached results so pages fetch fresh data
-    revalidateTag('results', { expire: 0 });
+    // Revalidate all pages so they fetch fresh data
+    revalidatePath('/', 'layout');
+
+    // Notify Google Indexing API about updated pages
+    const urls = buildNotificationUrls();
+    const indexingResult = await notifyGoogleIndexing(urls);
 
     return NextResponse.json({
       success: true,
       message: 'UK 49s results cache revalidated',
+      googleIndexing: {
+        notified: indexingResult.total,
+        succeeded: indexingResult.succeeded,
+        failed: indexingResult.failed,
+      },
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
