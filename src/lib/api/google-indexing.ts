@@ -18,22 +18,22 @@ interface NotifyResult {
   results: IndexingResult[];
 }
 
-function getAuth(): GoogleAuth | null {
+function getAuth(): { auth: GoogleAuth } | { error: string } {
   const serviceAccountJson = process.env.GOOGLE_SERVICE_ACCOUNT_JSON;
   if (!serviceAccountJson) {
-    console.warn('GOOGLE_SERVICE_ACCOUNT_JSON not set — skipping Google Indexing');
-    return null;
+    return { error: `GOOGLE_SERVICE_ACCOUNT_JSON not set (env keys: ${Object.keys(process.env).filter(k => k.includes('GOOGLE')).join(', ') || 'none with GOOGLE'})` };
   }
 
   try {
     const credentials = JSON.parse(serviceAccountJson);
-    return new GoogleAuth({
-      credentials,
-      scopes: ['https://www.googleapis.com/auth/indexing'],
-    });
+    return {
+      auth: new GoogleAuth({
+        credentials,
+        scopes: ['https://www.googleapis.com/auth/indexing'],
+      }),
+    };
   } catch (err) {
-    console.error('Failed to parse GOOGLE_SERVICE_ACCOUNT_JSON:', err);
-    return null;
+    return { error: `Failed to parse JSON (length=${serviceAccountJson.length}): ${String(err)}` };
   }
 }
 
@@ -67,14 +67,20 @@ function sleep(ms: number): Promise<void> {
 }
 
 export async function notifyGoogleIndexing(urls: string[]): Promise<NotifyResult> {
-  const auth = getAuth();
-  if (!auth) {
-    return { total: urls.length, succeeded: 0, failed: urls.length, results: urls.map(url => ({ url, success: false, error: 'No credentials' })) };
+  const authResult = getAuth();
+  if ('error' in authResult) {
+    return { total: urls.length, succeeded: 0, failed: urls.length, results: urls.map(url => ({ url, success: false, error: authResult.error })) };
   }
 
-  const client = await auth.getClient();
-  const tokenResponse = await client.getAccessToken();
-  const accessToken = typeof tokenResponse === 'string' ? tokenResponse : tokenResponse?.token;
+  let accessToken: string | null | undefined;
+  try {
+    const client = await authResult.auth.getClient();
+    const tokenResponse = await client.getAccessToken();
+    accessToken = typeof tokenResponse === 'string' ? tokenResponse : tokenResponse?.token;
+  } catch (err) {
+    const errMsg = `Auth failed: ${String(err)}`;
+    return { total: urls.length, succeeded: 0, failed: urls.length, results: urls.map(url => ({ url, success: false, error: errMsg })) };
+  }
 
   if (!accessToken) {
     return { total: urls.length, succeeded: 0, failed: urls.length, results: urls.map(url => ({ url, success: false, error: 'Failed to get access token' })) };
