@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { notifyGoogleIndexing, buildNotificationUrls } from '@/lib/api/google-indexing';
+import { notifyGoogleIndexing, buildNotificationUrls, fetchAllSitemapUrls } from '@/lib/api/google-indexing';
 
 export const dynamic = 'force-dynamic';
 
@@ -15,12 +15,29 @@ export async function POST(request: Request) {
   try {
     const body = await request.json().catch(() => ({}));
     const additionalUrls: string[] = body.urls || [];
+    const fullSitemap: boolean = body.full === true;
 
-    const urls = buildNotificationUrls(additionalUrls);
+    let urls: string[];
+    if (fullSitemap) {
+      // Fetch all URLs from the live sitemap
+      urls = await fetchAllSitemapUrls();
+      // Merge any additional URLs
+      if (additionalUrls.length > 0) {
+        const urlSet = new Set(urls);
+        for (const u of additionalUrls) {
+          urlSet.add(u);
+        }
+        urls = [...urlSet];
+      }
+    } else {
+      urls = buildNotificationUrls(additionalUrls);
+    }
+
     const result = await notifyGoogleIndexing(urls);
 
     return NextResponse.json({
       success: true,
+      mode: fullSitemap ? 'full-sitemap' : 'standard',
       ...result,
       timestamp: new Date().toISOString(),
     });

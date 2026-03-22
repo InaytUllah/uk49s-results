@@ -169,3 +169,20 @@ export function buildNotificationUrls(additionalUrls: string[] = []): string[] {
 
   return [...urls];
 }
+
+/**
+ * Fetch ALL URLs from the live sitemap.xml and return them.
+ * Used for daily full-site indexing submissions.
+ */
+export async function fetchAllSitemapUrls(): Promise<string[]> {
+  try {
+    const response = await fetch(`${SITE_URL}/sitemap.xml`, { cache: 'no-store' });
+    if (!response.ok) return [];
+    const xml = await response.text();
+    const urls = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1]);
+    return urls;
+  } catch (err) {
+    console.error('Failed to fetch sitemap:', err);
+    return [];
+  }
+}

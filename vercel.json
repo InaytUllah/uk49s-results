@@ -7,6 +7,10 @@
     {
       "path": "/api/cron",
       "schedule": "*/2 16-18 * * *"
+    },
+    {
+      "path": "/api/cron?full=true",
+      "schedule": "7 6 * * *"
     }
   ]
 }
