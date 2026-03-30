@@ -20,18 +20,26 @@ export default async function BlogPage() {
   const uniqueDates = [...new Set(results.map(r => r.date))].sort((a, b) => b.localeCompare(a));
   const predictionDates = [predInfo.date, ...uniqueDates.slice(0, 5)];
 
-  const predictionPosts = [...new Set(predictionDates)].slice(0, 6).map(date => {
+  const predictionPosts: { slug: string; title: string; excerpt: string; date: string; drawType: 'lunchtime' | 'teatime' }[] = [];
+  for (const date of [...new Set(predictionDates)].slice(0, 5)) {
     const formattedDate = new Date(date + 'T00:00:00').toLocaleDateString('en-GB', {
       weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
     });
-
-    return {
-      slug: `uk-49s-predictions-${date}`,
-      title: `UK 49s Predictions for ${formattedDate}`,
-      excerpt: `In-depth statistical analysis and weighted prediction sets for UK 49s Lunchtime and Teatime draws on ${formattedDate}. Includes hot number trends and previous prediction performance.`,
+    predictionPosts.push({
+      slug: `uk-49s-lunchtime-predictions-${date}`,
+      title: `UK 49s Lunchtime Predictions for ${formattedDate}`,
+      excerpt: `Statistical analysis and 3 weighted prediction sets for the 12:49 PM Lunchtime draw on ${formattedDate}. Based on hot number trends.`,
       date,
-    };
-  });
+      drawType: 'lunchtime',
+    });
+    predictionPosts.push({
+      slug: `uk-49s-teatime-predictions-${date}`,
+      title: `UK 49s Teatime Predictions for ${formattedDate}`,
+      excerpt: `Statistical analysis and 3 weighted prediction sets for the 5:49 PM Teatime draw on ${formattedDate}. Based on hot number trends.`,
+      date,
+      drawType: 'teatime',
+    });
+  }
 
   // Latest results for quick-link section (deduplicate by date, show last 5 dates)
   const latestDates = uniqueDates.slice(0, 5);
@@ -108,8 +116,12 @@ export default async function BlogPage() {
               className="bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-200 dark:border-gray-700 p-6 hover:shadow-lg transition-shadow"
             >
               <div className="flex items-center gap-2 mb-2">
-                <span className="px-2 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300">
-                  Predictions
+                <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
+                  post.drawType === 'lunchtime'
+                    ? 'bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300'
+                    : 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/50 dark:text-indigo-300'
+                }`}>
+                  {post.drawType === 'lunchtime' ? 'Lunchtime' : 'Teatime'} Predictions
                 </span>
                 <span className="text-sm text-gray-500 dark:text-gray-400">{post.date}</span>
               </div>

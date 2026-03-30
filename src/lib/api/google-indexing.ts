@@ -131,8 +131,9 @@ export function buildNotificationUrls(): string[] {
   urls.add(`${SITE_URL}/lunchtime-predictions`);
   urls.add(`${SITE_URL}/teatime-predictions`);
 
-  // Today's prediction blog post
-  urls.add(`${SITE_URL}/blog/uk-49s-predictions-${todayStr}`);
+  // Today's prediction blog posts (separate for each draw)
+  urls.add(`${SITE_URL}/blog/uk-49s-lunchtime-predictions-${todayStr}`);
+  urls.add(`${SITE_URL}/blog/uk-49s-teatime-predictions-${todayStr}`);
 
   return [...urls];
 }
@@ -167,9 +168,11 @@ export function buildDailyNotificationUrls(): string[] {
     urls.add(`${SITE_URL}/${game}/results/${yesterdayStr}`);
   }
 
-  // Recent prediction blog posts
-  urls.add(`${SITE_URL}/blog/uk-49s-predictions-${todayStr}`);
-  urls.add(`${SITE_URL}/blog/uk-49s-predictions-${tomorrowStr}`);
+  // Recent prediction blog posts (separate for each draw)
+  urls.add(`${SITE_URL}/blog/uk-49s-lunchtime-predictions-${todayStr}`);
+  urls.add(`${SITE_URL}/blog/uk-49s-teatime-predictions-${todayStr}`);
+  urls.add(`${SITE_URL}/blog/uk-49s-lunchtime-predictions-${tomorrowStr}`);
+  urls.add(`${SITE_URL}/blog/uk-49s-teatime-predictions-${tomorrowStr}`);
 
   return [...urls];
 }

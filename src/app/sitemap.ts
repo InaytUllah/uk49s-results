@@ -57,14 +57,23 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // NOTE: Blog result posts removed from sitemap.
   // Result blog URLs now redirect to canonical /lunchtime/results/{date} pages.
 
-  // Prediction blog posts (these have unique analytical content)
+  // Prediction blog posts — separate for lunchtime and teatime
   const uniqueDates = [...new Set(allResults.map(r => r.date))].sort((a, b) => b.localeCompare(a));
-  const predictionPages = [predInfo.date, ...uniqueDates.slice(0, 5)].map(date => ({
-    url: `${SITE_URL}/blog/uk-49s-predictions-${date}`,
-    lastModified: new Date(),
-    changeFrequency: 'daily' as const,
-    priority: 0.7,
-  }));
+  const predDates = [predInfo.date, ...uniqueDates.slice(0, 5)];
+  const predictionPages = [...new Set(predDates)].flatMap(date => [
+    {
+      url: `${SITE_URL}/blog/uk-49s-lunchtime-predictions-${date}`,
+      lastModified: new Date(),
+      changeFrequency: 'daily' as const,
+      priority: 0.7,
+    },
+    {
+      url: `${SITE_URL}/blog/uk-49s-teatime-predictions-${date}`,
+      lastModified: new Date(),
+      changeFrequency: 'daily' as const,
+      priority: 0.7,
+    },
+  ]);
 
   return [
     ...staticPages,
