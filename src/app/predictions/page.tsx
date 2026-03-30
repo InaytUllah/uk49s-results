@@ -2,17 +2,26 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import LotteryBalls from '@/components/LotteryBalls';
 import { getLatestResults, getHotNumbers, getColdNumbers, getPredictionDate, getPredictionDateForLunchtime } from '@/lib/data/draws';
-import { PAGE_SEO } from '@/lib/data/seo';
+import { PAGE_SEO, SITE_URL } from '@/lib/data/seo';
+import { breadcrumbSchema, webPageSchema } from '@/lib/schema';
 
 export const metadata: Metadata = {
   title: PAGE_SEO.predictions.title,
   description: PAGE_SEO.predictions.description,
   alternates: { canonical: '/predictions' },
+  openGraph: {
+    title: 'UK 49s Predictions Today — Lunchtime & Teatime',
+    description: 'Statistical predictions for both UK 49s draws. View Lunchtime and Teatime prediction sets.',
+    type: 'website',
+    images: [{
+      url: `${SITE_URL}/api/og?title=${encodeURIComponent('UK 49s Predictions Today')}&subtitle=${encodeURIComponent('Lunchtime & Teatime Statistical Analysis')}&type=prediction`,
+      width: 1200, height: 630,
+    }],
+  },
 };
 
 export const revalidate = 60;
 
-// Use date-based seed for consistent predictions (don't change on every page load)
 function seededRandom(seed: number): () => number {
   let s = seed;
   return () => {
@@ -21,28 +30,22 @@ function seededRandom(seed: number): () => number {
   };
 }
 
-function generatePrediction(hot: number[], cold: number[], seed: number): { numbers: number[]; booster: number } {
+function generatePrediction(hot: number[], seed: number): { numbers: number[]; booster: number } {
   const random = seededRandom(seed);
   const pool = Array.from({ length: 49 }, (_, i) => i + 1);
   const selected: number[] = [];
-
-  // Pick 3-4 from hot numbers
   const hotPicks = hot.slice(0, 4);
   for (const num of hotPicks) {
     if (selected.length < 4) selected.push(num);
   }
-
-  // Fill remaining with randoms (avoiding already selected)
   const remaining = pool.filter(n => !selected.includes(n));
   while (selected.length < 6) {
     const idx = Math.floor(random() * remaining.length);
     selected.push(remaining[idx]);
     remaining.splice(idx, 1);
   }
-
   selected.sort((a, b) => a - b);
   const booster = remaining[Math.floor(random() * remaining.length)];
-
   return { numbers: selected, booster };
 }
 
@@ -52,29 +55,17 @@ export default async function PredictionsPage() {
   const teatimeResults = allResults.filter(r => r.drawType === 'teatime');
 
   const hotLunch = getHotNumbers(lunchtimeResults, 10);
-  const coldLunch = getColdNumbers(lunchtimeResults, 10);
   const hotTea = getHotNumbers(teatimeResults, 10);
-  const coldTea = getColdNumbers(teatimeResults, 10);
 
-  // Smart date: shows tomorrow if today's results are already announced
   const predInfo = getPredictionDate(allResults);
   const lunchInfo = getPredictionDateForLunchtime(allResults);
 
-  // Use date as seed so predictions stay consistent for the same day
   const dateSeed = parseInt(predInfo.date.replace(/-/g, ''), 10);
   const lunchDateSeed = parseInt(lunchInfo.date.replace(/-/g, ''), 10);
 
-  const lunchPredictions = [
-    generatePrediction(hotLunch, coldLunch, lunchDateSeed + 1),
-    generatePrediction(hotLunch, coldLunch, lunchDateSeed + 2),
-    generatePrediction(hotLunch, coldLunch, lunchDateSeed + 3),
-  ];
-
-  const teaPredictions = [
-    generatePrediction(hotTea, coldTea, dateSeed + 4),
-    generatePrediction(hotTea, coldTea, dateSeed + 5),
-    generatePrediction(hotTea, coldTea, dateSeed + 6),
-  ];
+  // Show top prediction set for each draw as preview
+  const lunchPreview = generatePrediction(hotLunch, lunchDateSeed + 1);
+  const teaPreview = generatePrediction(hotTea, dateSeed + 4);
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
@@ -82,55 +73,87 @@ export default async function PredictionsPage() {
         UK 49s Predictions Today
       </h1>
       <p className="text-gray-600 dark:text-gray-400 mb-2">
-        Statistical predictions updated after every draw
+        Statistical predictions for both Lunchtime and Teatime draws, updated after every result
       </p>
       <p className="text-xs text-yellow-600 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg px-3 py-2 mb-8">
-        Disclaimer: These predictions are based on statistical analysis of past results. Lottery draws are random and no prediction can guarantee a win.
+        Disclaimer: Predictions are based on statistical analysis of past results. Lottery draws are random — no prediction guarantees a win.
       </p>
 
-      {/* Lunchtime Predictions */}
-      <section className="mb-10">
-        <h2 className="text-2xl font-bold text-amber-700 dark:text-amber-400 mb-1">
-          Lunchtime Predictions
-        </h2>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-          For {lunchInfo.formatted} — Draw at 12:49 PM UK
-        </p>
-        <div className="space-y-4">
-          {lunchPredictions.map((pred, i) => (
-            <div key={i} className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-xl p-4">
-              <p className="text-sm font-semibold text-amber-700 dark:text-amber-400 mb-3">
-                Prediction Set {i + 1}
+      {/* Lunchtime Preview + Link to Full Page */}
+      <section className="mb-8">
+        <div className="bg-amber-50 dark:bg-amber-950/20 border-2 border-amber-200 dark:border-amber-800 rounded-2xl p-6 sm:p-8">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h2 className="text-2xl font-bold text-amber-700 dark:text-amber-400">
+                Lunchtime Predictions
+              </h2>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                For {lunchInfo.formatted} — Draw at 12:49 PM UK
               </p>
-              <LotteryBalls numbers={pred.numbers} booster={pred.booster} size="md" animated={false} />
             </div>
-          ))}
+            <span className="px-3 py-1 rounded-full text-xs font-semibold bg-amber-200 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300">
+              12:49 PM
+            </span>
+          </div>
+
+          <div className="mb-4">
+            <p className="text-xs text-amber-700 dark:text-amber-400 font-semibold mb-2">Preview — Prediction Set 1</p>
+            <LotteryBalls numbers={lunchPreview.numbers} booster={lunchPreview.booster} size="md" animated={false} />
+          </div>
+
+          <div className="flex items-center justify-between">
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              3 prediction sets + hot/cold analysis + trending numbers
+            </p>
+            <Link
+              href="/lunchtime-predictions"
+              className="px-5 py-2.5 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors font-medium text-sm whitespace-nowrap"
+            >
+              View All Lunchtime Predictions &rarr;
+            </Link>
+          </div>
         </div>
       </section>
 
-      {/* Teatime Predictions */}
+      {/* Teatime Preview + Link to Full Page */}
       <section className="mb-10">
-        <h2 className="text-2xl font-bold text-indigo-700 dark:text-indigo-400 mb-1">
-          Teatime Predictions
-        </h2>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-          For {predInfo.formatted} — Draw at 5:49 PM UK
-        </p>
-        <div className="space-y-4">
-          {teaPredictions.map((pred, i) => (
-            <div key={i} className="bg-indigo-50 dark:bg-indigo-950/20 border border-indigo-200 dark:border-indigo-800 rounded-xl p-4">
-              <p className="text-sm font-semibold text-indigo-700 dark:text-indigo-400 mb-3">
-                Prediction Set {i + 1}
+        <div className="bg-indigo-50 dark:bg-indigo-950/20 border-2 border-indigo-200 dark:border-indigo-800 rounded-2xl p-6 sm:p-8">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h2 className="text-2xl font-bold text-indigo-700 dark:text-indigo-400">
+                Teatime Predictions
+              </h2>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                For {predInfo.formatted} — Draw at 5:49 PM UK
               </p>
-              <LotteryBalls numbers={pred.numbers} booster={pred.booster} size="md" animated={false} />
             </div>
-          ))}
+            <span className="px-3 py-1 rounded-full text-xs font-semibold bg-indigo-200 text-indigo-800 dark:bg-indigo-900/50 dark:text-indigo-300">
+              5:49 PM
+            </span>
+          </div>
+
+          <div className="mb-4">
+            <p className="text-xs text-indigo-700 dark:text-indigo-400 font-semibold mb-2">Preview — Prediction Set 1</p>
+            <LotteryBalls numbers={teaPreview.numbers} booster={teaPreview.booster} size="md" animated={false} />
+          </div>
+
+          <div className="flex items-center justify-between">
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              3 prediction sets + hot/cold analysis + trending numbers
+            </p>
+            <Link
+              href="/teatime-predictions"
+              className="px-5 py-2.5 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition-colors font-medium text-sm whitespace-nowrap"
+            >
+              View All Teatime Predictions &rarr;
+            </Link>
+          </div>
         </div>
       </section>
 
-      {/* Hot Numbers Used */}
+      {/* Hot Numbers Quick View */}
       <section className="mb-10">
-        <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Based on These Hot Numbers</h2>
+        <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Current Hot Numbers</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4">
             <p className="text-sm font-semibold text-amber-700 dark:text-amber-400 mb-2">Lunchtime Hot</p>
@@ -143,36 +166,46 @@ export default async function PredictionsPage() {
         </div>
       </section>
 
+      {/* SEO Content */}
       <section>
         <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 sm:p-8">
           <div className="space-y-6">
             <div>
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">How Our UK 49s Predictions Work</h2>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">About Our UK 49s Predictions</h2>
               <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                Our predictions are generated using <strong className="text-gray-900 dark:text-white">statistical analysis</strong> of recent UK 49s draw results.
-                We analyze number frequency patterns, <Link href="/hot-cold-numbers" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">hot and cold numbers</Link>, and overdue numbers to
-                produce prediction sets for both <span className="inline-flex items-center gap-1"><span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300">Lunchtime</span></span> and <span className="inline-flex items-center gap-1"><span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-indigo-100 text-indigo-800 dark:bg-indigo-900/50 dark:text-indigo-300">Teatime</span></span> draws.
+                We provide separate prediction pages for each UK 49s draw because <strong className="text-gray-900 dark:text-white">Lunchtime and Teatime are independent events</strong> with different frequency patterns. A number that is hot in the 12:49 PM draw may not be hot in the 5:49 PM draw.
               </p>
             </div>
-
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Auto-Updated Predictions</h3>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Choose Your Draw</h3>
               <ul className="space-y-2">
                 <li className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
-                  <svg className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
-                  <span>Predictions refresh automatically after each draw is announced</span>
+                  <svg className="w-5 h-5 text-amber-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                  <span><Link href="/lunchtime-predictions" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">Lunchtime Predictions</Link> — for the 12:49 PM draw, using Lunchtime-only frequency data</span>
                 </li>
                 <li className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
-                  <svg className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
-                  <span>Once lunchtime results are in, lunchtime predictions switch to the next day</span>
-                </li>
-                <li className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
-                  <svg className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
-                  <span>Same automatic rollover happens for teatime predictions</span>
+                  <svg className="w-5 h-5 text-indigo-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                  <span><Link href="/teatime-predictions" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">Teatime Predictions</Link> — for the 5:49 PM draw, using Teatime-only frequency data</span>
                 </li>
               </ul>
             </div>
-
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">How Predictions Auto-Update</h3>
+              <ul className="space-y-2">
+                <li className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
+                  <svg className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                  <span>Lunchtime predictions switch to next day once 12:49 PM results are in</span>
+                </li>
+                <li className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
+                  <svg className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                  <span>Teatime predictions switch to next day once 5:49 PM results are in</span>
+                </li>
+                <li className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
+                  <svg className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                  <span>Hot/cold numbers recalculate with every new draw added</span>
+                </li>
+              </ul>
+            </div>
             <div className="bg-yellow-50 dark:bg-yellow-900/20 rounded-lg p-4 border border-yellow-200 dark:border-yellow-800">
               <p className="text-sm text-yellow-800 dark:text-yellow-300 flex items-start gap-2">
                 <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01M12 3a9 9 0 110 18 9 9 0 010-18z" /></svg>
@@ -182,6 +215,9 @@ export default async function PredictionsPage() {
           </div>
         </div>
       </section>
+
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([{ name: 'Predictions', url: '/predictions' }])) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema(PAGE_SEO.predictions.title, PAGE_SEO.predictions.description, '/predictions')) }} />
     </div>
   );
 }

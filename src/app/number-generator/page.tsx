@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import LotteryBalls from '@/components/LotteryBalls';
+import { PAGE_SEO } from '@/lib/data/seo';
+import { breadcrumbSchema, webPageSchema } from '@/lib/schema';
 
 export default function NumberGeneratorPage() {
   const [numbers, setNumbers] = useState<number[]>([]);
@@ -154,6 +156,9 @@ export default function NumberGeneratorPage() {
           </div>
         </div>
       </section>
+
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([{ name: 'Number Generator', url: '/number-generator' }])) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema(PAGE_SEO.numberGenerator.title, PAGE_SEO.numberGenerator.description, '/number-generator')) }} />
     </div>
   );
 }

@@ -28,6 +28,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     alternates: {
       canonical: `${SITE_URL}/numbers/${num}`,
     },
+    robots: {
+      index: false,
+      follow: true,
+    },
   };
 }
 

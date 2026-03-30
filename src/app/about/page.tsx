@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { PAGE_SEO, SITE_NAME } from '@/lib/data/seo';
+import { breadcrumbSchema, webPageSchema } from '@/lib/schema';
 
 export const metadata: Metadata = {
   title: PAGE_SEO.about.title,
@@ -165,6 +166,9 @@ export default function AboutPage() {
           <Link href="/contact">Contact</Link> page to get in touch with the team.
         </p>
       </div>
+
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([{ name: 'About Us', url: '/about' }])) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema(PAGE_SEO.about.title, PAGE_SEO.about.description, '/about')) }} />
     </div>
   );
 }

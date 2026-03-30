@@ -17,11 +17,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/teatime`, changeFrequency: 'hourly' as const, priority: 0.9 },
     { url: `${SITE_URL}/hot-cold-numbers`, changeFrequency: 'daily' as const, priority: 0.8 },
     { url: `${SITE_URL}/predictions`, changeFrequency: 'daily' as const, priority: 0.8 },
+    { url: `${SITE_URL}/lunchtime-predictions`, changeFrequency: 'daily' as const, priority: 0.8 },
+    { url: `${SITE_URL}/teatime-predictions`, changeFrequency: 'daily' as const, priority: 0.8 },
     { url: `${SITE_URL}/number-generator`, changeFrequency: 'monthly' as const, priority: 0.7 },
     { url: `${SITE_URL}/history`, changeFrequency: 'daily' as const, priority: 0.7 },
     { url: `${SITE_URL}/how-to-play`, changeFrequency: 'monthly' as const, priority: 0.6 },
     { url: `${SITE_URL}/blog`, changeFrequency: 'daily' as const, priority: 0.7 },
-    // New SEO content pages
     { url: `${SITE_URL}/faq`, changeFrequency: 'monthly' as const, priority: 0.7 },
     { url: `${SITE_URL}/odds`, changeFrequency: 'monthly' as const, priority: 0.7 },
     { url: `${SITE_URL}/lunchtime-vs-teatime`, changeFrequency: 'daily' as const, priority: 0.7 },
@@ -35,14 +36,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/responsible-gaming`, changeFrequency: 'monthly' as const, priority: 0.4 },
   ];
 
-  // Individual number pages (1-49)
-  const numberPages = Array.from({ length: 49 }, (_, i) => ({
-    url: `${SITE_URL}/numbers/${i + 1}`,
-    changeFrequency: 'daily' as const,
-    priority: 0.6,
-  }));
+  // NOTE: Individual number pages (/numbers/1-49) removed from sitemap.
+  // They have noindex and are accessible via internal links from /numbers hub.
 
-  // Result pages by date
+  // Result pages by date (canonical source — no more blog duplicates)
   const lunchtimeResultPages = dates.map(date => ({
     url: `${SITE_URL}/lunchtime/results/${date}`,
     lastModified: new Date(date),
@@ -57,15 +54,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }));
 
-  // Blog post pages (one per draw result)
-  const blogPostPages = allResults.map(result => ({
-    url: `${SITE_URL}/blog/uk-49s-${result.drawType}-results-${result.date}`,
-    lastModified: new Date(result.date),
-    changeFrequency: 'never' as const,
-    priority: 0.6,
-  }));
+  // NOTE: Blog result posts removed from sitemap.
+  // Result blog URLs now redirect to canonical /lunchtime/results/{date} pages.
 
-  // Prediction blog posts
+  // Prediction blog posts (these have unique analytical content)
   const uniqueDates = [...new Set(allResults.map(r => r.date))].sort((a, b) => b.localeCompare(a));
   const predictionPages = [predInfo.date, ...uniqueDates.slice(0, 5)].map(date => ({
     url: `${SITE_URL}/blog/uk-49s-predictions-${date}`,
@@ -76,10 +68,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   return [
     ...staticPages,
-    ...numberPages,
     ...lunchtimeResultPages,
     ...teatimeResultPages,
-    ...blogPostPages,
     ...predictionPages,
   ];
 }

@@ -2,7 +2,8 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import LotteryBalls from '@/components/LotteryBalls';
 import { getLatestResults, calculateFrequency, getHotNumbers, getColdNumbers } from '@/lib/data/draws';
-import { SITE_NAME, SITE_URL } from '@/lib/data/seo';
+import { PAGE_SEO, SITE_NAME, SITE_URL } from '@/lib/data/seo';
+import { breadcrumbSchema, webPageSchema } from '@/lib/schema';
 
 export const revalidate = 60;
 
@@ -340,6 +341,9 @@ export default async function LunchtimeVsTeatimePage() {
           </div>
         </div>
       </section>
+
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([{ name: 'Lunchtime vs Teatime', url: '/lunchtime-vs-teatime' }])) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema(PAGE_SEO.lunchtimeVsTeatime.title, PAGE_SEO.lunchtimeVsTeatime.description, '/lunchtime-vs-teatime')) }} />
     </div>
   );
 }

@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { getLatestResults } from '@/lib/data/draws';
 import { PAGE_SEO } from '@/lib/data/seo';
+import { breadcrumbSchema, webPageSchema } from '@/lib/schema';
 import HistoryResults from './HistoryResults';
 
 export const metadata: Metadata = {
@@ -59,6 +60,9 @@ export default async function HistoryPage() {
           </ul>
         </div>
       </section>
+
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([{ name: 'Past Results', url: '/history' }])) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema(PAGE_SEO.history.title, PAGE_SEO.history.description, '/history')) }} />
     </div>
   );
 }

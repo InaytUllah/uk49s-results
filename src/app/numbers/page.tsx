@@ -1,7 +1,8 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { getLatestResults, calculateFrequency } from '@/lib/data/draws';
-import { SITE_NAME, SITE_URL } from '@/lib/data/seo';
+import { PAGE_SEO, SITE_NAME, SITE_URL } from '@/lib/data/seo';
+import { breadcrumbSchema, webPageSchema } from '@/lib/schema';
 
 export const revalidate = 60;
 
@@ -204,6 +205,9 @@ export default async function NumbersIndexPage() {
           </div>
         </div>
       </section>
+
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([{ name: 'Number Statistics', url: '/numbers' }])) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema(PAGE_SEO.numbers.title, PAGE_SEO.numbers.description, '/numbers')) }} />
     </div>
   );
 }

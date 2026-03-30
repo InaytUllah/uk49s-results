@@ -72,7 +72,7 @@ export default function Footer() {
         </div>
 
         {/* Responsible Gaming Badge */}
-        <div className="border-t border-gray-800 mt-8 pt-6">
+        <div className="border-t border-gray-800 mt-6 pt-6">
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-sm mb-4">
             <Link
               href="/responsible-gaming"

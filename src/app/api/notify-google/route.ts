@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server';
-import { notifyGoogleIndexing, buildNotificationUrls, fetchAllSitemapUrls } from '@/lib/api/google-indexing';
+import { notifyGoogleIndexing, buildDailyNotificationUrls, fetchAllSitemapUrls } from '@/lib/api/google-indexing';
+import { SITE_URL } from '@/lib/data/seo';
 
 export const dynamic = 'force-dynamic';
 
 export async function POST(request: Request) {
-  // Verify the request has valid secret
   const authHeader = request.headers.get('authorization');
   const cronSecret = process.env.CRON_SECRET;
 
@@ -19,9 +19,7 @@ export async function POST(request: Request) {
 
     let urls: string[];
     if (fullSitemap) {
-      // Fetch all URLs from the live sitemap
       urls = await fetchAllSitemapUrls();
-      // Merge any additional URLs
       if (additionalUrls.length > 0) {
         const urlSet = new Set(urls);
         for (const u of additionalUrls) {
@@ -30,7 +28,13 @@ export async function POST(request: Request) {
         urls = [...urlSet];
       }
     } else {
-      urls = buildNotificationUrls(additionalUrls);
+      // Start with daily core pages, merge any additional URLs
+      const baseUrls = buildDailyNotificationUrls();
+      const urlSet = new Set(baseUrls);
+      for (const u of additionalUrls) {
+        urlSet.add(u.startsWith('http') ? u : `${SITE_URL}${u}`);
+      }
+      urls = [...urlSet];
     }
 
     const result = await notifyGoogleIndexing(urls);

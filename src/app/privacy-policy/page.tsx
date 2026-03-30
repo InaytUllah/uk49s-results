@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { PAGE_SEO, SITE_NAME } from '@/lib/data/seo';
+import { breadcrumbSchema, webPageSchema } from '@/lib/schema';
 
 export const metadata: Metadata = {
   title: PAGE_SEO.privacyPolicy.title,
@@ -148,6 +149,9 @@ export default function PrivacyPolicyPage() {
           We aim to respond to all data-related requests within 30 days.
         </p>
       </div>
+
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([{ name: 'Privacy Policy', url: '/privacy-policy' }])) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema(PAGE_SEO.privacyPolicy.title, PAGE_SEO.privacyPolicy.description, '/privacy-policy')) }} />
     </div>
   );
 }

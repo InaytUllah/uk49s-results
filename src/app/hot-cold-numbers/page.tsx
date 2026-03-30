@@ -3,6 +3,7 @@ import Link from 'next/link';
 import LotteryBalls from '@/components/LotteryBalls';
 import { getLatestResults, getHotNumbers, getColdNumbers, calculateFrequency } from '@/lib/data/draws';
 import { PAGE_SEO } from '@/lib/data/seo';
+import { breadcrumbSchema, webPageSchema } from '@/lib/schema';
 
 export const metadata: Metadata = {
   title: PAGE_SEO.hotCold.title,
@@ -188,6 +189,9 @@ export default async function HotColdPage() {
           </div>
         </div>
       </section>
+
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([{ name: 'Hot & Cold Numbers', url: '/hot-cold-numbers' }])) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema(PAGE_SEO.hotCold.title, PAGE_SEO.hotCold.description, '/hot-cold-numbers')) }} />
     </div>
   );
 }

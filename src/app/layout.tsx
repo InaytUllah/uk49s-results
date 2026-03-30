@@ -16,11 +16,20 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_GB',
     siteName: 'UK49s Results',
+    images: [
+      {
+        url: `${SITE_URL}/api/og?title=${encodeURIComponent('UK 49s Results Today')}&subtitle=${encodeURIComponent('Lunchtime & Teatime Winning Numbers')}`,
+        width: 1200,
+        height: 630,
+        alt: 'UK 49s Results - Lunchtime & Teatime Winning Numbers',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: PAGE_SEO.home.title,
     description: PAGE_SEO.home.description,
+    images: [`${SITE_URL}/api/og?title=${encodeURIComponent('UK 49s Results Today')}&subtitle=${encodeURIComponent('Lunchtime & Teatime Winning Numbers')}`],
   },
   robots: {
     index: true,
@@ -50,6 +59,21 @@ export default function RootLayout({
       '@type': 'SearchAction',
       target: 'https://uk49sresults.co.uk/numbers/{search_term_string}',
       'query-input': 'required name=search_term_string',
+    },
+  };
+
+  const organizationSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'UK49s Results',
+    url: 'https://uk49sresults.co.uk',
+    description: 'The UK\'s trusted source for UK 49s Lunchtime and Teatime lottery results, statistical analysis, and predictions.',
+    foundingDate: '2026',
+    sameAs: [],
+    contactPoint: {
+      '@type': 'ContactPoint',
+      contactType: 'customer support',
+      url: 'https://uk49sresults.co.uk/contact',
     },
   };
 
@@ -90,6 +114,10 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
         />
       </body>
     </html>

@@ -32,7 +32,9 @@ const menuCategories: MenuCategory[] = [
     label: 'Predictions',
     icon: '🎯',
     items: [
-      { href: '/predictions', icon: '🔮', title: "Today's Predictions", description: 'Statistical predictions for next draw' },
+      { href: '/predictions', icon: '🔮', title: "Today's Predictions", description: 'Lunchtime & Teatime prediction hub' },
+      { href: '/lunchtime-predictions', icon: '☀️', title: 'Lunchtime Predictions', description: '12:49 PM draw analysis & numbers' },
+      { href: '/teatime-predictions', icon: '🌙', title: 'Teatime Predictions', description: '5:49 PM draw analysis & numbers' },
       { href: '/hot-cold-numbers', icon: '🔥', title: 'Hot & Cold Numbers', description: 'Most and least drawn numbers' },
       { href: '/numbers', icon: '📈', title: 'Number Statistics', description: 'Frequency data for all 49 numbers' },
       { href: '/odds', icon: '🎰', title: 'Odds & Payouts', description: 'Betting odds and payout tables' },

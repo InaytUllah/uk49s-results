@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { PAGE_SEO, SITE_NAME } from '@/lib/data/seo';
+import { breadcrumbSchema, webPageSchema } from '@/lib/schema';
 
 export const metadata: Metadata = {
   title: PAGE_SEO.terms.title,
@@ -136,6 +137,9 @@ export default function TermsPage() {
           <Link href="/contact">contact us</Link>.
         </p>
       </div>
+
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([{ name: 'Terms & Conditions', url: '/terms' }])) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema(PAGE_SEO.terms.title, PAGE_SEO.terms.description, '/terms')) }} />
     </div>
   );
 }

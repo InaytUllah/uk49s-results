@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { PAGE_SEO, SITE_NAME } from '@/lib/data/seo';
+import { breadcrumbSchema, webPageSchema } from '@/lib/schema';
 
 export const metadata: Metadata = {
   title: PAGE_SEO.disclaimer.title,
@@ -156,6 +157,9 @@ export default function DisclaimerPage() {
           <li><Link href="/contact">Contact Us</Link></li>
         </ul>
       </div>
+
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([{ name: 'Disclaimer', url: '/disclaimer' }])) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema(PAGE_SEO.disclaimer.title, PAGE_SEO.disclaimer.description, '/disclaimer')) }} />
     </div>
   );
 }

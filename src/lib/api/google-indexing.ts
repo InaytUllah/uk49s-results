@@ -112,60 +112,64 @@ export async function notifyGoogleIndexing(urls: string[]): Promise<NotifyResult
 }
 
 /**
- * Build the standard set of URLs to notify after results are updated.
- * Includes static pages + dynamic date-based result/prediction pages.
+ * Build a focused set of URLs for draw-time cron notifications.
+ * Only submits genuinely new/changed pages — NOT the entire site.
  */
-export function buildNotificationUrls(additionalUrls: string[] = []): string[] {
+export function buildNotificationUrls(): string[] {
   const today = new Date();
-  const tomorrow = new Date(today);
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  const yesterday = new Date(today);
-  yesterday.setDate(yesterday.getDate() - 1);
-
   const fmt = (d: Date) => d.toISOString().substring(0, 10);
   const todayStr = fmt(today);
-  const tomorrowStr = fmt(tomorrow);
-  const yesterdayStr = fmt(yesterday);
-
-  const games = ['lunchtime', 'teatime'];
 
   const urls = new Set<string>();
 
-  // Static pages
-  const staticPages = [
-    '/',
-    '/lunchtime',
-    '/teatime',
-    '/predictions',
-    '/hot-cold-numbers',
-    '/numbers',
-    '/history',
-    '/blog',
-  ];
-  for (const page of staticPages) {
+  // Only today's result pages (the new content)
+  urls.add(`${SITE_URL}/lunchtime/results/${todayStr}`);
+  urls.add(`${SITE_URL}/teatime/results/${todayStr}`);
+
+  // Predictions pages (update after each draw)
+  urls.add(`${SITE_URL}/predictions`);
+  urls.add(`${SITE_URL}/lunchtime-predictions`);
+  urls.add(`${SITE_URL}/teatime-predictions`);
+
+  // Today's prediction blog post
+  urls.add(`${SITE_URL}/blog/uk-49s-predictions-${todayStr}`);
+
+  return [...urls];
+}
+
+/**
+ * Build a broader set of URLs for the daily full indexing run.
+ * Includes core static pages + recent dynamic content.
+ */
+export function buildDailyNotificationUrls(): string[] {
+  const today = new Date();
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+
+  const fmt = (d: Date) => d.toISOString().substring(0, 10);
+  const todayStr = fmt(today);
+  const yesterdayStr = fmt(yesterday);
+  const tomorrowStr = fmt(tomorrow);
+
+  const urls = new Set<string>();
+
+  // Core static pages only (not the whole site)
+  const corePages = ['/', '/lunchtime', '/teatime', '/predictions', '/hot-cold-numbers', '/numbers', '/blog'];
+  for (const page of corePages) {
     urls.add(`${SITE_URL}${page}`);
   }
 
-  // Dynamic result pages for today and yesterday
-  for (const game of games) {
+  // Recent result pages (today + yesterday)
+  for (const game of ['lunchtime', 'teatime']) {
     urls.add(`${SITE_URL}/${game}/results/${todayStr}`);
     urls.add(`${SITE_URL}/${game}/results/${yesterdayStr}`);
   }
 
-  // Dynamic blog posts — result posts for today and yesterday
-  for (const game of games) {
-    urls.add(`${SITE_URL}/blog/uk-49s-${game}-results-${todayStr}`);
-    urls.add(`${SITE_URL}/blog/uk-49s-${game}-results-${yesterdayStr}`);
-  }
-
-  // Dynamic blog posts — prediction posts for today and tomorrow
+  // Recent prediction blog posts
   urls.add(`${SITE_URL}/blog/uk-49s-predictions-${todayStr}`);
   urls.add(`${SITE_URL}/blog/uk-49s-predictions-${tomorrowStr}`);
-
-  // Additional URLs passed in
-  for (const url of additionalUrls) {
-    urls.add(url.startsWith('http') ? url : `${SITE_URL}${url}`);
-  }
 
   return [...urls];
 }

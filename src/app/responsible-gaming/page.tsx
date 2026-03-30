@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { PAGE_SEO, SITE_NAME } from '@/lib/data/seo';
+import { breadcrumbSchema, webPageSchema } from '@/lib/schema';
 
 export const metadata: Metadata = {
   title: PAGE_SEO.responsibleGaming.title,
@@ -205,6 +206,9 @@ export default function ResponsibleGamingPage() {
           not hesitate to <Link href="/contact">contact us</Link>.
         </p>
       </div>
+
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([{ name: 'Responsible Gaming', url: '/responsible-gaming' }])) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema(PAGE_SEO.responsibleGaming.title, PAGE_SEO.responsibleGaming.description, '/responsible-gaming')) }} />
     </div>
   );
 }
