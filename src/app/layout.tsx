@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import ResponsibleGamingPopup from '@/components/ResponsibleGamingPopup';
+
 import { PAGE_SEO, SITE_URL } from '@/lib/data/seo';
 import Script from 'next/script';
 
@@ -55,11 +55,6 @@ export default function RootLayout({
     name: 'UK49s Results',
     url: 'https://uk49sresults.co.uk',
     description: 'Get the latest UK 49s Lunchtime and Teatime results updated daily. Check winning numbers, hot & cold numbers, predictions, and past results.',
-    potentialAction: {
-      '@type': 'SearchAction',
-      target: 'https://uk49sresults.co.uk/numbers/{search_term_string}',
-      'query-input': 'required name=search_term_string',
-    },
   };
 
   const organizationSchema = {
@@ -68,8 +63,6 @@ export default function RootLayout({
     name: 'UK49s Results',
     url: 'https://uk49sresults.co.uk',
     description: 'The UK\'s trusted source for UK 49s Lunchtime and Teatime lottery results, statistical analysis, and predictions.',
-    foundingDate: '2026',
-    sameAs: [],
     contactPoint: {
       '@type': 'ContactPoint',
       contactType: 'customer support',
@@ -110,7 +103,6 @@ export default function RootLayout({
           {children}
         </main>
         <Footer />
-        <ResponsibleGamingPopup />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}

@@ -71,37 +71,31 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Responsible Gaming Badge */}
+        {/* Responsible Gaming Notice */}
         <div className="border-t border-gray-800 mt-6 pt-6">
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-sm mb-4">
-            <Link
-              href="/responsible-gaming"
-              className="inline-flex items-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg text-white transition-colors font-medium"
-            >
-              <span className="text-red-500 font-bold text-base">18+</span>
-              <span>Only. Please play responsibly.</span>
-            </Link>
-          </div>
-          <div className="flex flex-wrap items-center justify-center gap-4 text-xs text-gray-500 mb-6">
-            <a
-              href="https://www.begambleaware.org"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-white transition-colors"
-            >
-              BeGambleAware.org
-            </a>
-            <span className="hidden sm:inline">|</span>
-            <a
-              href="https://www.gamcare.org.uk"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-white transition-colors"
-            >
-              GamCare
-            </a>
-            <span className="hidden sm:inline">|</span>
-            <span>Gambling can be addictive. Play responsibly.</span>
+          <div className="max-w-2xl mx-auto bg-gray-800 rounded-xl border border-amber-500/30 overflow-hidden">
+            <div className="h-1 bg-gradient-to-r from-amber-400 to-orange-500" />
+            <div className="p-5">
+              <div className="flex items-center gap-2 mb-3">
+                <svg className="w-5 h-5 text-amber-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.345 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
+                </svg>
+                <span className="font-semibold text-white">Responsible Gaming</span>
+                <span className="text-red-500 font-bold text-sm ml-auto">18+</span>
+              </div>
+              <p className="text-sm text-gray-300 leading-relaxed mb-3">
+                Gambling is considered sinful in many faiths and traditions. If your beliefs discourage it, please honor them. No tool or strategy can change lottery odds — play responsibly or not at all.
+              </p>
+              <div className="flex flex-wrap items-center gap-4">
+                <Link href="/responsible-gaming" className="inline-flex items-center gap-1 text-sm font-medium text-emerald-400 hover:text-emerald-300 transition-colors">
+                  Get Help &amp; Support
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                </Link>
+                <span className="text-gray-600">|</span>
+                <a href="https://www.begambleaware.org" target="_blank" rel="noopener noreferrer" className="text-xs text-gray-400 hover:text-white transition-colors">BeGambleAware.org</a>
+                <a href="https://www.gamcare.org.uk" target="_blank" rel="noopener noreferrer" className="text-xs text-gray-400 hover:text-white transition-colors">GamCare</a>
+              </div>
+            </div>
           </div>
         </div>
 

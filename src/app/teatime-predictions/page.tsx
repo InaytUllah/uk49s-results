@@ -6,8 +6,8 @@ import { SITE_NAME, SITE_URL } from '@/lib/data/seo';
 import { breadcrumbSchema } from '@/lib/schema';
 
 export const metadata: Metadata = {
-  title: `UK 49s Teatime Predictions Today — Hot Numbers & Analysis | ${SITE_NAME}`,
-  description: 'Get today\'s UK 49s Teatime predictions based on statistical analysis. Hot & cold number trends, frequency patterns, and 3 weighted prediction sets for the 5:49 PM draw.',
+  title: `UK 49s Teatime Predictions for Today — Hot Numbers & Analysis | ${SITE_NAME}`,
+  description: 'UK teatime prediction for today\'s 5:49 PM draw. Get 3 statistically weighted prediction sets based on hot & cold number trends and frequency analysis.',
   alternates: { canonical: '/teatime-predictions' },
   openGraph: {
     title: 'UK 49s Teatime Predictions Today',

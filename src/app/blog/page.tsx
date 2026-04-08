@@ -1,13 +1,14 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { getLatestResults, getPredictionDate } from '@/lib/data/draws';
-import { PAGE_SEO } from '@/lib/data/seo';
+import { PAGE_SEO, ogMeta } from '@/lib/data/seo';
 import { breadcrumbSchema, webPageSchema } from '@/lib/schema';
 
 export const metadata: Metadata = {
   title: PAGE_SEO.blog.title,
   description: PAGE_SEO.blog.description,
   alternates: { canonical: '/blog' },
+  ...ogMeta(PAGE_SEO.blog.title, PAGE_SEO.blog.description, '/blog'),
 };
 
 export const revalidate = 60;

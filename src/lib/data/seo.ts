@@ -7,6 +7,32 @@ export function generateTitle(page: string): string {
   return `${page} | ${SITE_NAME}`;
 }
 
+/**
+ * Generate standard OG + Twitter metadata from title, description, and path.
+ * Use in page metadata: ...ogMeta('UK 49s Lunchtime Results', 'desc', '/lunchtime')
+ */
+export function ogMeta(title: string, description: string, path: string) {
+  return {
+    openGraph: {
+      title,
+      description,
+      type: 'website' as const,
+      url: `${SITE_URL}${path}`,
+      images: [{
+        url: `${SITE_URL}/api/og?title=${encodeURIComponent(title)}&subtitle=${encodeURIComponent(description.slice(0, 80))}`,
+        width: 1200,
+        height: 630,
+      }],
+    },
+    twitter: {
+      card: 'summary_large_image' as const,
+      title,
+      description,
+      images: [`${SITE_URL}/api/og?title=${encodeURIComponent(title)}&subtitle=${encodeURIComponent(description.slice(0, 80))}`],
+    },
+  };
+}
+
 export const PAGE_SEO = {
   home: {
     title: `UK 49s Results Today - Lunchtime & Teatime Winning Numbers | ${SITE_NAME}`,
@@ -21,12 +47,12 @@ export const PAGE_SEO = {
     description: 'Check the latest UK 49s Teatime results. Today\'s winning numbers drawn at 5:49 PM UK time. View past teatime results and number analysis.',
   },
   hotCold: {
-    title: `UK 49s Hot and Cold Numbers - Most & Least Drawn | ${SITE_NAME}`,
-    description: 'Discover UK 49s hot and cold numbers. See which numbers are drawn most and least frequently for Lunchtime and Teatime draws.',
+    title: `49s Hot and Cold Numbers Today - UK 49s Lunchtime & Teatime | ${SITE_NAME}`,
+    description: 'Today\'s 49s hot and cold numbers for UK 49s Lunchtime and Teatime draws. See the most and least frequently drawn numbers updated daily with statistical analysis.',
   },
   predictions: {
-    title: `UK 49s Predictions Today - Lunchtime & Teatime | ${SITE_NAME}`,
-    description: 'Get UK 49s predictions for today\'s Lunchtime and Teatime draws. Based on statistical analysis of past results and number frequency.',
+    title: `UK 49s Predictions for Today - Lunchtime & Teatime Draw | ${SITE_NAME}`,
+    description: 'UK 49s predictions for today\'s Lunchtime and Teatime draws. Statistical analysis, hot numbers, and weighted prediction sets for the 12:49 PM and 5:49 PM draws.',
   },
   numberGenerator: {
     title: `UK 49s Random Number Generator - Pick Your Numbers | ${SITE_NAME}`,
@@ -81,7 +107,7 @@ export const PAGE_SEO = {
     description: 'Compare UK 49s Lunchtime and Teatime draws side by side. Discover which draw has the hottest numbers and explore statistical differences.',
   },
   numbers: {
-    title: `UK 49s Numbers 1-49 - Individual Number Stats & History | ${SITE_NAME}`,
-    description: 'Explore detailed statistics for every UK 49s number from 1 to 49. View frequency, last drawn date, and historical performance for each number.',
+    title: `UK49s Statistics - Number Frequency & Analysis for All 49 Numbers | ${SITE_NAME}`,
+    description: 'Complete UK49s statistics for all 49 numbers. View draw frequency, percentage, hot/cold status, and historical performance for every UK 49s Lunchtime and Teatime number.',
   },
 };

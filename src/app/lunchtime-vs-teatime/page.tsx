@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import LotteryBalls from '@/components/LotteryBalls';
 import { getLatestResults, calculateFrequency, getHotNumbers, getColdNumbers } from '@/lib/data/draws';
-import { PAGE_SEO, SITE_NAME, SITE_URL } from '@/lib/data/seo';
+import { PAGE_SEO, SITE_NAME, SITE_URL, ogMeta } from '@/lib/data/seo';
 import { breadcrumbSchema, webPageSchema } from '@/lib/schema';
 
 export const revalidate = 60;
@@ -10,9 +10,8 @@ export const revalidate = 60;
 export const metadata: Metadata = {
   title: `UK 49s Lunchtime vs Teatime - Which Draw Has Better Odds? | ${SITE_NAME}`,
   description: 'Compare UK 49s Lunchtime and Teatime draws. See which numbers appear more in each draw, hot and cold number differences, and statistical analysis.',
-  alternates: {
-    canonical: `${SITE_URL}/lunchtime-vs-teatime`,
-  },
+  alternates: { canonical: `${SITE_URL}/lunchtime-vs-teatime` },
+  ...ogMeta('Lunchtime vs Teatime - UK 49s Draw Comparison & Stats', 'Compare UK 49s Lunchtime and Teatime draws. See which numbers appear more in each draw and explore statistical differences.', '/lunchtime-vs-teatime'),
 };
 
 function getBallColor(num: number): string {

@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { getLatestResults } from '@/lib/data/draws';
-import { PAGE_SEO } from '@/lib/data/seo';
+import { PAGE_SEO, ogMeta } from '@/lib/data/seo';
 import { breadcrumbSchema, webPageSchema } from '@/lib/schema';
 import HistoryResults from './HistoryResults';
 
@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   title: PAGE_SEO.history.title,
   description: PAGE_SEO.history.description,
   alternates: { canonical: '/history' },
+  ...ogMeta(PAGE_SEO.history.title, PAGE_SEO.history.description, '/history'),
 };
 
 export const revalidate = 60;

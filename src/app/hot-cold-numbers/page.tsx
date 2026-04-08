@@ -2,13 +2,14 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import LotteryBalls from '@/components/LotteryBalls';
 import { getLatestResults, getHotNumbers, getColdNumbers, calculateFrequency } from '@/lib/data/draws';
-import { PAGE_SEO } from '@/lib/data/seo';
+import { PAGE_SEO, ogMeta } from '@/lib/data/seo';
 import { breadcrumbSchema, webPageSchema } from '@/lib/schema';
 
 export const metadata: Metadata = {
   title: PAGE_SEO.hotCold.title,
   description: PAGE_SEO.hotCold.description,
   alternates: { canonical: '/hot-cold-numbers' },
+  ...ogMeta(PAGE_SEO.hotCold.title, PAGE_SEO.hotCold.description, '/hot-cold-numbers'),
 };
 
 export const revalidate = 60;
@@ -31,10 +32,10 @@ export default async function HotColdPage() {
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-2">
-        UK 49s Hot and Cold Numbers
+        49s Hot and Cold Numbers Today
       </h1>
       <p className="text-gray-600 dark:text-gray-400 mb-8">
-        Most and least frequently drawn numbers based on recent results
+        UK 49s hot and cold numbers for Lunchtime and Teatime draws — updated daily from recent results
       </p>
 
       {/* Overall Hot & Cold */}
@@ -121,6 +122,23 @@ export default async function HotColdPage() {
         </div>
       </section>
 
+      {/* Prediction CTAs */}
+      <section className="mb-10">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Use Hot Numbers in Predictions</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <Link href="/lunchtime-predictions" className="block bg-amber-50 dark:bg-amber-950/20 border-2 border-amber-200 dark:border-amber-800 rounded-xl p-5 hover:shadow-lg transition-shadow">
+            <p className="text-sm font-semibold text-amber-600 dark:text-amber-400 mb-1">12:49 PM Draw</p>
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white">Lunchtime Predictions for Today</h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">3 weighted prediction sets using today&apos;s hottest Lunchtime numbers</p>
+          </Link>
+          <Link href="/teatime-predictions" className="block bg-indigo-50 dark:bg-indigo-950/20 border-2 border-indigo-200 dark:border-indigo-800 rounded-xl p-5 hover:shadow-lg transition-shadow">
+            <p className="text-sm font-semibold text-indigo-600 dark:text-indigo-400 mb-1">5:49 PM Draw</p>
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white">Teatime Predictions for Today</h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">3 weighted prediction sets using today&apos;s hottest Teatime numbers</p>
+          </Link>
+        </div>
+      </section>
+
       <section>
         <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 sm:p-8">
           <div className="space-y-6">
@@ -192,6 +210,37 @@ export default async function HotColdPage() {
 
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([{ name: 'Hot & Cold Numbers', url: '/hot-cold-numbers' }])) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema(PAGE_SEO.hotCold.title, PAGE_SEO.hotCold.description, '/hot-cold-numbers')) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: [
+          {
+            '@type': 'Question',
+            name: 'What are the UK 49s hot and cold numbers today?',
+            acceptedAnswer: { '@type': 'Answer', text: `The current hot numbers (most frequently drawn) for UK 49s are ${hotAll.slice(0, 5).join(', ')}. The cold numbers (least drawn) are ${coldAll.slice(0, 5).join(', ')}. These are updated daily based on recent Lunchtime and Teatime draw results.` },
+          },
+          {
+            '@type': 'Question',
+            name: 'What are the 49s Lunchtime hot and cold numbers?',
+            acceptedAnswer: { '@type': 'Answer', text: `The hottest Lunchtime numbers are ${hotLunch.slice(0, 5).join(', ')} and the coldest are ${coldLunch.slice(0, 5).join(', ')}. These are based on frequency analysis of the 12:49 PM Lunchtime draw specifically.` },
+          },
+          {
+            '@type': 'Question',
+            name: 'What are the 49s Teatime hot and cold numbers?',
+            acceptedAnswer: { '@type': 'Answer', text: `The hottest Teatime numbers are ${hotTea.slice(0, 5).join(', ')} and the coldest are ${coldTea.slice(0, 5).join(', ')}. These are based on frequency analysis of the 5:49 PM Teatime draw specifically.` },
+          },
+          {
+            '@type': 'Question',
+            name: 'How are UK 49s hot and cold numbers calculated?',
+            acceptedAnswer: { '@type': 'Answer', text: 'Hot numbers are those drawn most frequently in recent UK 49s draws. Cold numbers are those drawn least often. We analyse the last 30 days of both Lunchtime and Teatime results. While past frequency does not guarantee future results, many players use this data to inform their number selections.' },
+          },
+          {
+            '@type': 'Question',
+            name: 'Should I pick hot or cold numbers for UK 49s?',
+            acceptedAnswer: { '@type': 'Answer', text: 'Both strategies are popular. Some players follow hot numbers believing trends continue, while others target cold numbers believing they are "due". A balanced approach combines both. Remember that every UK 49s draw is an independent random event — each number has an equal chance regardless of past results.' },
+          },
+        ],
+      }) }} />
     </div>
   );
 }

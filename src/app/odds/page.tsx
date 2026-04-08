@@ -1,14 +1,16 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { SITE_NAME, SITE_URL, PAGE_SEO } from '@/lib/data/seo';
+import { SITE_NAME, SITE_URL, PAGE_SEO, ogMeta } from '@/lib/data/seo';
 import { breadcrumbSchema, webPageSchema } from '@/lib/schema';
 
+const oddsTitle = `UK 49s Odds & Payouts - Winning Chances Explained | ${SITE_NAME}`;
+const oddsDesc = 'Complete UK 49s odds table for Pick 1 through Pick 5 bets, with and without Booster ball. Understand your winning chances and how payouts work.';
+
 export const metadata: Metadata = {
-  title: `UK 49s Odds & Payouts - Winning Chances Explained | ${SITE_NAME}`,
-  description: 'Complete UK 49s odds table for Pick 1 through Pick 5 bets, with and without Booster ball. Understand your winning chances and how payouts work.',
-  alternates: {
-    canonical: `${SITE_URL}/odds`,
-  },
+  title: oddsTitle,
+  description: oddsDesc,
+  alternates: { canonical: `${SITE_URL}/odds` },
+  ...ogMeta(oddsTitle, oddsDesc, '/odds'),
 };
 
 const oddsData = [

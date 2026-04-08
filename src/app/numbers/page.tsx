@@ -1,17 +1,16 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { getLatestResults, calculateFrequency } from '@/lib/data/draws';
-import { PAGE_SEO, SITE_NAME, SITE_URL } from '@/lib/data/seo';
+import { PAGE_SEO, SITE_NAME, SITE_URL, ogMeta } from '@/lib/data/seo';
 import { breadcrumbSchema, webPageSchema } from '@/lib/schema';
 
 export const revalidate = 60;
 
 export const metadata: Metadata = {
-  title: `UK 49s Number Statistics - All 49 Numbers Frequency | ${SITE_NAME}`,
-  description: 'Complete UK 49s number statistics for all 49 numbers. See draw frequency, percentage, and hot/cold status for every number in Lunchtime and Teatime draws.',
-  alternates: {
-    canonical: `${SITE_URL}/numbers`,
-  },
+  title: PAGE_SEO.numbers.title,
+  description: PAGE_SEO.numbers.description,
+  alternates: { canonical: `${SITE_URL}/numbers` },
+  ...ogMeta(PAGE_SEO.numbers.title, PAGE_SEO.numbers.description, '/numbers'),
 };
 
 function getBallColor(num: number): string {
@@ -52,10 +51,10 @@ export default async function NumbersIndexPage() {
       </nav>
 
       <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-2">
-        UK 49s Number Statistics
+        UK49s Statistics — All 49 Numbers
       </h1>
       <p className="text-gray-600 dark:text-gray-400 mb-8">
-        All 49 numbers ranked by draw frequency. Click any number for detailed stats and history.
+        Complete UK 49s number frequency statistics ranked by draw count. Click any number for detailed stats and history.
       </p>
 
       {/* Quick grid of all numbers */}

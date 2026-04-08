@@ -1,12 +1,13 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { PAGE_SEO, SITE_NAME } from '@/lib/data/seo';
+import { PAGE_SEO, SITE_NAME, ogMeta } from '@/lib/data/seo';
 import { breadcrumbSchema, webPageSchema } from '@/lib/schema';
 
 export const metadata: Metadata = {
   title: PAGE_SEO.about.title,
   description: PAGE_SEO.about.description,
   alternates: { canonical: '/about' },
+  ...ogMeta(PAGE_SEO.about.title, PAGE_SEO.about.description, '/about'),
 };
 
 export default function AboutPage() {

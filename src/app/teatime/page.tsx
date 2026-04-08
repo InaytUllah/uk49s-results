@@ -4,12 +4,13 @@ import ResultCard from '@/components/ResultCard';
 import Countdown from '@/components/Countdown';
 import UpcomingDraw from '@/components/UpcomingDraw';
 import { getLatestResults } from '@/lib/data/draws';
-import { PAGE_SEO } from '@/lib/data/seo';
+import { PAGE_SEO, ogMeta } from '@/lib/data/seo';
 
 export const metadata: Metadata = {
   title: PAGE_SEO.teatime.title,
   description: PAGE_SEO.teatime.description,
   alternates: { canonical: '/teatime' },
+  ...ogMeta(PAGE_SEO.teatime.title, PAGE_SEO.teatime.description, '/teatime'),
 };
 
 export const revalidate = 60;

@@ -1,13 +1,15 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { SITE_NAME, SITE_URL } from '@/lib/data/seo';
+import { SITE_NAME, SITE_URL, ogMeta } from '@/lib/data/seo';
+
+const faqTitle = `UK 49s FAQ - Frequently Asked Questions | ${SITE_NAME}`;
+const faqDesc = 'Answers to frequently asked questions about UK 49s lottery. Learn about draw times, odds, how to play, Booster ball, payouts, and more.';
 
 export const metadata: Metadata = {
-  title: `UK 49s FAQ - Frequently Asked Questions | ${SITE_NAME}`,
-  description: 'Answers to frequently asked questions about UK 49s lottery. Learn about draw times, odds, how to play, Booster ball, payouts, and more.',
-  alternates: {
-    canonical: `${SITE_URL}/faq`,
-  },
+  title: faqTitle,
+  description: faqDesc,
+  alternates: { canonical: `${SITE_URL}/faq` },
+  ...ogMeta(faqTitle, faqDesc, '/faq'),
 };
 
 const faqs = [

@@ -10,23 +10,25 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const predInfo = getPredictionDate(allResults);
 
-  // Main pages
+  const now = new Date();
+
+  // Main pages — lastModified tells Google when to recrawl
   const staticPages = [
-    { url: SITE_URL, changeFrequency: 'hourly' as const, priority: 1.0 },
-    { url: `${SITE_URL}/lunchtime`, changeFrequency: 'hourly' as const, priority: 0.9 },
-    { url: `${SITE_URL}/teatime`, changeFrequency: 'hourly' as const, priority: 0.9 },
-    { url: `${SITE_URL}/hot-cold-numbers`, changeFrequency: 'daily' as const, priority: 0.8 },
-    { url: `${SITE_URL}/predictions`, changeFrequency: 'daily' as const, priority: 0.8 },
-    { url: `${SITE_URL}/lunchtime-predictions`, changeFrequency: 'daily' as const, priority: 0.8 },
-    { url: `${SITE_URL}/teatime-predictions`, changeFrequency: 'daily' as const, priority: 0.8 },
+    { url: SITE_URL, lastModified: now, changeFrequency: 'hourly' as const, priority: 1.0 },
+    { url: `${SITE_URL}/lunchtime`, lastModified: now, changeFrequency: 'hourly' as const, priority: 0.9 },
+    { url: `${SITE_URL}/teatime`, lastModified: now, changeFrequency: 'hourly' as const, priority: 0.9 },
+    { url: `${SITE_URL}/hot-cold-numbers`, lastModified: now, changeFrequency: 'daily' as const, priority: 0.8 },
+    { url: `${SITE_URL}/predictions`, lastModified: now, changeFrequency: 'daily' as const, priority: 0.8 },
+    { url: `${SITE_URL}/lunchtime-predictions`, lastModified: now, changeFrequency: 'daily' as const, priority: 0.8 },
+    { url: `${SITE_URL}/teatime-predictions`, lastModified: now, changeFrequency: 'daily' as const, priority: 0.8 },
     { url: `${SITE_URL}/number-generator`, changeFrequency: 'monthly' as const, priority: 0.7 },
-    { url: `${SITE_URL}/history`, changeFrequency: 'daily' as const, priority: 0.7 },
+    { url: `${SITE_URL}/history`, lastModified: now, changeFrequency: 'daily' as const, priority: 0.7 },
     { url: `${SITE_URL}/how-to-play`, changeFrequency: 'monthly' as const, priority: 0.6 },
-    { url: `${SITE_URL}/blog`, changeFrequency: 'daily' as const, priority: 0.7 },
+    { url: `${SITE_URL}/blog`, lastModified: now, changeFrequency: 'daily' as const, priority: 0.7 },
     { url: `${SITE_URL}/faq`, changeFrequency: 'monthly' as const, priority: 0.7 },
     { url: `${SITE_URL}/odds`, changeFrequency: 'monthly' as const, priority: 0.7 },
-    { url: `${SITE_URL}/lunchtime-vs-teatime`, changeFrequency: 'daily' as const, priority: 0.7 },
-    { url: `${SITE_URL}/numbers`, changeFrequency: 'daily' as const, priority: 0.7 },
+    { url: `${SITE_URL}/lunchtime-vs-teatime`, lastModified: now, changeFrequency: 'daily' as const, priority: 0.7 },
+    { url: `${SITE_URL}/numbers`, lastModified: now, changeFrequency: 'daily' as const, priority: 0.7 },
     // Legal & trust pages
     { url: `${SITE_URL}/about`, changeFrequency: 'monthly' as const, priority: 0.5 },
     { url: `${SITE_URL}/contact`, changeFrequency: 'monthly' as const, priority: 0.5 },
@@ -36,8 +38,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/responsible-gaming`, changeFrequency: 'monthly' as const, priority: 0.4 },
   ];
 
-  // NOTE: Individual number pages (/numbers/1-49) removed from sitemap.
-  // They have noindex and are accessible via internal links from /numbers hub.
+  // Individual number pages — unique long-tail content for each number
+  const numberPages = Array.from({ length: 49 }, (_, i) => ({
+    url: `${SITE_URL}/numbers/${i + 1}`,
+    changeFrequency: 'daily' as const,
+    priority: 0.5,
+  }));
 
   // Result pages by date (canonical source — no more blog duplicates)
   const lunchtimeResultPages = dates.map(date => ({
@@ -77,6 +83,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   return [
     ...staticPages,
+    ...numberPages,
     ...lunchtimeResultPages,
     ...teatimeResultPages,
     ...predictionPages,

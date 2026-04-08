@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import LotteryBalls from '@/components/LotteryBalls';
 import { getLatestResults, calculateFrequency } from '@/lib/data/draws';
-import { SITE_NAME, SITE_URL } from '@/lib/data/seo';
+import { SITE_NAME, SITE_URL, ogMeta } from '@/lib/data/seo';
 
 export const revalidate = 60;
 
@@ -29,9 +29,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       canonical: `${SITE_URL}/numbers/${num}`,
     },
     robots: {
-      index: false,
+      index: true,
       follow: true,
     },
+    ...ogMeta(
+      `Number ${num} - UK 49s Statistics & History`,
+      `Number ${num} frequency analysis for UK 49s. See how often number ${num} appears in Lunchtime and Teatime draws.`,
+      `/numbers/${num}`,
+    ),
   };
 }
 
