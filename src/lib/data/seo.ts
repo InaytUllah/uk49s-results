@@ -36,15 +36,15 @@ export function ogMeta(title: string, description: string, path: string) {
 export const PAGE_SEO = {
   home: {
     title: `UK 49s Results Today - Lunchtime & Teatime Winning Numbers | ${SITE_NAME}`,
-    description: 'Get the latest UK 49s Lunchtime and Teatime results updated daily. Check today\'s winning numbers, hot & cold numbers, predictions, and past results.',
+    description: 'Today\'s UK 49s Lunchtime and Teatime winning numbers. Results go up within minutes of each draw. Also includes hot & cold numbers, predictions, and past results.',
   },
   lunchtime: {
     title: `UK 49s Lunchtime Results Today - Winning Numbers | ${SITE_NAME}`,
-    description: 'Check the latest UK 49s Lunchtime results. Today\'s winning numbers drawn at 12:49 PM UK time. View past lunchtime results and number analysis.',
+    description: 'UK 49s Lunchtime results for today. The 12:49 PM draw numbers are posted here within minutes. Past lunchtime results also available.',
   },
   teatime: {
     title: `UK 49s Teatime Results Today - Winning Numbers | ${SITE_NAME}`,
-    description: 'Check the latest UK 49s Teatime results. Today\'s winning numbers drawn at 5:49 PM UK time. View past teatime results and number analysis.',
+    description: 'UK 49s Teatime results for today. The 5:49 PM draw numbers are posted here within minutes. Past teatime results also available.',
   },
   hotCold: {
     title: `49s Hot and Cold Numbers Today - UK 49s Lunchtime & Teatime | ${SITE_NAME}`,
@@ -56,19 +56,19 @@ export const PAGE_SEO = {
   },
   numberGenerator: {
     title: `UK 49s Random Number Generator - Pick Your Numbers | ${SITE_NAME}`,
-    description: 'Generate random UK 49s numbers for Lunchtime and Teatime draws. Free random number picker with smart and quick pick options.',
+    description: 'Random number picker for UK 49s. Generates 6 numbers plus a Booster for Lunchtime or Teatime bets. Quick pick or choose your own.',
   },
   history: {
     title: `UK 49s Past Results - Lunchtime & Teatime History | ${SITE_NAME}`,
-    description: 'Browse UK 49s past results for both Lunchtime and Teatime draws. Complete history of winning numbers searchable by date.',
+    description: 'Full archive of UK 49s past results. Look up any Lunchtime or Teatime draw by date. Updated after every draw.',
   },
   howToPlay: {
     title: `How to Play UK 49s - Rules, Odds & Guide | ${SITE_NAME}`,
-    description: 'Learn how to play UK 49s lottery. Complete guide covering rules, odds of winning, draw times, and betting options for Lunchtime and Teatime.',
+    description: 'UK 49s rules explained simply. How the draws work, what the Booster ball is, how odds change based on how many numbers you pick, and where to place bets.',
   },
   blog: {
     title: `UK 49s Blog - Latest News, Tips & Analysis | ${SITE_NAME}`,
-    description: 'Stay updated with UK 49s news, tips, analysis and winning strategies. Latest articles about Lunchtime and Teatime draws.',
+    description: 'UK 49s predictions, number analysis, and draw breakdowns. New posts before each Lunchtime and Teatime draw.',
   },
   privacyPolicy: {
     title: `Privacy Policy | ${SITE_NAME}`,
@@ -80,11 +80,11 @@ export const PAGE_SEO = {
   },
   about: {
     title: `About Us - UK 49s Results & Predictions | ${SITE_NAME}`,
-    description: 'Learn about UK49s Results, our mission to provide fast and accurate UK 49s Lunchtime and Teatime results, predictions, and statistical analysis.',
+    description: 'Who runs UK49s Results and why we built it. We post Lunchtime and Teatime numbers fast and keep the site clean and easy to use.',
   },
   contact: {
     title: `Contact Us | ${SITE_NAME}`,
-    description: 'Get in touch with the UK49s Results team. Contact us for questions, feedback, or to report issues with our UK 49s results service.',
+    description: 'Questions, feedback, or something broken? Get in touch with the UK49s Results team.',
   },
   responsibleGaming: {
     title: `Responsible Gaming - Play Safely | ${SITE_NAME}`,
@@ -104,7 +104,7 @@ export const PAGE_SEO = {
   },
   lunchtimeVsTeatime: {
     title: `Lunchtime vs Teatime - UK 49s Draw Comparison & Stats | ${SITE_NAME}`,
-    description: 'Compare UK 49s Lunchtime and Teatime draws side by side. Discover which draw has the hottest numbers and explore statistical differences.',
+    description: 'Side-by-side comparison of UK 49s Lunchtime and Teatime draws. See which numbers show up more in each draw and how the two differ statistically.',
   },
   numbers: {
     title: `UK49s Statistics - Number Frequency & Analysis for All 49 Numbers | ${SITE_NAME}`,

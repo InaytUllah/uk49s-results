@@ -143,48 +143,44 @@ export default async function HotColdPage() {
         <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 sm:p-8">
           <div className="space-y-6">
             <div>
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Understanding Hot and Cold Numbers</h2>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">What are hot and cold numbers?</h2>
               <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                <strong className="text-gray-900 dark:text-white">Hot numbers</strong> are those drawn most frequently in recent UK 49s draws.
-                <strong className="text-gray-900 dark:text-white"> Cold numbers</strong> are those drawn least often. While past frequency does not guarantee
-                future results, many players use this analysis to inform their number selections
-                for both the <Link href="/lunchtime" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">Lunchtime</Link> and <Link href="/teatime" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">Teatime</Link> draws.
+                <strong className="text-gray-900 dark:text-white">Hot numbers</strong> are the ones that keep showing up in recent draws.
+                <strong className="text-gray-900 dark:text-white"> Cold numbers</strong> are the opposite: they haven&apos;t been drawn in a while. This doesn&apos;t mean hot numbers will keep appearing or that cold numbers are &quot;due&quot;, but a lot of players like to look at the data before picking their <Link href="/lunchtime" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">Lunchtime</Link> or <Link href="/teatime" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">Teatime</Link> numbers.
               </p>
             </div>
 
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">How to Use Number Frequency Data</h3>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Three ways people use this data</h3>
               <ul className="space-y-2">
                 <li className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
                   <span className="w-6 h-6 rounded-full bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">1</span>
-                  <span><strong className="text-gray-900 dark:text-white">Follow the hot streak</strong> — pick frequently drawn numbers, reasoning they may continue</span>
+                  <span><strong className="text-gray-900 dark:text-white">Ride the hot streak.</strong> Pick numbers that have been coming up a lot, betting the pattern continues.</span>
                 </li>
                 <li className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
                   <span className="w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">2</span>
-                  <span><strong className="text-gray-900 dark:text-white">Target cold numbers</strong> — choose rarely drawn numbers, believing they are &quot;due&quot;</span>
+                  <span><strong className="text-gray-900 dark:text-white">Go cold.</strong> Pick numbers that haven&apos;t appeared recently, on the theory they&apos;re overdue.</span>
                 </li>
                 <li className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
                   <span className="w-6 h-6 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">3</span>
-                  <span><strong className="text-gray-900 dark:text-white">Balanced approach</strong> — combine both hot and cold numbers in a single bet</span>
+                  <span><strong className="text-gray-900 dark:text-white">Mix both.</strong> Pick a few hot and a few cold in the same bet.</span>
                 </li>
               </ul>
               <p className="text-sm text-gray-500 dark:text-gray-400 mt-3">
-                Every draw is an independent event — each number has an equal probability of being drawn regardless of past performance.
+                Worth remembering: each draw is independent. The ball machine doesn&apos;t know what came up last time.
               </p>
             </div>
 
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Analyse Individual Numbers</h3>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Look up individual numbers</h3>
               <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                Click on any number in the frequency table above to see detailed statistics for that
-                specific number, including how often it has appeared as a main ball or Booster, its
-                most recent appearances, and which draw type it favours. Visit our{' '}
-                <Link href="/numbers" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">number stats hub</Link> for a complete overview of all 49 numbers.
+                Click any number in the table above to see its full stats: how often it appears as a main ball vs Booster, when it was last drawn, and whether it shows up more in Lunchtime or Teatime. The{' '}
+                <Link href="/numbers" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">number stats page</Link> has all 49 numbers in one place.
               </p>
             </div>
 
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Combine Data with Other Tools</h3>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Other tools on this site</h3>
               <ul className="space-y-2">
                 <li className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
                   <svg className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>

@@ -164,36 +164,36 @@ export default async function TeatimePredictionsPage() {
         <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 sm:p-8">
           <div className="space-y-6">
             <div>
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">How Teatime Predictions Work</h2>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">How these predictions work</h2>
               <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                Our <strong className="text-gray-900 dark:text-white">UK 49s Teatime predictions</strong> use a weighted statistical model analysing number frequency patterns from the <strong className="text-gray-900 dark:text-white">5:49 PM Teatime draw</strong> specifically. Teatime data is kept separate from <Link href="/lunchtime-predictions" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">Lunchtime predictions</Link> because each draw is an independent event with its own frequency patterns.
+                These <strong className="text-gray-900 dark:text-white">UK 49s Teatime predictions</strong> are based on number frequency from the <strong className="text-gray-900 dark:text-white">5:49 PM Teatime draw</strong> only. We keep Teatime data separate from <Link href="/lunchtime-predictions" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">Lunchtime predictions</Link> because the two draws are independent events. A hot Teatime number might be cold at lunchtime.
               </p>
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Prediction Methodology</h3>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">How each set is built</h3>
               <ul className="space-y-2">
                 <li className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
                   <svg className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
-                  <span>4 numbers selected from the top 10 <Link href="/hot-cold-numbers" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">hot Teatime numbers</Link></span>
+                  <span>4 numbers come from the top 10 <Link href="/hot-cold-numbers" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">hot Teatime numbers</Link></span>
                 </li>
                 <li className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
                   <svg className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
-                  <span>2 numbers randomly selected from the remaining pool for balanced coverage</span>
+                  <span>2 are picked randomly from the rest of the pool</span>
                 </li>
                 <li className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
                   <svg className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
-                  <span>Booster ball selected independently from the full 1-49 range</span>
+                  <span>The Booster is picked separately from all 49 numbers</span>
                 </li>
                 <li className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
                   <svg className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
-                  <span>Predictions auto-update to the next day once Teatime results are announced</span>
+                  <span>Once today&apos;s Teatime results are in, the predictions roll forward to tomorrow</span>
                 </li>
               </ul>
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">About the Teatime Draw</h3>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">About the Teatime draw</h3>
               <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                The UK 49s Teatime draw is the second daily draw, taking place at <strong className="text-gray-900 dark:text-white">5:49 PM UK time</strong> every day including weekends. It uses the same format as the Lunchtime draw — 6 main numbers from 1-49 plus a Booster ball — but results are completely independent. Check our <Link href="/lunchtime-vs-teatime" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">Lunchtime vs Teatime comparison</Link> to see how the two draws differ statistically.
+                The Teatime draw is the second UK 49s draw of the day, at <strong className="text-gray-900 dark:text-white">5:49 PM UK time</strong>, every day including weekends. Same format as lunchtime: 6 main numbers from 1-49 plus a Booster. The results are completely separate though. Our <Link href="/lunchtime-vs-teatime" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">Lunchtime vs Teatime comparison</Link> shows how the two differ.
               </p>
             </div>
           </div>

@@ -314,12 +314,12 @@ export default async function BlogPostPage({ params }: Props) {
         <section className="mb-8">
           <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 sm:p-8">
             <div className="space-y-4">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">How {drawLabel} Predictions Work</h2>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">How these predictions work</h2>
               <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                Our <strong className="text-gray-900 dark:text-white">UK 49s {drawLabel} predictions</strong> for {formattedDate} use a weighted model analysing number frequency from the <strong className="text-gray-900 dark:text-white">{drawTime} {drawLabel} draw</strong> specifically. We keep {drawLabel} data separate from <Link href={`/blog/uk-49s-${otherDraw}-predictions-${date}`} className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">{otherLabel} predictions</Link> because each draw is independent.
+                These <strong className="text-gray-900 dark:text-white">UK 49s {drawLabel} predictions</strong> for {formattedDate} are based on number frequency from the <strong className="text-gray-900 dark:text-white">{drawTime} {drawLabel} draw</strong> only. We don&apos;t mix {drawLabel} data with <Link href={`/blog/uk-49s-${otherDraw}-predictions-${date}`} className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">{otherLabel} predictions</Link> because the draws are separate events.
               </p>
               <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                Each set selects 4 numbers from the top 10 <Link href="/hot-cold-numbers" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">hot {drawLabel} numbers</Link>, then 2 random picks for balance. The Booster is selected independently. Predictions auto-update once {drawLabel} results are announced.
+                Each set picks 4 numbers from the top 10 <Link href="/hot-cold-numbers" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">hot {drawLabel} numbers</Link> and 2 random ones. The Booster is picked separately. Once today&apos;s {drawLabel} results come in, the predictions update.
               </p>
             </div>
           </div>

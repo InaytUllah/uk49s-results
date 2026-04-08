@@ -164,36 +164,36 @@ export default async function LunchtimePredictionsPage() {
         <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 sm:p-8">
           <div className="space-y-6">
             <div>
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">How Lunchtime Predictions Work</h2>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">How these predictions work</h2>
               <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                Our <strong className="text-gray-900 dark:text-white">UK 49s Lunchtime predictions</strong> are generated using a weighted statistical model that analyses the frequency distribution of numbers drawn specifically in the <strong className="text-gray-900 dark:text-white">12:49 PM Lunchtime draw</strong>. We use separate data from the <Link href="/teatime-predictions" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">Teatime draw</Link> because each draw is independent — a number that is hot in Lunchtime may be cold in Teatime.
+                These <strong className="text-gray-900 dark:text-white">UK 49s Lunchtime predictions</strong> look at which numbers have been coming up most in the <strong className="text-gray-900 dark:text-white">12:49 PM Lunchtime draw</strong> specifically. We don&apos;t mix in <Link href="/teatime-predictions" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">Teatime data</Link> because the two draws are separate. A number that&apos;s hot at lunchtime might be cold at teatime.
               </p>
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Prediction Methodology</h3>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">How each set is built</h3>
               <ul className="space-y-2">
                 <li className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
                   <svg className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
-                  <span>4 numbers selected from the top 10 <Link href="/hot-cold-numbers" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">hot Lunchtime numbers</Link></span>
+                  <span>4 numbers come from the top 10 <Link href="/hot-cold-numbers" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">hot Lunchtime numbers</Link></span>
                 </li>
                 <li className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
                   <svg className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
-                  <span>2 numbers randomly picked from the remaining pool for balanced coverage</span>
+                  <span>2 are picked randomly from the rest of the pool</span>
                 </li>
                 <li className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
                   <svg className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
-                  <span>Booster ball selected independently from the full 1-49 range</span>
+                  <span>The Booster is picked separately from all 49 numbers</span>
                 </li>
                 <li className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
                   <svg className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
-                  <span>Predictions auto-update to the next day once Lunchtime results are announced</span>
+                  <span>Once today&apos;s Lunchtime results are in, the predictions roll forward to tomorrow</span>
                 </li>
               </ul>
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">About the Lunchtime Draw</h3>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">About the Lunchtime draw</h3>
               <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                The UK 49s Lunchtime draw takes place every day at <strong className="text-gray-900 dark:text-white">12:49 PM UK time</strong>, including weekends and bank holidays. Six main numbers are drawn from a pool of 1 to 49, plus a Booster ball. Visit our <Link href="/how-to-play" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">How to Play</Link> guide and <Link href="/odds" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">Odds & Payouts</Link> page for full details on betting options.
+                The Lunchtime draw happens every day at <strong className="text-gray-900 dark:text-white">12:49 PM UK time</strong>, weekends and bank holidays included. Six numbers are drawn from 1 to 49, plus a Booster ball. See our <Link href="/how-to-play" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">How to Play</Link> guide or <Link href="/odds" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">Odds &amp; Payouts</Link> page for more on betting options.
               </p>
             </div>
           </div>

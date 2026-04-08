@@ -149,22 +149,17 @@ export default async function HomePage() {
             <div>
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">About UK 49s Lottery</h2>
               <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                <strong className="text-gray-900 dark:text-white">UK 49s</strong> is one of the most popular lottery-style betting games in the <strong className="text-gray-900 dark:text-white">United Kingdom</strong> and <strong className="text-gray-900 dark:text-white">South Africa</strong>.
-                Unlike traditional lotteries such as the National Lottery or EuroMillions, UK 49s gives players the
-                unique flexibility to choose how many numbers they want to bet on — from 1 to 5 numbers — plus a
-                <strong className="text-gray-900 dark:text-white"> Booster ball</strong> option. This flexibility means you control your own odds and potential payout, making
-                UK 49s an appealing choice for those who want more control over their betting strategy.
+                <strong className="text-gray-900 dark:text-white">UK 49s</strong> is a lottery-style betting game played across the <strong className="text-gray-900 dark:text-white">United Kingdom</strong> and <strong className="text-gray-900 dark:text-white">South Africa</strong>.
+                It works differently from the National Lottery or EuroMillions. You pick how many numbers to bet on, from 1 to 5, and decide whether to include the
+                <strong className="text-gray-900 dark:text-white"> Booster ball</strong>. Fewer numbers means better odds but a smaller payout. More numbers means a bigger payout but harder to win. You set the terms.
               </p>
             </div>
 
             <div>
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">UK 49s Results Today</h3>
               <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                Our site provides the fastest <strong className="text-gray-900 dark:text-white">UK 49s results today</strong> for both the <Link href="/lunchtime" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">Lunchtime</Link> and <Link href="/teatime" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">Teatime</Link> draws. We update
-                our lunchtime results today within minutes of the draw taking place at 12:49 PM, and our teatime results
-                are available shortly after the 5:49 PM draw. Bookmark this page to check today&apos;s winning numbers
-                as soon as they are released. We also maintain a comprehensive <Link href="/history" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">archive of past results</Link> so you can review
-                historical data and identify trends.
+                We post <strong className="text-gray-900 dark:text-white">UK 49s results today</strong> for both the <Link href="/lunchtime" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">Lunchtime</Link> and <Link href="/teatime" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">Teatime</Link> draws within minutes of each draw.
+                Lunchtime numbers go up after 12:49 PM UK time, Teatime after 5:49 PM. Bookmark this page if you want to check the winning numbers quickly. We also keep a full <Link href="/history" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">archive of past results</Link> going back several weeks.
               </p>
             </div>
 
@@ -237,33 +232,33 @@ export default async function HomePage() {
             <div>
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">UK 49s Predictions and Statistics</h3>
               <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                Many players look for <strong className="text-gray-900 dark:text-white">UK49s predictions</strong> to help guide their number selections. While no prediction
-                method can guarantee a win — every draw is random and independent — statistical analysis can reveal
-                interesting patterns. Our <Link href="/hot-cold-numbers" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">hot and cold numbers</Link> page shows which
-                numbers have been drawn most and least frequently in recent results. You can also use our
-                free <Link href="/number-generator" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">random number generator</Link> for quick picks, or explore
-                our <Link href="/predictions" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">predictions page</Link> for statistically informed suggestions.
+                A lot of people search for <strong className="text-gray-900 dark:text-white">UK49s predictions</strong> before placing their bets. To be clear: no method can guarantee a win because each draw is random.
+                That said, looking at which numbers come up more often can be useful for picking your selections. Our <Link href="/hot-cold-numbers" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">hot and cold numbers</Link> page shows
+                the most and least drawn numbers from recent draws. There&apos;s also a <Link href="/number-generator" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">random number generator</Link> if you just want a quick pick, and a <Link href="/predictions" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">predictions page</Link> with number sets based on frequency data.
               </p>
             </div>
 
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Why Check UK 49s Results Here?</h3>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Why Check Results Here?</h3>
+              <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-3">
+                We built this site because most UK 49s result pages are slow, cluttered with ads, or hard to read on a phone. Here&apos;s what we do differently:
+              </p>
               <ul className="space-y-2">
                 <li className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
                   <svg className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
-                  <span><strong className="text-gray-900 dark:text-white">Fastest updates</strong> — results within minutes of each draw</span>
+                  <span>Results go up within minutes of each draw, not hours</span>
                 </li>
                 <li className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
                   <svg className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
-                  <span><strong className="text-gray-900 dark:text-white">Mobile optimised</strong> — check results on phone, tablet, or desktop</span>
+                  <span>Works well on phones. No zooming or horizontal scrolling needed</span>
                 </li>
                 <li className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
                   <svg className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
-                  <span><strong className="text-gray-900 dark:text-white">Complete toolkit</strong> — frequency analysis, number generator, draw comparisons</span>
+                  <span>Number frequency data, predictions, and a random picker all in one place</span>
                 </li>
                 <li className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
                   <svg className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
-                  <span><strong className="text-gray-900 dark:text-white">Educational guides</strong> — learn how the game works before you play</span>
+                  <span>Plain-English guides if you&apos;re new to the game</span>
                 </li>
               </ul>
             </div>
