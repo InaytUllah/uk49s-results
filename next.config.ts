@@ -28,6 +28,16 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  async redirects() {
+    return [
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'uk49s-results.vercel.app' }],
+        destination: 'https://uk49sresults.co.uk/:path*',
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       {
