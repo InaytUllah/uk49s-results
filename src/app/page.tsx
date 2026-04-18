@@ -19,17 +19,41 @@ export default async function HomePage() {
   const latestTeatime = allResults.find(r => r.drawType === 'teatime');
   const recentResults = allResults.slice(0, 10);
 
+  const today = new Date();
+  const todayLabel = today.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       {/* Hero Section */}
-      <section className="text-center mb-10">
+      <section className="text-center mb-8">
         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-3">
           UK 49s Results Today
         </h1>
         <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-          Latest Lunchtime and Teatime winning numbers, updated daily
+          Latest Lunchtime and Teatime winning numbers for {todayLabel}
         </p>
       </section>
+
+      {/* Quick Answer Block — AEO optimized */}
+      {(latestLunchtime || latestTeatime) && (
+        <section className="mb-8 p-5 max-w-3xl mx-auto rounded-xl bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-950/30 dark:to-teal-950/30 border-2 border-emerald-200 dark:border-emerald-800">
+          <p className="text-xs font-semibold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider mb-2">Today&apos;s Winning Numbers</p>
+          <div className="space-y-1 text-base text-gray-800 dark:text-gray-200">
+            {latestLunchtime && (
+              <p>
+                <strong>Lunchtime (12:49 PM)</strong>: {latestLunchtime.numbers.join(', ')}
+                {latestLunchtime.booster !== undefined && <> · Booster: {latestLunchtime.booster}</>}
+              </p>
+            )}
+            {latestTeatime && (
+              <p>
+                <strong>Teatime (5:49 PM)</strong>: {latestTeatime.numbers.join(', ')}
+                {latestTeatime.booster !== undefined && <> · Booster: {latestTeatime.booster}</>}
+              </p>
+            )}
+          </div>
+        </section>
+      )}
 
       {/* Upcoming Draw Placeholders - show ? balls before results are announced */}
       <section className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
@@ -42,24 +66,36 @@ export default async function HomePage() {
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
           Latest UK 49s Results
         </h2>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {latestLunchtime && (
-            <div>
-              <h3 className="text-lg font-semibold text-amber-700 dark:text-amber-400 mb-3">
-                Lunchtime Result
-              </h3>
-              <ResultCard result={latestLunchtime} featured />
-            </div>
-          )}
-          {latestTeatime && (
-            <div>
-              <h3 className="text-lg font-semibold text-indigo-700 dark:text-indigo-400 mb-3">
-                Teatime Result
-              </h3>
-              <ResultCard result={latestTeatime} featured />
-            </div>
-          )}
-        </div>
+        {!latestLunchtime && !latestTeatime ? (
+          <div className="p-8 rounded-xl border-2 border-dashed border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 text-center">
+            <p className="text-gray-600 dark:text-gray-400 mb-3">
+              Results are being fetched. Check back in a moment, or view past results in our archive.
+            </p>
+            <Link href="/history" className="inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-400 hover:underline font-medium">
+              Past Results Archive
+              <svg aria-hidden="true" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
+            </Link>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {latestLunchtime && (
+              <div>
+                <h3 className="text-lg font-semibold text-amber-700 dark:text-amber-400 mb-3">
+                  Lunchtime Result
+                </h3>
+                <ResultCard result={latestLunchtime} featured />
+              </div>
+            )}
+            {latestTeatime && (
+              <div>
+                <h3 className="text-lg font-semibold text-indigo-700 dark:text-indigo-400 mb-3">
+                  Teatime Result
+                </h3>
+                <ResultCard result={latestTeatime} featured />
+              </div>
+            )}
+          </div>
+        )}
       </section>
 
       {/* Countdown Timers — after results */}

@@ -21,54 +21,54 @@ export default function Footer() {
           </div>
 
           {/* Quick Links */}
-          <div>
+          <nav aria-label="Footer quick links">
             <h3 className="text-white font-semibold mb-4">Quick Links</h3>
-            <ul className="space-y-2 text-sm">
-              <li><Link href="/lunchtime" className="hover:text-white transition-colors">Lunchtime Results</Link></li>
-              <li><Link href="/teatime" className="hover:text-white transition-colors">Teatime Results</Link></li>
-              <li><Link href="/history" className="hover:text-white transition-colors">Past Results</Link></li>
-              <li><Link href="/hot-cold-numbers" className="hover:text-white transition-colors">Hot &amp; Cold Numbers</Link></li>
-              <li><Link href="/predictions" className="hover:text-white transition-colors">Predictions</Link></li>
-              <li><Link href="/odds" className="hover:text-white transition-colors">Odds &amp; Payouts</Link></li>
+            <ul className="space-y-1 text-sm">
+              <li><Link href="/lunchtime" className="block py-1.5 hover:text-white transition-colors focus:outline-none focus-visible:text-white focus-visible:underline">Lunchtime Results</Link></li>
+              <li><Link href="/teatime" className="block py-1.5 hover:text-white transition-colors focus:outline-none focus-visible:text-white focus-visible:underline">Teatime Results</Link></li>
+              <li><Link href="/history" className="block py-1.5 hover:text-white transition-colors focus:outline-none focus-visible:text-white focus-visible:underline">Past Results</Link></li>
+              <li><Link href="/hot-cold-numbers" className="block py-1.5 hover:text-white transition-colors focus:outline-none focus-visible:text-white focus-visible:underline">Hot &amp; Cold Numbers</Link></li>
+              <li><Link href="/predictions" className="block py-1.5 hover:text-white transition-colors focus:outline-none focus-visible:text-white focus-visible:underline">Predictions</Link></li>
+              <li><Link href="/odds" className="block py-1.5 hover:text-white transition-colors focus:outline-none focus-visible:text-white focus-visible:underline">Odds &amp; Payouts</Link></li>
             </ul>
-          </div>
+          </nav>
 
           {/* Tools */}
-          <div>
+          <nav aria-label="Footer tools">
             <h3 className="text-white font-semibold mb-4">Tools</h3>
-            <ul className="space-y-2 text-sm">
-              <li><Link href="/number-generator" className="hover:text-white transition-colors">Number Generator</Link></li>
-              <li><Link href="/numbers" className="hover:text-white transition-colors">Number Stats</Link></li>
-              <li><Link href="/lunchtime-vs-teatime" className="hover:text-white transition-colors">Lunchtime vs Teatime</Link></li>
-              <li><Link href="/how-to-play" className="hover:text-white transition-colors">How to Play</Link></li>
-              <li><Link href="/blog" className="hover:text-white transition-colors">Blog</Link></li>
+            <ul className="space-y-1 text-sm">
+              <li><Link href="/number-generator" className="block py-1.5 hover:text-white transition-colors focus:outline-none focus-visible:text-white focus-visible:underline">Number Generator</Link></li>
+              <li><Link href="/numbers" className="block py-1.5 hover:text-white transition-colors focus:outline-none focus-visible:text-white focus-visible:underline">Number Stats</Link></li>
+              <li><Link href="/lunchtime-vs-teatime" className="block py-1.5 hover:text-white transition-colors focus:outline-none focus-visible:text-white focus-visible:underline">Lunchtime vs Teatime</Link></li>
+              <li><Link href="/how-to-play" className="block py-1.5 hover:text-white transition-colors focus:outline-none focus-visible:text-white focus-visible:underline">How to Play</Link></li>
+              <li><Link href="/blog" className="block py-1.5 hover:text-white transition-colors focus:outline-none focus-visible:text-white focus-visible:underline">Blog</Link></li>
             </ul>
-          </div>
+          </nav>
 
           {/* Legal */}
-          <div>
+          <nav aria-label="Footer legal">
             <h3 className="text-white font-semibold mb-4">Legal</h3>
-            <ul className="space-y-2 text-sm">
-              <li><Link href="/privacy-policy" className="hover:text-white transition-colors">Privacy Policy</Link></li>
-              <li><Link href="/terms" className="hover:text-white transition-colors">Terms &amp; Conditions</Link></li>
-              <li><Link href="/disclaimer" className="hover:text-white transition-colors">Disclaimer</Link></li>
-              <li><Link href="/responsible-gaming" className="hover:text-white transition-colors">Responsible Gaming</Link></li>
+            <ul className="space-y-1 text-sm">
+              <li><Link href="/privacy-policy" className="block py-1.5 hover:text-white transition-colors focus:outline-none focus-visible:text-white focus-visible:underline">Privacy Policy</Link></li>
+              <li><Link href="/terms" className="block py-1.5 hover:text-white transition-colors focus:outline-none focus-visible:text-white focus-visible:underline">Terms &amp; Conditions</Link></li>
+              <li><Link href="/disclaimer" className="block py-1.5 hover:text-white transition-colors focus:outline-none focus-visible:text-white focus-visible:underline">Disclaimer</Link></li>
+              <li><Link href="/responsible-gaming" className="block py-1.5 hover:text-white transition-colors focus:outline-none focus-visible:text-white focus-visible:underline">Responsible Gaming</Link></li>
             </ul>
 
             {/* Draw Times */}
             <h3 className="text-white font-semibold mb-3 mt-6">Draw Times (UK)</h3>
             <div className="space-y-2 text-sm">
               <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-amber-500"></span>
+                <span aria-hidden="true" className="w-3 h-3 rounded-full bg-amber-500"></span>
                 <span>Lunchtime: 12:49 PM</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-indigo-500"></span>
+                <span aria-hidden="true" className="w-3 h-3 rounded-full bg-indigo-500"></span>
                 <span>Teatime: 5:49 PM</span>
               </div>
               <p className="text-xs text-gray-500 mt-1">Draws take place 7 days a week</p>
             </div>
-          </div>
+          </nav>
         </div>
 
         {/* Responsible Gaming Notice */}
@@ -77,7 +77,7 @@ export default function Footer() {
             <div className="h-1 bg-gradient-to-r from-amber-400 to-orange-500" />
             <div className="p-5">
               <div className="flex items-center gap-2 mb-3">
-                <svg className="w-5 h-5 text-amber-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <svg role="img" aria-label="Warning" className="w-5 h-5 text-amber-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.345 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
                 </svg>
                 <span className="font-semibold text-white">Responsible Gaming</span>

@@ -33,9 +33,15 @@ export default async function LunchtimePage() {
       <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-2">
         UK 49s Lunchtime Results
       </h1>
-      <p className="text-gray-600 dark:text-gray-400 mb-6">
+      <p className="text-gray-600 dark:text-gray-400 mb-2">
         Today&apos;s winning numbers drawn at 12:49 PM UK time
       </p>
+      <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-6">
+        <svg aria-hidden="true" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+        <span>By <Link href="/about" className="text-emerald-600 dark:text-emerald-400 hover:underline">UK49s Results Team</Link></span>
+        <span aria-hidden="true">·</span>
+        <time dateTime={new Date().toISOString()}>Updated {new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</time>
+      </div>
 
       {/* Upcoming Draw Placeholder - shows ? balls + countdown before results */}
       <UpcomingDraw drawType="lunchtime" latestDate={latest?.date || ''} />
@@ -43,10 +49,16 @@ export default async function LunchtimePage() {
       <Countdown drawType="lunchtime" />
 
       {/* Latest Result */}
-      {latest && (
+      {latest ? (
         <section className="mb-8">
           <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Latest Lunchtime Result</h2>
           <ResultCard result={latest} featured />
+        </section>
+      ) : (
+        <section className="mb-8 p-6 rounded-xl border-2 border-dashed border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 text-center">
+          <p className="text-gray-600 dark:text-gray-400">
+            Results for today&apos;s Lunchtime draw will appear here shortly after 12:49 PM UK time. Check back soon or see our <Link href="/history" className="text-emerald-600 dark:text-emerald-400 hover:underline">past results archive</Link>.
+          </p>
         </section>
       )}
 

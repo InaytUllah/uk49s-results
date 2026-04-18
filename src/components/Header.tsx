@@ -97,15 +97,19 @@ export default function Header() {
                 onMouseLeave={closeDesktopMenu}
               >
                 <button
-                  className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  aria-expanded={activeDesktopMenu === category.label}
+                  aria-haspopup="true"
+                  aria-label={`${category.label} menu`}
+                  className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-emerald-700 ${
                     activeDesktopMenu === category.label
                       ? 'text-white bg-white/15'
                       : 'text-white/90 hover:text-white hover:bg-white/10'
                   }`}
                 >
-                  <span>{category.icon}</span>
+                  <span aria-hidden="true">{category.icon}</span>
                   <span>{category.label}</span>
                   <svg
+                    aria-hidden="true"
                     className={`w-3.5 h-3.5 transition-transform duration-200 ${
                       activeDesktopMenu === category.label ? 'rotate-180' : ''
                     }`}
@@ -127,10 +131,12 @@ export default function Header() {
               setMobileMenuOpen(!mobileMenuOpen);
               if (mobileMenuOpen) setMobileAccordion(null);
             }}
-            className="lg:hidden p-2 rounded-lg hover:bg-white/10"
-            aria-label="Toggle menu"
+            className="lg:hidden p-3 rounded-lg hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white min-w-[44px] min-h-[44px] flex items-center justify-center"
+            aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={mobileMenuOpen}
+            aria-controls="mobile-navigation"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg aria-hidden="true" className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               {mobileMenuOpen ? (
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               ) : (
@@ -186,20 +192,23 @@ export default function Header() {
 
       {/* Mobile Nav */}
       {mobileMenuOpen && (
-        <nav className="lg:hidden border-t border-white/20 max-h-[calc(100vh-4rem)] overflow-y-auto">
+        <nav id="mobile-navigation" aria-label="Main navigation" className="lg:hidden border-t border-white/20 max-h-[calc(100vh-4rem)] overflow-y-auto">
           <div className="px-4 py-3 space-y-1">
             {menuCategories.map(category => (
               <div key={category.label}>
                 {/* Accordion Header */}
                 <button
                   onClick={() => toggleMobileAccordion(category.label)}
-                  className="w-full flex items-center justify-between px-3 py-3 rounded-lg text-white/90 hover:bg-white/10 transition-colors"
+                  aria-expanded={mobileAccordion === category.label}
+                  aria-controls={`mobile-menu-${category.label.toLowerCase().replace(/\s+/g, '-')}`}
+                  className="w-full flex items-center justify-between px-3 py-3 rounded-lg text-white/90 hover:bg-white/10 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
                 >
                   <span className="flex items-center gap-2 font-medium text-sm">
-                    <span>{category.icon}</span>
+                    <span aria-hidden="true">{category.icon}</span>
                     <span>{category.label}</span>
                   </span>
                   <svg
+                    aria-hidden="true"
                     className={`w-4 h-4 transition-transform duration-200 ${
                       mobileAccordion === category.label ? 'rotate-180' : ''
                     }`}
@@ -214,7 +223,7 @@ export default function Header() {
 
                 {/* Accordion Content */}
                 {mobileAccordion === category.label && (
-                  <div className="ml-2 mb-2 space-y-0.5 animate-fadeInDown">
+                  <div id={`mobile-menu-${category.label.toLowerCase().replace(/\s+/g, '-')}`} className="ml-2 mb-2 space-y-0.5 animate-fadeInDown">
                     {category.items.map(item => (
                       <Link
                         key={item.href}

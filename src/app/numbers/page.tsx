@@ -53,9 +53,20 @@ export default async function NumbersIndexPage() {
       <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-2">
         UK49s Statistics — All 49 Numbers
       </h1>
-      <p className="text-gray-600 dark:text-gray-400 mb-8">
+      <p className="text-gray-600 dark:text-gray-400 mb-2">
         Complete UK 49s number frequency statistics ranked by draw count. Click any number for detailed stats and history.
       </p>
+      <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
+        <time dateTime={new Date().toISOString()}>Updated {new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</time> · Based on {totalDraws} recent draws
+      </p>
+
+      {/* Quick Answer Block — AEO */}
+      <section className="mb-8 p-5 rounded-xl bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-950/30 dark:to-teal-950/30 border-2 border-emerald-200 dark:border-emerald-800">
+        <p className="text-xs font-semibold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider mb-2">Quick Answer</p>
+        <p className="text-base text-gray-800 dark:text-gray-200 leading-relaxed">
+          Across the last <strong>{totalDraws} UK 49s draws</strong>, the most frequently drawn number is <strong>{sortedNumbers[0]?.[0]}</strong> (appearing {sortedNumbers[0]?.[1]} times) and the least frequent is <strong>{sortedNumbers[sortedNumbers.length - 1]?.[0]}</strong> ({sortedNumbers[sortedNumbers.length - 1]?.[1]} times). On average, each number is drawn {avgCount.toFixed(1)} times.
+        </p>
+      </section>
 
       {/* Quick grid of all numbers */}
       <section className="mb-10">
