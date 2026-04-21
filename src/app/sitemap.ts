@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next';
-import { getRecentDates, getLatestResults, getPredictionDate } from '@/lib/data/draws';
+import { getRecentDates, getLatestResults, getPredictionDate, getPredictionDateForLunchtime } from '@/lib/data/draws';
 import { SITE_URL } from '@/lib/data/seo';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -8,7 +8,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     getLatestResults(),
   ]);
 
-  const predInfo = getPredictionDate(allResults);
+  const teaInfo = getPredictionDate(allResults);
+  const lunchInfo = getPredictionDateForLunchtime(allResults);
 
   const now = new Date();
 
@@ -63,23 +64,27 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // NOTE: Blog result posts removed from sitemap.
   // Result blog URLs now redirect to canonical /lunchtime/results/{date} pages.
 
-  // Prediction blog posts — separate for lunchtime and teatime
+  // Prediction blog posts — lunchtime and teatime have separate "next prediction" dates
+  // so we include both to ensure tomorrow's lunchtime URL is in the sitemap the moment
+  // today's lunchtime results come in.
   const uniqueDates = [...new Set(allResults.map(r => r.date))].sort((a, b) => b.localeCompare(a));
-  const predDates = [predInfo.date, ...uniqueDates.slice(0, 5)];
-  const predictionPages = [...new Set(predDates)].flatMap(date => [
-    {
+  const lunchPredDates = [...new Set([lunchInfo.date, ...uniqueDates.slice(0, 5)])];
+  const teaPredDates = [...new Set([teaInfo.date, ...uniqueDates.slice(0, 5)])];
+
+  const predictionPages = [
+    ...lunchPredDates.map(date => ({
       url: `${SITE_URL}/blog/uk-49s-lunchtime-predictions-${date}`,
       lastModified: new Date(),
       changeFrequency: 'daily' as const,
       priority: 0.7,
-    },
-    {
+    })),
+    ...teaPredDates.map(date => ({
       url: `${SITE_URL}/blog/uk-49s-teatime-predictions-${date}`,
       lastModified: new Date(),
       changeFrequency: 'daily' as const,
       priority: 0.7,
-    },
-  ]);
+    })),
+  ];
 
   return [
     ...staticPages,

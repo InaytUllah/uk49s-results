@@ -29,7 +29,7 @@ export async function POST(request: Request) {
       }
     } else {
       // Start with daily core pages, merge any additional URLs
-      const baseUrls = buildDailyNotificationUrls();
+      const baseUrls = await buildDailyNotificationUrls();
       const urlSet = new Set(baseUrls);
       for (const u of additionalUrls) {
         urlSet.add(u.startsWith('http') ? u : `${SITE_URL}${u}`);

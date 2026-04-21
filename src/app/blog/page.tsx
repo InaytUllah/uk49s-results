@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { getLatestResults, getPredictionDate } from '@/lib/data/draws';
+import { getLatestResults, getPredictionDate, getPredictionDateForLunchtime } from '@/lib/data/draws';
 import { PAGE_SEO, ogMeta } from '@/lib/data/seo';
 import { breadcrumbSchema, webPageSchema } from '@/lib/schema';
 
@@ -15,31 +15,63 @@ export const revalidate = 60;
 
 export default async function BlogPage() {
   const results = await getLatestResults();
-  const predInfo = getPredictionDate(results);
+  const teaInfo = getPredictionDate(results);          // rolls over after teatime done
+  const lunchInfo = getPredictionDateForLunchtime(results); // rolls over after lunchtime done
 
-  // Prediction blog posts only — no more result blog posts
+  // For older prediction posts (historical archive)
   const uniqueDates = [...new Set(results.map(r => r.date))].sort((a, b) => b.localeCompare(a));
-  const predictionDates = [predInfo.date, ...uniqueDates.slice(0, 5)];
+  const historicalDates = uniqueDates.slice(0, 4);
 
-  const predictionPosts: { slug: string; title: string; excerpt: string; date: string; drawType: 'lunchtime' | 'teatime' }[] = [];
-  for (const date of [...new Set(predictionDates)].slice(0, 5)) {
-    const formattedDate = new Date(date + 'T00:00:00').toLocaleDateString('en-GB', {
+  const formatDate = (date: string) =>
+    new Date(date + 'T00:00:00').toLocaleDateString('en-GB', {
       weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
     });
-    predictionPosts.push({
-      slug: `uk-49s-lunchtime-predictions-${date}`,
-      title: `UK 49s Lunchtime Predictions for ${formattedDate}`,
-      excerpt: `Statistical analysis and 3 weighted prediction sets for the 12:49 PM Lunchtime draw on ${formattedDate}. Based on hot number trends.`,
-      date,
-      drawType: 'lunchtime',
-    });
-    predictionPosts.push({
-      slug: `uk-49s-teatime-predictions-${date}`,
-      title: `UK 49s Teatime Predictions for ${formattedDate}`,
-      excerpt: `Statistical analysis and 3 weighted prediction sets for the 5:49 PM Teatime draw on ${formattedDate}. Based on hot number trends.`,
-      date,
-      drawType: 'teatime',
-    });
+
+  const predictionPosts: { slug: string; title: string; excerpt: string; date: string; drawType: 'lunchtime' | 'teatime' }[] = [];
+
+  // Latest lunchtime prediction (uses lunch-aware date — rolls over right after lunch draw)
+  predictionPosts.push({
+    slug: `uk-49s-lunchtime-predictions-${lunchInfo.date}`,
+    title: `UK 49s Lunchtime Predictions for ${formatDate(lunchInfo.date)}`,
+    excerpt: `Statistical analysis and 3 weighted prediction sets for the 12:49 PM Lunchtime draw on ${formatDate(lunchInfo.date)}. Based on hot number trends.`,
+    date: lunchInfo.date,
+    drawType: 'lunchtime',
+  });
+
+  // Latest teatime prediction (uses tea-aware date — rolls over after teatime draw)
+  predictionPosts.push({
+    slug: `uk-49s-teatime-predictions-${teaInfo.date}`,
+    title: `UK 49s Teatime Predictions for ${formatDate(teaInfo.date)}`,
+    excerpt: `Statistical analysis and 3 weighted prediction sets for the 5:49 PM Teatime draw on ${formatDate(teaInfo.date)}. Based on hot number trends.`,
+    date: teaInfo.date,
+    drawType: 'teatime',
+  });
+
+  // Add historical prediction posts (avoid duplicates with latest)
+  const seenSlugs = new Set(predictionPosts.map(p => p.slug));
+  for (const date of historicalDates) {
+    const lunchSlug = `uk-49s-lunchtime-predictions-${date}`;
+    const teaSlug = `uk-49s-teatime-predictions-${date}`;
+    if (!seenSlugs.has(lunchSlug)) {
+      predictionPosts.push({
+        slug: lunchSlug,
+        title: `UK 49s Lunchtime Predictions for ${formatDate(date)}`,
+        excerpt: `Statistical analysis and 3 weighted prediction sets for the 12:49 PM Lunchtime draw on ${formatDate(date)}. Based on hot number trends.`,
+        date,
+        drawType: 'lunchtime',
+      });
+      seenSlugs.add(lunchSlug);
+    }
+    if (!seenSlugs.has(teaSlug)) {
+      predictionPosts.push({
+        slug: teaSlug,
+        title: `UK 49s Teatime Predictions for ${formatDate(date)}`,
+        excerpt: `Statistical analysis and 3 weighted prediction sets for the 5:49 PM Teatime draw on ${formatDate(date)}. Based on hot number trends.`,
+        date,
+        drawType: 'teatime',
+      });
+      seenSlugs.add(teaSlug);
+    }
   }
 
   // Latest results for quick-link section (deduplicate by date, show last 5 dates)

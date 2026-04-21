@@ -18,11 +18,11 @@ export async function GET(request: Request) {
   try {
     revalidatePath('/', 'layout');
 
-    // Draw-time crons: only 4 URLs (today's results + predictions)
-    // Daily full run: core pages + recent results (~13 URLs)
+    // Draw-time crons: ~7 URLs (today's results + smart prediction dates)
+    // Daily full run: core pages + recent results (~15 URLs)
     const urls = isFullSubmission
-      ? buildDailyNotificationUrls()
-      : buildNotificationUrls();
+      ? await buildDailyNotificationUrls()
+      : await buildNotificationUrls();
 
     const indexingResult = await notifyGoogleIndexing(urls);
 
