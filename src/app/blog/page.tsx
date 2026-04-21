@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { getLatestResults, getPredictionDate, getPredictionDateForLunchtime } from '@/lib/data/draws';
+import { getLatestResults } from '@/lib/data/draws';
 import { PAGE_SEO, ogMeta } from '@/lib/data/seo';
 import { breadcrumbSchema, webPageSchema } from '@/lib/schema';
 
@@ -15,66 +15,7 @@ export const revalidate = 60;
 
 export default async function BlogPage() {
   const results = await getLatestResults();
-  const teaInfo = getPredictionDate(results);          // rolls over after teatime done
-  const lunchInfo = getPredictionDateForLunchtime(results); // rolls over after lunchtime done
-
-  // For older prediction posts (historical archive)
   const uniqueDates = [...new Set(results.map(r => r.date))].sort((a, b) => b.localeCompare(a));
-  const historicalDates = uniqueDates.slice(0, 4);
-
-  const formatDate = (date: string) =>
-    new Date(date + 'T00:00:00').toLocaleDateString('en-GB', {
-      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
-    });
-
-  const predictionPosts: { slug: string; title: string; excerpt: string; date: string; drawType: 'lunchtime' | 'teatime' }[] = [];
-
-  // Latest lunchtime prediction (uses lunch-aware date — rolls over right after lunch draw)
-  predictionPosts.push({
-    slug: `uk-49s-lunchtime-predictions-${lunchInfo.date}`,
-    title: `UK 49s Lunchtime Predictions for ${formatDate(lunchInfo.date)}`,
-    excerpt: `Statistical analysis and 3 weighted prediction sets for the 12:49 PM Lunchtime draw on ${formatDate(lunchInfo.date)}. Based on hot number trends.`,
-    date: lunchInfo.date,
-    drawType: 'lunchtime',
-  });
-
-  // Latest teatime prediction (uses tea-aware date — rolls over after teatime draw)
-  predictionPosts.push({
-    slug: `uk-49s-teatime-predictions-${teaInfo.date}`,
-    title: `UK 49s Teatime Predictions for ${formatDate(teaInfo.date)}`,
-    excerpt: `Statistical analysis and 3 weighted prediction sets for the 5:49 PM Teatime draw on ${formatDate(teaInfo.date)}. Based on hot number trends.`,
-    date: teaInfo.date,
-    drawType: 'teatime',
-  });
-
-  // Add historical prediction posts (avoid duplicates with latest)
-  const seenSlugs = new Set(predictionPosts.map(p => p.slug));
-  for (const date of historicalDates) {
-    const lunchSlug = `uk-49s-lunchtime-predictions-${date}`;
-    const teaSlug = `uk-49s-teatime-predictions-${date}`;
-    if (!seenSlugs.has(lunchSlug)) {
-      predictionPosts.push({
-        slug: lunchSlug,
-        title: `UK 49s Lunchtime Predictions for ${formatDate(date)}`,
-        excerpt: `Statistical analysis and 3 weighted prediction sets for the 12:49 PM Lunchtime draw on ${formatDate(date)}. Based on hot number trends.`,
-        date,
-        drawType: 'lunchtime',
-      });
-      seenSlugs.add(lunchSlug);
-    }
-    if (!seenSlugs.has(teaSlug)) {
-      predictionPosts.push({
-        slug: teaSlug,
-        title: `UK 49s Teatime Predictions for ${formatDate(date)}`,
-        excerpt: `Statistical analysis and 3 weighted prediction sets for the 5:49 PM Teatime draw on ${formatDate(date)}. Based on hot number trends.`,
-        date,
-        drawType: 'teatime',
-      });
-      seenSlugs.add(teaSlug);
-    }
-  }
-
-  // Latest results for quick-link section (deduplicate by date, show last 5 dates)
   const latestDates = uniqueDates.slice(0, 5);
 
   return (
@@ -85,6 +26,76 @@ export default async function BlogPage() {
       <p className="text-gray-600 dark:text-gray-400 mb-8">
         Predictions, analysis and number trends for UK 49s Lunchtime and Teatime draws
       </p>
+
+      {/* Today's Predictions — hub pages */}
+      <section className="mb-10">
+        <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Today&apos;s Predictions</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <Link
+            href="/lunchtime-predictions"
+            className="block bg-amber-50 dark:bg-amber-950/20 border-2 border-amber-200 dark:border-amber-800 rounded-xl p-5 hover:shadow-lg transition-shadow"
+          >
+            <p className="text-sm font-semibold text-amber-600 dark:text-amber-400 mb-1">12:49 PM Draw</p>
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1">Lunchtime Predictions</h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              Fresh prediction sets for today&apos;s Lunchtime draw, refreshed after each result.
+            </p>
+          </Link>
+          <Link
+            href="/teatime-predictions"
+            className="block bg-indigo-50 dark:bg-indigo-950/20 border-2 border-indigo-200 dark:border-indigo-800 rounded-xl p-5 hover:shadow-lg transition-shadow"
+          >
+            <p className="text-sm font-semibold text-indigo-600 dark:text-indigo-400 mb-1">5:49 PM Draw</p>
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1">Teatime Predictions</h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              Fresh prediction sets for today&apos;s Teatime draw, refreshed after each result.
+            </p>
+          </Link>
+        </div>
+      </section>
+
+      {/* Number Analysis Tools */}
+      <section className="mb-10">
+        <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Number Analysis</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <Link
+            href="/hot-cold-numbers"
+            className="block bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-5 hover:shadow-md transition-shadow"
+          >
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1">Hot &amp; Cold Numbers</h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              Most and least frequently drawn numbers from recent UK 49s draws.
+            </p>
+          </Link>
+          <Link
+            href="/numbers"
+            className="block bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-5 hover:shadow-md transition-shadow"
+          >
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1">Number Statistics</h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              Frequency data, last drawn dates, and hot/cold status for all 49 numbers.
+            </p>
+          </Link>
+          <Link
+            href="/lunchtime-vs-teatime"
+            className="block bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-5 hover:shadow-md transition-shadow"
+          >
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1">Lunchtime vs Teatime</h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              Side-by-side comparison of both daily draws and how their numbers differ.
+            </p>
+          </Link>
+          <Link
+            href="/odds"
+            className="block bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-5 hover:shadow-md transition-shadow"
+          >
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1">Odds &amp; Payouts</h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              How UK 49s odds work for Pick 1 through Pick 5 bets, with and without Booster.
+            </p>
+          </Link>
+        </div>
+      </section>
 
       {/* Latest Results Quick Links */}
       <section className="mb-10">
@@ -136,42 +147,6 @@ export default async function BlogPage() {
           <Link href="/history" className="text-sm text-emerald-600 dark:text-emerald-400 hover:underline font-medium">
             View full results history &rarr;
           </Link>
-        </div>
-      </section>
-
-      {/* Prediction Posts */}
-      <section>
-        <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Predictions & Analysis</h2>
-        <div className="space-y-6">
-          {predictionPosts.map((post) => (
-            <article
-              key={post.slug}
-              className="bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-200 dark:border-gray-700 p-6 hover:shadow-lg transition-shadow"
-            >
-              <div className="flex items-center gap-2 mb-2">
-                <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                  post.drawType === 'lunchtime'
-                    ? 'bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300'
-                    : 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/50 dark:text-indigo-300'
-                }`}>
-                  {post.drawType === 'lunchtime' ? 'Lunchtime' : 'Teatime'} Predictions
-                </span>
-                <span className="text-sm text-gray-500 dark:text-gray-400">{post.date}</span>
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-                {post.title}
-              </h3>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">
-                {post.excerpt}
-              </p>
-              <Link
-                href={`/blog/${post.slug}`}
-                className="inline-block mt-3 text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 text-sm font-medium"
-              >
-                View Full Analysis &rarr;
-              </Link>
-            </article>
-          ))}
         </div>
       </section>
 

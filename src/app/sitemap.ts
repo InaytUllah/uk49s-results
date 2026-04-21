@@ -1,15 +1,9 @@
 import { MetadataRoute } from 'next';
-import { getRecentDates, getLatestResults, getPredictionDate, getPredictionDateForLunchtime } from '@/lib/data/draws';
+import { getRecentDates } from '@/lib/data/draws';
 import { SITE_URL } from '@/lib/data/seo';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [dates, allResults] = await Promise.all([
-    getRecentDates(),
-    getLatestResults(),
-  ]);
-
-  const teaInfo = getPredictionDate(allResults);
-  const lunchInfo = getPredictionDateForLunchtime(allResults);
+  const dates = await getRecentDates();
 
   const now = new Date();
 
@@ -64,33 +58,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // NOTE: Blog result posts removed from sitemap.
   // Result blog URLs now redirect to canonical /lunchtime/results/{date} pages.
 
-  // Prediction blog posts — lunchtime and teatime have separate "next prediction" dates
-  // so we include both to ensure tomorrow's lunchtime URL is in the sitemap the moment
-  // today's lunchtime results come in.
-  const uniqueDates = [...new Set(allResults.map(r => r.date))].sort((a, b) => b.localeCompare(a));
-  const lunchPredDates = [...new Set([lunchInfo.date, ...uniqueDates.slice(0, 5)])];
-  const teaPredDates = [...new Set([teaInfo.date, ...uniqueDates.slice(0, 5)])];
-
-  const predictionPages = [
-    ...lunchPredDates.map(date => ({
-      url: `${SITE_URL}/blog/uk-49s-lunchtime-predictions-${date}`,
-      lastModified: new Date(),
-      changeFrequency: 'daily' as const,
-      priority: 0.7,
-    })),
-    ...teaPredDates.map(date => ({
-      url: `${SITE_URL}/blog/uk-49s-teatime-predictions-${date}`,
-      lastModified: new Date(),
-      changeFrequency: 'daily' as const,
-      priority: 0.7,
-    })),
-  ];
+  // NOTE: Daily prediction blog posts (/blog/uk-49s-{draw}-predictions-{date})
+  // are intentionally NOT in the sitemap and are noindexed. They are near-duplicates
+  // of each other (same template, only date+numbers differ) and Google's spam update
+  // classifies this as scaled content abuse. The rolling /lunchtime-predictions and
+  // /teatime-predictions hub pages serve as the canonical daily prediction URLs.
 
   return [
     ...staticPages,
     ...numberPages,
     ...lunchtimeResultPages,
     ...teatimeResultPages,
-    ...predictionPages,
   ];
 }

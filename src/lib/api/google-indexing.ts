@@ -1,6 +1,5 @@
 import { GoogleAuth } from 'google-auth-library';
 import { SITE_URL } from '@/lib/data/seo';
-import { getLatestResults, getPredictionDate, getPredictionDateForLunchtime } from '@/lib/data/draws';
 
 const INDEXING_API_URL = 'https://indexing.googleapis.com/v3/urlNotifications:publish';
 const BATCH_SIZE = 10;
@@ -116,8 +115,10 @@ export async function notifyGoogleIndexing(urls: string[]): Promise<NotifyResult
  * Build a focused set of URLs for draw-time cron notifications.
  * Only submits genuinely new/changed pages — NOT the entire site.
  *
- * Smart logic: if today's lunchtime result is already in, we submit TOMORROW's
- * lunchtime prediction URL (since today's is stale). Same for teatime.
+ * We do NOT submit dated prediction blog URLs because Google's spam update
+ * flags daily near-duplicate pages as scaled content abuse. The rolling
+ * /lunchtime-predictions and /teatime-predictions hub URLs serve as the
+ * canonical daily prediction endpoints.
  */
 export async function buildNotificationUrls(): Promise<string[]> {
   const fmt = (d: Date) => d.toISOString().substring(0, 10);
@@ -126,74 +127,61 @@ export async function buildNotificationUrls(): Promise<string[]> {
 
   const urls = new Set<string>();
 
-  // Today's result pages (the new content just posted)
+  // Today's result pages (unique per date — Google indexes these well)
   urls.add(`${SITE_URL}/lunchtime/results/${todayStr}`);
   urls.add(`${SITE_URL}/teatime/results/${todayStr}`);
 
-  // Predictions hub pages (always update after each draw)
+  // Rolling hub pages (same URL, refreshed content — Google loves this pattern)
   urls.add(`${SITE_URL}/predictions`);
   urls.add(`${SITE_URL}/lunchtime-predictions`);
   urls.add(`${SITE_URL}/teatime-predictions`);
-
-  // Smart prediction URLs — use the date logic that rolls over when a draw is done
-  try {
-    const results = await getLatestResults();
-    const lunchInfo = getPredictionDateForLunchtime(results);
-    const teaInfo = getPredictionDate(results);
-    urls.add(`${SITE_URL}/blog/uk-49s-lunchtime-predictions-${lunchInfo.date}`);
-    urls.add(`${SITE_URL}/blog/uk-49s-teatime-predictions-${teaInfo.date}`);
-  } catch {
-    // Fallback: if fetching results fails, submit today's URLs
-    urls.add(`${SITE_URL}/blog/uk-49s-lunchtime-predictions-${todayStr}`);
-    urls.add(`${SITE_URL}/blog/uk-49s-teatime-predictions-${todayStr}`);
-  }
+  urls.add(`${SITE_URL}/hot-cold-numbers`);
+  urls.add(`${SITE_URL}/numbers`);
 
   return [...urls];
 }
 
 /**
  * Build a broader set of URLs for the daily full indexing run.
- * Includes core static pages + recent dynamic content.
+ * Only includes pages Google is likely to actually index:
+ *  - core static pages (unique content per URL)
+ *  - recent result pages (unique numbers per date)
+ *  - rolling hub pages (stable URL, fresh content)
+ *
+ * We skip dated prediction blog URLs — those are noindexed.
  */
 export async function buildDailyNotificationUrls(): Promise<string[]> {
   const nowUK = new Date(new Date().toLocaleString('en-US', { timeZone: 'Europe/London' }));
   const yesterday = new Date(nowUK);
   yesterday.setDate(yesterday.getDate() - 1);
-  const tomorrow = new Date(nowUK);
-  tomorrow.setDate(tomorrow.getDate() + 1);
 
   const fmt = (d: Date) => d.toISOString().substring(0, 10);
   const todayStr = fmt(nowUK);
   const yesterdayStr = fmt(yesterday);
-  const tomorrowStr = fmt(tomorrow);
 
   const urls = new Set<string>();
 
-  // Core static pages (not the whole site)
-  const corePages = ['/', '/lunchtime', '/teatime', '/predictions', '/lunchtime-predictions', '/teatime-predictions', '/hot-cold-numbers', '/numbers', '/blog'];
+  // Core static + rolling pages
+  const corePages = [
+    '/',
+    '/lunchtime',
+    '/teatime',
+    '/predictions',
+    '/lunchtime-predictions',
+    '/teatime-predictions',
+    '/hot-cold-numbers',
+    '/numbers',
+    '/history',
+    '/lunchtime-vs-teatime',
+  ];
   for (const page of corePages) {
     urls.add(`${SITE_URL}${page}`);
   }
 
-  // Recent result pages (today + yesterday)
+  // Recent result pages (unique content per date)
   for (const game of ['lunchtime', 'teatime']) {
     urls.add(`${SITE_URL}/${game}/results/${todayStr}`);
     urls.add(`${SITE_URL}/${game}/results/${yesterdayStr}`);
-  }
-
-  // Smart prediction URLs — based on which draws are done
-  try {
-    const results = await getLatestResults();
-    const lunchInfo = getPredictionDateForLunchtime(results);
-    const teaInfo = getPredictionDate(results);
-    urls.add(`${SITE_URL}/blog/uk-49s-lunchtime-predictions-${lunchInfo.date}`);
-    urls.add(`${SITE_URL}/blog/uk-49s-teatime-predictions-${teaInfo.date}`);
-  } catch {
-    // Fallback: submit today's + tomorrow's URLs
-    urls.add(`${SITE_URL}/blog/uk-49s-lunchtime-predictions-${todayStr}`);
-    urls.add(`${SITE_URL}/blog/uk-49s-teatime-predictions-${todayStr}`);
-    urls.add(`${SITE_URL}/blog/uk-49s-lunchtime-predictions-${tomorrowStr}`);
-    urls.add(`${SITE_URL}/blog/uk-49s-teatime-predictions-${tomorrowStr}`);
   }
 
   return [...urls];

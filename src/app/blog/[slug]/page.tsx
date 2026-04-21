@@ -83,15 +83,24 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const drawLabel = drawType === 'lunchtime' ? 'Lunchtime' : 'Teatime';
   const drawTime = drawType === 'lunchtime' ? '12:49 PM' : '5:49 PM';
   const formattedDate = formatDate(date);
+  // Canonical points to the rolling hub page, NOT this dated URL.
+  // Dated URLs are kept for direct access / backlinks but not indexed
+  // because they are near-duplicates of each other (Google spam update).
+  const hubUrl = `${SITE_URL}/${drawType}-predictions`;
 
   return {
     title: `UK 49s ${drawLabel} Predictions for ${formattedDate} — Analysis & Hot Numbers | ${SITE_NAME}`,
     description: `In-depth UK 49s ${drawLabel} predictions for ${formattedDate}. Statistical analysis of hot & cold number trends and 3 weighted prediction sets for the ${drawTime} draw.`,
-    alternates: { canonical: `${SITE_URL}/blog/${slug}` },
+    alternates: { canonical: hubUrl },
+    robots: {
+      index: false,
+      follow: true,
+    },
     openGraph: {
       title: `UK 49s ${drawLabel} Predictions — ${formattedDate}`,
       description: `Statistical analysis and prediction sets for the ${drawTime} ${drawLabel} draw.`,
       type: 'article',
+      url: hubUrl,
       images: [{
         url: `${SITE_URL}/api/og?title=${encodeURIComponent(`${drawLabel} Predictions — ${formattedDate}`)}&subtitle=${encodeURIComponent(`${drawTime} Draw — Statistical Analysis`)}&type=prediction`,
         width: 1200, height: 630,
