@@ -44,6 +44,7 @@ const menuCategories: MenuCategory[] = [
     label: 'Tools & Info',
     icon: '🛠️',
     items: [
+      { href: '/check', icon: '✅', title: 'Number Checker', description: 'Did your numbers win? Check the archive' },
       { href: '/number-generator', icon: '🎲', title: 'Number Generator', description: 'Generate random UK 49s numbers' },
       { href: '/how-to-play', icon: '📖', title: 'How to Play', description: 'Rules, odds and betting guide' },
       { href: '/faq', icon: '❓', title: 'FAQ', description: 'Frequently asked questions' },

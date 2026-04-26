@@ -131,11 +131,11 @@ export default async function HomePage() {
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {[
+            { href: '/check', title: 'Number Checker', desc: 'Did your numbers win? Scan the archive', icon: '✅' },
             { href: '/hot-cold-numbers', title: 'Hot & Cold Numbers', desc: 'See most and least drawn numbers', icon: '🔥' },
             { href: '/predictions', title: 'Predictions', desc: 'Statistical predictions for next draw', icon: '🎯' },
             { href: '/number-generator', title: 'Number Generator', desc: 'Generate random UK 49s numbers', icon: '🎲' },
             { href: '/history', title: 'Past Results', desc: 'Browse complete results history', icon: '📊' },
-            { href: '/how-to-play', title: 'How to Play', desc: 'Learn UK 49s rules and odds', icon: '📖' },
             { href: '/blog', title: 'Latest News', desc: 'Tips, analysis and news', icon: '📰' },
           ].map(item => (
             <Link

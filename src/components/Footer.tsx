@@ -37,6 +37,7 @@ export default function Footer() {
           <nav aria-label="Footer tools">
             <h3 className="text-white font-semibold mb-4">Tools</h3>
             <ul className="space-y-1 text-sm">
+              <li><Link href="/check" className="block py-1.5 hover:text-white transition-colors focus:outline-none focus-visible:text-white focus-visible:underline">Number Checker</Link></li>
               <li><Link href="/number-generator" className="block py-1.5 hover:text-white transition-colors focus:outline-none focus-visible:text-white focus-visible:underline">Number Generator</Link></li>
               <li><Link href="/numbers" className="block py-1.5 hover:text-white transition-colors focus:outline-none focus-visible:text-white focus-visible:underline">Number Stats</Link></li>
               <li><Link href="/lunchtime-vs-teatime" className="block py-1.5 hover:text-white transition-colors focus:outline-none focus-visible:text-white focus-visible:underline">Lunchtime vs Teatime</Link></li>

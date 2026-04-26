@@ -4,6 +4,7 @@ import LotteryBalls from '@/components/LotteryBalls';
 import { getLatestResults, getHotNumbers, getColdNumbers, getPredictionDateForLunchtime, calculateFrequency } from '@/lib/data/draws';
 import { SITE_NAME, SITE_URL } from '@/lib/data/seo';
 import { breadcrumbSchema } from '@/lib/schema';
+import HitTracker from './HitTracker';
 
 export const metadata: Metadata = {
   title: `UK 49s Lunchtime Predictions for Today — Hot Numbers & Analysis | ${SITE_NAME}`,
@@ -116,6 +117,14 @@ export default async function LunchtimePredictionsPage() {
           ))}
         </div>
       </section>
+
+      {/* Track record / hit-tracking */}
+      <HitTracker
+        drawType="lunchtime"
+        drawResults={lunchtimeResults}
+        hotNumbers={hot}
+        seedOffsetStart={1}
+      />
 
       {/* Trending Numbers */}
       <section className="mb-10">

@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { SITE_NAME, SITE_URL, PAGE_SEO, ogMeta } from '@/lib/data/seo';
 import { breadcrumbSchema, webPageSchema } from '@/lib/schema';
+import PayoutCalculator from './PayoutCalculator';
 
 const oddsTitle = `UK 49s Odds & Payouts - Winning Chances Explained | ${SITE_NAME}`;
 const oddsDesc = 'Complete UK 49s odds table for Pick 1 through Pick 5 bets, with and without Booster ball. Understand your winning chances and how payouts work.';
@@ -79,6 +80,11 @@ export default function OddsPage() {
       <p className="text-gray-600 dark:text-gray-400 mb-8">
         Understand your chances of winning for each bet type, with and without the Booster ball.
       </p>
+
+      {/* Interactive Payout Calculator */}
+      <section className="mb-10">
+        <PayoutCalculator />
+      </section>
 
       {/* Main Odds Table */}
       <section className="mb-10">

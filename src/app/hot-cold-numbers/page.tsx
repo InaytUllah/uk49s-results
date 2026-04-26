@@ -4,6 +4,7 @@ import LotteryBalls from '@/components/LotteryBalls';
 import { getLatestResults, getHotNumbers, getColdNumbers, calculateFrequency } from '@/lib/data/draws';
 import { PAGE_SEO, ogMeta } from '@/lib/data/seo';
 import { breadcrumbSchema, webPageSchema } from '@/lib/schema';
+import HotColdExplorer from './HotColdExplorer';
 
 export const metadata: Metadata = {
   title: PAGE_SEO.hotCold.title,
@@ -51,6 +52,13 @@ export default async function HotColdPage() {
           The top <strong>5 hottest UK 49s numbers today</strong> are <strong className="text-red-600 dark:text-red-400">{hotAll.slice(0, 5).join(', ')}</strong>. The coldest are <strong className="text-blue-600 dark:text-blue-400">{coldAll.slice(0, 5).join(', ')}</strong>. These rankings combine {lunchtimeResults.length} Lunchtime and {teatimeResults.length} Teatime draws from the last few weeks.
         </p>
       </section>
+
+      {/* Interactive explorer with windows + overdue tab */}
+      <HotColdExplorer
+        results={allResults}
+        lunchtimeResults={lunchtimeResults}
+        teatimeResults={teatimeResults}
+      />
 
       {/* Overall Hot & Cold */}
       <section className="mb-10">

@@ -4,6 +4,7 @@ import LotteryBalls from '@/components/LotteryBalls';
 import { getLatestResults, getHotNumbers, getColdNumbers, getPredictionDate, calculateFrequency } from '@/lib/data/draws';
 import { SITE_NAME, SITE_URL } from '@/lib/data/seo';
 import { breadcrumbSchema } from '@/lib/schema';
+import HitTracker from '../lunchtime-predictions/HitTracker';
 
 export const metadata: Metadata = {
   title: `UK 49s Teatime Predictions for Today — Hot Numbers & Analysis | ${SITE_NAME}`,
@@ -116,6 +117,14 @@ export default async function TeatimePredictionsPage() {
           ))}
         </div>
       </section>
+
+      {/* Track record / hit-tracking */}
+      <HitTracker
+        drawType="teatime"
+        drawResults={teatimeResults}
+        hotNumbers={hot}
+        seedOffsetStart={4}
+      />
 
       {/* Trending Numbers */}
       <section className="mb-10">
