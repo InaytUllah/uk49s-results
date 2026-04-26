@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import InstallPrompt from '@/components/InstallPrompt';
 
 import { PAGE_SEO, SITE_URL } from '@/lib/data/seo';
 import Script from 'next/script';
@@ -41,6 +42,15 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: '/',
+  },
+  manifest: '/manifest.webmanifest',
+  appleWebApp: {
+    capable: true,
+    title: 'UK49s',
+    statusBarStyle: 'default',
+  },
+  formatDetection: {
+    telephone: false,
   },
 };
 
@@ -103,6 +113,7 @@ export default function RootLayout({
           {children}
         </main>
         <Footer />
+        <InstallPrompt />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
