@@ -201,10 +201,11 @@ async function scrapeResults(drawType: 'lunchtime' | 'teatime'): Promise<UK49sRe
     dateMatches.push({ date: dateMatch[0], index: dateMatch.index });
   }
 
-  // CRITICAL: 49s.events has a date-shift quirk in its archive section.
-  // Each date section displays the PREVIOUS day's results, not that day's.
-  // e.g. "Thursday 19th March" section shows Wednesday 18th March numbers.
-  // Fix: subtract 1 day from each section's header date to get the real date.
+  // 49s.events: each date header sits ABOVE its own balls.
+  // (We previously subtracted 1 day to compensate for what looked like a
+  // date-shift quirk, but that hack now misroutes today's balls to yesterday
+  // — and za.national-lottery then overwrites yesterday with its own correct
+  // data, silently dropping today's results. Trust the published date.)
 
   // Get current UK date/time
   const nowUK = new Date(new Date().toLocaleString('en-US', { timeZone: 'Europe/London' }));
@@ -215,12 +216,9 @@ async function scrapeResults(drawType: 'lunchtime' | 'teatime'): Promise<UK49sRe
     const headerDate = parseDateString(dateMatches[i].date);
     if (!headerDate) continue;
 
-    // Shift date back by 1 day to get the ACTUAL result date
-    const headerDateObj = new Date(headerDate + 'T12:00:00Z');
-    headerDateObj.setDate(headerDateObj.getDate() - 1);
-    const isoDate = headerDateObj.toISOString().substring(0, 10);
+    const isoDate = headerDate;
 
-    // Skip future dates (safety check)
+    // Skip future dates (safety check — anything labelled tomorrow+ is definitely wrong)
     if (isoDate > todayISO) continue;
 
     // Get the HTML chunk between this date and the next date (or end)
