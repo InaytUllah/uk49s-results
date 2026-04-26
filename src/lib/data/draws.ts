@@ -192,13 +192,16 @@ async function scrapeResults(drawType: 'lunchtime' | 'teatime'): Promise<UK49sRe
   const html = await response.text();
   const results: UK49sResult[] = [];
 
-  // Split HTML into sections by date headers
-  // Each section contains a date followed by its ball numbers
-  const dateRegex = /(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)\s+\d+(?:st|nd|rd|th)\s+\w+\s+\d{4}/g;
+  // Split HTML into sections by date headers.
+  // 49s.events wraps the ordinal suffix in <sup> tags now, e.g. "Sunday 26<sup>th</sup> April 2026".
+  // Match flexibly so the regex still works whether the source uses <sup> or not.
+  const dateRegex = /(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)\s+(\d+)(?:<sup>)?(?:st|nd|rd|th)(?:<\/sup>)?\s+(January|February|March|April|May|June|July|August|September|October|November|December)\s+(\d{4})/g;
   const dateMatches: { date: string; index: number }[] = [];
   let dateMatch;
   while ((dateMatch = dateRegex.exec(html)) !== null) {
-    dateMatches.push({ date: dateMatch[0], index: dateMatch.index });
+    // Reconstruct a clean "Weekday DD Month YYYY" string for parseDateString.
+    const cleanDate = `${dateMatch[1]} ${dateMatch[2]} ${dateMatch[3]} ${dateMatch[4]}`;
+    dateMatches.push({ date: cleanDate, index: dateMatch.index });
   }
 
   // 49s.events: each date header sits ABOVE its own balls.
