@@ -335,17 +335,17 @@ export default async function BlogPostPage({ params }: Props) {
         </section>
 
         {/* Links */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <Link href={`/blog/uk-49s-${otherDraw}-predictions-${date}`} className={`px-4 py-3 ${drawType === 'lunchtime' ? 'bg-indigo-500 hover:bg-indigo-600' : 'bg-amber-500 hover:bg-amber-600'} text-white rounded-lg font-medium text-center text-sm transition-colors`}>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
+          <Link href={`/blog/uk-49s-${otherDraw}-predictions-${date}`} className={`px-2 sm:px-4 py-3 ${drawType === 'lunchtime' ? 'bg-indigo-500 hover:bg-indigo-600' : 'bg-amber-500 hover:bg-amber-600'} text-white rounded-lg font-medium text-center text-xs sm:text-sm leading-tight transition-colors`}>
             {otherLabel} Predictions
           </Link>
-          <Link href={`/${drawType}-predictions`} className="px-4 py-3 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 transition-colors font-medium text-center text-sm">
+          <Link href={`/${drawType}-predictions`} className="px-2 sm:px-4 py-3 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 transition-colors font-medium text-center text-xs sm:text-sm leading-tight">
             Live {drawLabel}
           </Link>
-          <Link href={`/${drawType}`} className={`px-4 py-3 ${drawType === 'lunchtime' ? 'bg-amber-500 hover:bg-amber-600' : 'bg-indigo-500 hover:bg-indigo-600'} text-white rounded-lg font-medium text-center text-sm transition-colors`}>
+          <Link href={`/${drawType}`} className={`px-2 sm:px-4 py-3 ${drawType === 'lunchtime' ? 'bg-amber-500 hover:bg-amber-600' : 'bg-indigo-500 hover:bg-indigo-600'} text-white rounded-lg font-medium text-center text-xs sm:text-sm leading-tight transition-colors`}>
             {drawLabel} Results
           </Link>
-          <Link href="/hot-cold-numbers" className="px-4 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors font-medium text-center text-sm">
+          <Link href="/hot-cold-numbers" className="px-2 sm:px-4 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors font-medium text-center text-xs sm:text-sm leading-tight">
             Hot & Cold
           </Link>
         </div>

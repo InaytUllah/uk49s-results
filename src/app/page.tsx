@@ -26,33 +26,24 @@ export default async function HomePage() {
     <div className="max-w-7xl mx-auto px-4 py-8">
       {/* Hero Section */}
       <section className="text-center mb-8">
-        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-3">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-3">
           UK 49s Results Today
         </h1>
-        <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+        <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
           Latest Lunchtime and Teatime winning numbers for {todayLabel}
         </p>
       </section>
 
-      {/* Quick Answer Block — AEO optimized */}
+      {/* AEO answer (visually hidden — duplicates the visual ball cards below for AI Overviews) */}
       {(latestLunchtime || latestTeatime) && (
-        <section className="mb-8 p-5 max-w-3xl mx-auto rounded-xl bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-950/30 dark:to-teal-950/30 border-2 border-emerald-200 dark:border-emerald-800">
-          <p className="text-xs font-semibold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider mb-2">Today&apos;s Winning Numbers</p>
-          <div className="space-y-1 text-base text-gray-800 dark:text-gray-200">
-            {latestLunchtime && (
-              <p>
-                <strong>Lunchtime (12:49 PM)</strong>: {latestLunchtime.numbers.join(', ')}
-                {latestLunchtime.booster !== undefined && <> · Booster: {latestLunchtime.booster}</>}
-              </p>
-            )}
-            {latestTeatime && (
-              <p>
-                <strong>Teatime (5:49 PM)</strong>: {latestTeatime.numbers.join(', ')}
-                {latestTeatime.booster !== undefined && <> · Booster: {latestTeatime.booster}</>}
-              </p>
-            )}
-          </div>
-        </section>
+        <div className="sr-only">
+          {latestLunchtime && (
+            <p>Today&apos;s UK 49s Lunchtime winning numbers (12:49 PM): {latestLunchtime.numbers.join(', ')}{latestLunchtime.booster !== undefined && `, Booster ${latestLunchtime.booster}`}.</p>
+          )}
+          {latestTeatime && (
+            <p>Today&apos;s UK 49s Teatime winning numbers (5:49 PM): {latestTeatime.numbers.join(', ')}{latestTeatime.booster !== undefined && `, Booster ${latestTeatime.booster}`}.</p>
+          )}
+        </div>
       )}
 
       {/* Upcoming Draw Placeholders - show ? balls before results are announced */}

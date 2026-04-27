@@ -45,13 +45,12 @@ export default async function HotColdPage() {
         <time dateTime={now.toISOString()}>Updated {updatedLabel}</time> · Based on {allResults.length} recent draws
       </p>
 
-      {/* Quick Answer Box — optimized for AI Overviews, featured snippets, AEO */}
-      <section className="mb-8 p-5 rounded-xl bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-950/30 dark:to-teal-950/30 border-2 border-emerald-200 dark:border-emerald-800">
-        <p className="text-xs font-semibold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider mb-2">Quick Answer</p>
-        <p className="text-base text-gray-800 dark:text-gray-200 leading-relaxed">
-          The top <strong>5 hottest UK 49s numbers today</strong> are <strong className="text-red-600 dark:text-red-400">{hotAll.slice(0, 5).join(', ')}</strong>. The coldest are <strong className="text-blue-600 dark:text-blue-400">{coldAll.slice(0, 5).join(', ')}</strong>. These rankings combine {lunchtimeResults.length} Lunchtime and {teatimeResults.length} Teatime draws from the last few weeks.
+      {/* AEO answer (sr-only — duplicates visual cards below for AI Overviews/snippets) */}
+      <div className="sr-only">
+        <p>
+          The top 5 hottest UK 49s numbers today are {hotAll.slice(0, 5).join(', ')}. The coldest are {coldAll.slice(0, 5).join(', ')}. Based on {lunchtimeResults.length} Lunchtime and {teatimeResults.length} Teatime draws.
         </p>
-      </section>
+      </div>
 
       {/* Interactive explorer with windows + overdue tab */}
       <HotColdExplorer

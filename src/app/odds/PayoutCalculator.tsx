@@ -41,13 +41,13 @@ export default function PayoutCalculator() {
   };
 
   return (
-    <div className="rounded-xl border-2 border-emerald-200 dark:border-emerald-800 bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-950/30 dark:to-teal-950/30 p-6 sm:p-8">
-      <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Payout Calculator</h2>
+    <div className="rounded-xl border-2 border-emerald-200 dark:border-emerald-800 bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-950/30 dark:to-teal-950/30 p-4 sm:p-6 md:p-8">
+      <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-2">Payout Calculator</h2>
       <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
         See what you&apos;d win for any UK 49s bet type and stake.
       </p>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4 mb-6">
         {/* Pick selector */}
         <div>
           <label htmlFor="pick" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
@@ -119,22 +119,22 @@ export default function PayoutCalculator() {
       </div>
 
       {/* Result */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4">
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
-          <p className="text-xs uppercase tracking-wider font-semibold text-gray-500 dark:text-gray-400 mb-1">Odds</p>
-          <p className="text-xl font-bold text-gray-900 dark:text-white">1 in {result.odds.toLocaleString('en-GB')}</p>
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 md:gap-4 mt-4">
+        <div className="bg-white dark:bg-gray-800 rounded-lg p-3 sm:p-4 border border-gray-200 dark:border-gray-700 min-w-0">
+          <p className="text-[10px] sm:text-xs uppercase tracking-wider font-semibold text-gray-500 dark:text-gray-400 mb-1">Odds</p>
+          <p className="text-base sm:text-lg md:text-xl font-bold text-gray-900 dark:text-white break-words">1 in {result.odds.toLocaleString('en-GB')}</p>
         </div>
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
-          <p className="text-xs uppercase tracking-wider font-semibold text-gray-500 dark:text-gray-400 mb-1">Payout</p>
-          <p className="text-xl font-bold text-gray-900 dark:text-white">{result.payoutMultiplier.toLocaleString('en-GB')}/1</p>
+        <div className="bg-white dark:bg-gray-800 rounded-lg p-3 sm:p-4 border border-gray-200 dark:border-gray-700 min-w-0">
+          <p className="text-[10px] sm:text-xs uppercase tracking-wider font-semibold text-gray-500 dark:text-gray-400 mb-1">Payout</p>
+          <p className="text-base sm:text-lg md:text-xl font-bold text-gray-900 dark:text-white break-words">{result.payoutMultiplier.toLocaleString('en-GB')}/1</p>
         </div>
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
-          <p className="text-xs uppercase tracking-wider font-semibold text-gray-500 dark:text-gray-400 mb-1">If you win</p>
-          <p className="text-xl font-bold text-emerald-700 dark:text-emerald-400">{currency}{fmt(result.winAmount)}</p>
+        <div className="bg-white dark:bg-gray-800 rounded-lg p-3 sm:p-4 border border-gray-200 dark:border-gray-700 min-w-0">
+          <p className="text-[10px] sm:text-xs uppercase tracking-wider font-semibold text-gray-500 dark:text-gray-400 mb-1">If you win</p>
+          <p className="text-base sm:text-lg md:text-xl font-bold text-emerald-700 dark:text-emerald-400 break-words">{currency}{fmt(result.winAmount)}</p>
         </div>
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
-          <p className="text-xs uppercase tracking-wider font-semibold text-gray-500 dark:text-gray-400 mb-1">Profit</p>
-          <p className="text-xl font-bold text-emerald-700 dark:text-emerald-400">{currency}{fmt(result.profit)}</p>
+        <div className="bg-white dark:bg-gray-800 rounded-lg p-3 sm:p-4 border border-gray-200 dark:border-gray-700 min-w-0">
+          <p className="text-[10px] sm:text-xs uppercase tracking-wider font-semibold text-gray-500 dark:text-gray-400 mb-1">Profit</p>
+          <p className="text-base sm:text-lg md:text-xl font-bold text-emerald-700 dark:text-emerald-400 break-words">{currency}{fmt(result.profit)}</p>
         </div>
       </div>
 

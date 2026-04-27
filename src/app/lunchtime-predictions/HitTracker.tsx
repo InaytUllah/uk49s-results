@@ -82,8 +82,8 @@ export default function HitTracker({ drawType, drawResults, hotNumbers, seedOffs
 
   return (
     <section className="mb-10">
-      <div className="rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 sm:p-8">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+      <div className="rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4 sm:p-6 md:p-8">
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-2">
           Track record — how our {drawLabel.toLowerCase()} predictions did recently
         </h2>
         <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
@@ -91,25 +91,25 @@ export default function HitTracker({ drawType, drawResults, hotNumbers, seedOffs
         </p>
 
         {/* Stats grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
-          <div className="rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 p-4">
-            <p className="text-xs uppercase tracking-wider font-semibold text-gray-500 dark:text-gray-400 mb-1">Sets checked</p>
-            <p className="text-2xl font-bold text-gray-900 dark:text-white">{totalSetsChecked}</p>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 mb-6">
+          <div className="rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 p-3 sm:p-4">
+            <p className="text-[10px] sm:text-xs uppercase tracking-wider font-semibold text-gray-500 dark:text-gray-400 mb-1">Sets checked</p>
+            <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">{totalSetsChecked}</p>
           </div>
-          <div className="rounded-lg border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/30 p-4">
-            <p className="text-xs uppercase tracking-wider font-semibold text-emerald-700 dark:text-emerald-400 mb-1">≥ 1 number hit</p>
-            <p className="text-2xl font-bold text-gray-900 dark:text-white">{accuracyAny.toFixed(0)}%</p>
-            <p className="text-xs text-gray-500 dark:text-gray-400">{setsWith1Plus}/{totalSetsChecked} sets</p>
+          <div className="rounded-lg border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/30 p-3 sm:p-4">
+            <p className="text-[10px] sm:text-xs uppercase tracking-wider font-semibold text-emerald-700 dark:text-emerald-400 mb-1">≥ 1 number hit</p>
+            <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">{accuracyAny.toFixed(0)}%</p>
+            <p className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400">{setsWith1Plus}/{totalSetsChecked} sets</p>
           </div>
-          <div className="rounded-lg border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/30 p-4">
-            <p className="text-xs uppercase tracking-wider font-semibold text-amber-700 dark:text-amber-400 mb-1">≥ 2 numbers hit</p>
-            <p className="text-2xl font-bold text-gray-900 dark:text-white">{accuracy2Plus.toFixed(0)}%</p>
-            <p className="text-xs text-gray-500 dark:text-gray-400">{setsWith2Plus}/{totalSetsChecked} sets</p>
+          <div className="rounded-lg border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/30 p-3 sm:p-4">
+            <p className="text-[10px] sm:text-xs uppercase tracking-wider font-semibold text-amber-700 dark:text-amber-400 mb-1">≥ 2 numbers hit</p>
+            <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">{accuracy2Plus.toFixed(0)}%</p>
+            <p className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400">{setsWith2Plus}/{totalSetsChecked} sets</p>
           </div>
-          <div className="rounded-lg border border-purple-200 dark:border-purple-800 bg-purple-50 dark:bg-purple-950/30 p-4">
-            <p className="text-xs uppercase tracking-wider font-semibold text-purple-700 dark:text-purple-400 mb-1">≥ 3 numbers hit</p>
-            <p className="text-2xl font-bold text-gray-900 dark:text-white">{accuracy3Plus.toFixed(0)}%</p>
-            <p className="text-xs text-gray-500 dark:text-gray-400">{setsWith3Plus}/{totalSetsChecked} sets</p>
+          <div className="rounded-lg border border-purple-200 dark:border-purple-800 bg-purple-50 dark:bg-purple-950/30 p-3 sm:p-4">
+            <p className="text-[10px] sm:text-xs uppercase tracking-wider font-semibold text-purple-700 dark:text-purple-400 mb-1">≥ 3 numbers hit</p>
+            <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">{accuracy3Plus.toFixed(0)}%</p>
+            <p className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400">{setsWith3Plus}/{totalSetsChecked} sets</p>
           </div>
         </div>
 

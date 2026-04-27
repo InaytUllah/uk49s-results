@@ -210,17 +210,17 @@ export default async function LunchtimePredictionsPage() {
       </section>
 
       {/* Related Links */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <Link href="/teatime-predictions" className="px-4 py-3 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition-colors font-medium text-center text-sm">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
+        <Link href="/teatime-predictions" className="px-2 sm:px-4 py-3 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition-colors font-medium text-center text-xs sm:text-sm leading-tight">
           Teatime Predictions
         </Link>
-        <Link href="/lunchtime" className="px-4 py-3 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors font-medium text-center text-sm">
+        <Link href="/lunchtime" className="px-2 sm:px-4 py-3 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors font-medium text-center text-xs sm:text-sm leading-tight">
           Lunchtime Results
         </Link>
-        <Link href="/hot-cold-numbers" className="px-4 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors font-medium text-center text-sm">
+        <Link href="/hot-cold-numbers" className="px-2 sm:px-4 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors font-medium text-center text-xs sm:text-sm leading-tight">
           Hot & Cold Numbers
         </Link>
-        <Link href="/number-generator" className="px-4 py-3 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 transition-colors font-medium text-center text-sm">
+        <Link href="/number-generator" className="px-2 sm:px-4 py-3 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 transition-colors font-medium text-center text-xs sm:text-sm leading-tight">
           Number Generator
         </Link>
       </div>

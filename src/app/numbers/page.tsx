@@ -60,13 +60,12 @@ export default async function NumbersIndexPage() {
         <time dateTime={new Date().toISOString()}>Updated {new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</time> · Based on {totalDraws} recent draws
       </p>
 
-      {/* Quick Answer Block — AEO */}
-      <section className="mb-8 p-5 rounded-xl bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-950/30 dark:to-teal-950/30 border-2 border-emerald-200 dark:border-emerald-800">
-        <p className="text-xs font-semibold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider mb-2">Quick Answer</p>
-        <p className="text-base text-gray-800 dark:text-gray-200 leading-relaxed">
-          Across the last <strong>{totalDraws} UK 49s draws</strong>, the most frequently drawn number is <strong>{sortedNumbers[0]?.[0]}</strong> (appearing {sortedNumbers[0]?.[1]} times) and the least frequent is <strong>{sortedNumbers[sortedNumbers.length - 1]?.[0]}</strong> ({sortedNumbers[sortedNumbers.length - 1]?.[1]} times). On average, each number is drawn {avgCount.toFixed(1)} times.
+      {/* AEO answer (sr-only — duplicates visible table below) */}
+      <div className="sr-only">
+        <p>
+          Across the last {totalDraws} UK 49s draws, the most frequently drawn number is {sortedNumbers[0]?.[0]} (appearing {sortedNumbers[0]?.[1]} times) and the least frequent is {sortedNumbers[sortedNumbers.length - 1]?.[0]} ({sortedNumbers[sortedNumbers.length - 1]?.[1]} times). On average, each number is drawn {avgCount.toFixed(1)} times.
         </p>
-      </section>
+      </div>
 
       {/* Quick grid of all numbers */}
       <section className="mb-10">

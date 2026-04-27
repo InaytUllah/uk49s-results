@@ -81,22 +81,22 @@ export default function HotColdExplorer({ results, lunchtimeResults, teatimeResu
   ];
 
   return (
-    <section className="mb-10 rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6">
+    <section className="mb-10 rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4 sm:p-6">
       <div className="mb-4">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">Explore the data</h2>
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-1">Explore the data</h2>
         <p className="text-sm text-gray-600 dark:text-gray-400">
           Slice by draw type, time window, and metric. Currently showing {filtered.length} draws.
         </p>
       </div>
 
       {/* Tab buttons */}
-      <div className="flex flex-wrap gap-2 mb-4">
+      <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-4">
         {(['hot', 'cold', 'overdue'] as Tab[]).map(t => (
           <button
             key={t}
             type="button"
             onClick={() => setTab(t)}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+            className={`px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors ${
               tab === t
                 ? t === 'hot' ? 'bg-red-600 text-white' : t === 'cold' ? 'bg-blue-600 text-white' : 'bg-purple-600 text-white'
                 : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
@@ -108,14 +108,14 @@ export default function HotColdExplorer({ results, lunchtimeResults, teatimeResu
       </div>
 
       {/* Window selector */}
-      <div className="flex flex-wrap gap-2 mb-4">
-        <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 self-center mr-1">WINDOW:</span>
+      <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-4 items-center">
+        <span className="text-[10px] sm:text-xs font-semibold text-gray-500 dark:text-gray-400 mr-1 w-full sm:w-auto">WINDOW:</span>
         {windows.map(w => (
           <button
             key={w.v}
             type="button"
             onClick={() => setWindowSize(w.v)}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+            className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-[11px] sm:text-xs font-medium transition-colors ${
               windowSize === w.v
                 ? 'bg-emerald-600 text-white'
                 : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
@@ -127,14 +127,14 @@ export default function HotColdExplorer({ results, lunchtimeResults, teatimeResu
       </div>
 
       {/* Scope selector */}
-      <div className="flex flex-wrap gap-2 mb-6">
-        <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 self-center mr-1">DRAW:</span>
+      <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-6 items-center">
+        <span className="text-[10px] sm:text-xs font-semibold text-gray-500 dark:text-gray-400 mr-1 w-full sm:w-auto">DRAW:</span>
         {(['all', 'lunchtime', 'teatime'] as DrawScope[]).map(s => (
           <button
             key={s}
             type="button"
             onClick={() => setScope(s)}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+            className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-[11px] sm:text-xs font-medium transition-colors ${
               scope === s
                 ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900'
                 : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'

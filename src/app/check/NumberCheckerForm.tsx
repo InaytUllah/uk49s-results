@@ -62,7 +62,7 @@ export default function NumberCheckerForm({ results }: Props) {
         <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
           Tap your bet numbers below ({selected.length}/5 selected)
         </p>
-        <div className="grid grid-cols-7 sm:grid-cols-10 gap-2">
+        <div className="grid grid-cols-7 sm:grid-cols-10 gap-1.5 sm:gap-2">
           {Array.from({ length: 49 }, (_, i) => i + 1).map(n => {
             const active = selected.includes(n);
             return (
@@ -71,7 +71,7 @@ export default function NumberCheckerForm({ results }: Props) {
                 type="button"
                 onClick={() => toggleNumber(n)}
                 disabled={!active && selected.length >= 5}
-                className={`aspect-square rounded-full font-bold text-sm sm:text-base flex items-center justify-center transition-all ${
+                className={`aspect-square rounded-full font-bold text-xs sm:text-sm md:text-base flex items-center justify-center transition-all ${
                   active
                     ? 'bg-emerald-600 text-white shadow-md scale-105'
                     : 'bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:border-emerald-400 disabled:opacity-30 disabled:cursor-not-allowed'
@@ -104,7 +104,7 @@ export default function NumberCheckerForm({ results }: Props) {
           <span className="text-sm text-gray-700 dark:text-gray-300">My bet included a Booster pick</span>
         </label>
         {includeBooster && (
-          <div className="grid grid-cols-7 sm:grid-cols-10 gap-2">
+          <div className="grid grid-cols-7 sm:grid-cols-10 gap-1.5 sm:gap-2">
             {Array.from({ length: 49 }, (_, i) => i + 1).map(n => {
               const active = boosterPick === n;
               return (
@@ -112,7 +112,7 @@ export default function NumberCheckerForm({ results }: Props) {
                   key={n}
                   type="button"
                   onClick={() => setBoosterPick(active ? null : n)}
-                  className={`aspect-square rounded-full font-bold text-sm flex items-center justify-center transition-all ${
+                  className={`aspect-square rounded-full font-bold text-xs sm:text-sm flex items-center justify-center transition-all ${
                     active
                       ? 'bg-purple-600 text-white shadow-md scale-105'
                       : 'bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:border-purple-400'
@@ -132,17 +132,17 @@ export default function NumberCheckerForm({ results }: Props) {
         <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
           Step 3 — Which draws?
         </h2>
-        <div className="inline-flex rounded-lg border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 overflow-hidden">
+        <div className="inline-flex flex-wrap rounded-lg border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 overflow-hidden max-w-full">
           {[
-            { v: 'all', label: 'Both Draws' },
-            { v: 'lunchtime', label: 'Lunchtime only' },
-            { v: 'teatime', label: 'Teatime only' },
+            { v: 'all', label: 'Both' },
+            { v: 'lunchtime', label: 'Lunchtime' },
+            { v: 'teatime', label: 'Teatime' },
           ].map(opt => (
             <button
               key={opt.v}
               type="button"
               onClick={() => setDrawType(opt.v as 'all' | 'lunchtime' | 'teatime')}
-              className={`px-4 py-2 text-sm font-medium transition-colors ${
+              className={`px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium transition-colors ${
                 drawType === opt.v
                   ? 'bg-emerald-600 text-white'
                   : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
@@ -155,19 +155,19 @@ export default function NumberCheckerForm({ results }: Props) {
       </section>
 
       {/* Action buttons */}
-      <div className="flex flex-wrap gap-3 mb-8">
+      <div className="flex flex-wrap gap-2 sm:gap-3 mb-8">
         <button
           type="button"
           onClick={() => setSubmitted(true)}
           disabled={selected.length === 0}
-          className="px-6 py-3 bg-emerald-600 text-white rounded-lg font-medium hover:bg-emerald-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+          className="flex-1 sm:flex-initial px-4 sm:px-6 py-3 bg-emerald-600 text-white rounded-lg font-medium hover:bg-emerald-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed text-sm sm:text-base"
         >
           Check my numbers
         </button>
         <button
           type="button"
           onClick={reset}
-          className="px-6 py-3 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-lg font-medium hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+          className="px-4 sm:px-6 py-3 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-lg font-medium hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors text-sm sm:text-base"
         >
           Reset
         </button>
