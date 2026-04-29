@@ -1,9 +1,16 @@
 import { MetadataRoute } from 'next';
-import { getRecentDates } from '@/lib/data/draws';
+import { getRecentDates, getLatestResults, getPredictionDate, getPredictionDateForLunchtime } from '@/lib/data/draws';
 import { SITE_URL } from '@/lib/data/seo';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const dates = await getRecentDates();
+  const [dates, allResults] = await Promise.all([
+    getRecentDates(),
+    getLatestResults(),
+  ]);
+
+  const teaInfo = getPredictionDate(allResults);
+  const lunchInfo = getPredictionDateForLunchtime(allResults);
+  const uniqueDates = [...new Set(allResults.map(r => r.date))].sort((a, b) => b.localeCompare(a));
 
   const now = new Date();
 
@@ -59,16 +66,34 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // NOTE: Blog result posts removed from sitemap.
   // Result blog URLs now redirect to canonical /lunchtime/results/{date} pages.
 
-  // NOTE: Daily prediction blog posts (/blog/uk-49s-{draw}-predictions-{date})
-  // are intentionally NOT in the sitemap and are noindexed. They are near-duplicates
-  // of each other (same template, only date+numbers differ) and Google's spam update
-  // classifies this as scaled content abuse. The rolling /lunchtime-predictions and
-  // /teatime-predictions hub pages serve as the canonical daily prediction URLs.
+  // Prediction blog posts — dated, self-canonical, indexable. Each post has
+  // unique numbers/analysis for that specific date and targets long-tail
+  // queries like "uk 49s lunchtime predictions 30 april 2026". The hub
+  // pages target the "today" cluster ("uk 49s lunchtime predictions today");
+  // dated posts target the date-specific long-tail. Different intents,
+  // both should rank.
+  const lunchPredDates = [...new Set([lunchInfo.date, ...uniqueDates.slice(0, 5)])];
+  const teaPredDates = [...new Set([teaInfo.date, ...uniqueDates.slice(0, 5)])];
+  const predictionBlogPages = [
+    ...lunchPredDates.map(date => ({
+      url: `${SITE_URL}/blog/uk-49s-lunchtime-predictions-${date}`,
+      lastModified: now,
+      changeFrequency: 'never' as const,
+      priority: 0.6,
+    })),
+    ...teaPredDates.map(date => ({
+      url: `${SITE_URL}/blog/uk-49s-teatime-predictions-${date}`,
+      lastModified: now,
+      changeFrequency: 'never' as const,
+      priority: 0.6,
+    })),
+  ];
 
   return [
     ...staticPages,
     ...numberPages,
     ...lunchtimeResultPages,
     ...teatimeResultPages,
+    ...predictionBlogPages,
   ];
 }

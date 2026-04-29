@@ -164,6 +164,41 @@ export default async function LunchtimePredictionsPage() {
         </div>
       </section>
 
+      {/* Past Predictions — internal linking to dated posts */}
+      {(() => {
+        const pastDates = [...new Set(lunchtimeResults.map(r => r.date))]
+          .sort((a, b) => b.localeCompare(a))
+          .filter(d => d !== lunchInfo.date)
+          .slice(0, 5);
+        if (pastDates.length === 0) return null;
+        return (
+          <section className="mb-10">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Past Lunchtime Predictions</h2>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+              See how earlier predictions stacked up against the actual draws.
+            </p>
+            <ul className="space-y-2">
+              {pastDates.map(date => {
+                const formatted = new Date(date + 'T00:00:00').toLocaleDateString('en-GB', {
+                  weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
+                });
+                return (
+                  <li key={date}>
+                    <Link
+                      href={`/blog/uk-49s-lunchtime-predictions-${date}`}
+                      className="flex items-center justify-between p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-amber-300 dark:hover:border-amber-700 transition-colors"
+                    >
+                      <span className="text-sm font-medium text-gray-900 dark:text-white">UK 49s Lunchtime Predictions for {formatted}</span>
+                      <svg aria-hidden="true" className="w-4 h-4 text-amber-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </section>
+        );
+      })()}
+
       {/* SEO Content */}
       <section className="mb-10">
         <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 sm:p-8">

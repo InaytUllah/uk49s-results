@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
+import { permanentRedirect } from 'next/navigation';
 import LotteryBalls from '@/components/LotteryBalls';
 import { getLatestResults, getHotNumbers, getColdNumbers, getPredictionDate, getPredictionDateForLunchtime, calculateFrequency } from '@/lib/data/draws';
 import { SITE_NAME, SITE_URL } from '@/lib/data/seo';
@@ -83,24 +83,25 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const drawLabel = drawType === 'lunchtime' ? 'Lunchtime' : 'Teatime';
   const drawTime = drawType === 'lunchtime' ? '12:49 PM' : '5:49 PM';
   const formattedDate = formatDate(date);
-  // Canonical points to the rolling hub page, NOT this dated URL.
-  // Dated URLs are kept for direct access / backlinks but not indexed
-  // because they are near-duplicates of each other (Google spam update).
-  const hubUrl = `${SITE_URL}/${drawType}-predictions`;
+  // Each dated post is a self-canonical, indexable page. It targets long-tail
+  // queries like "uk 49s lunchtime predictions 30 april 2026" — unique date,
+  // unique numbers, unique content. The /lunchtime-predictions hub targets
+  // "uk 49s lunchtime predictions today" — different keyword, different intent.
+  const selfUrl = `${SITE_URL}/blog/${slug}`;
 
   return {
     title: `UK 49s ${drawLabel} Predictions for ${formattedDate} — Analysis & Hot Numbers | ${SITE_NAME}`,
     description: `In-depth UK 49s ${drawLabel} predictions for ${formattedDate}. Statistical analysis of hot & cold number trends and 3 weighted prediction sets for the ${drawTime} draw.`,
-    alternates: { canonical: hubUrl },
+    alternates: { canonical: selfUrl },
     robots: {
-      index: false,
+      index: true,
       follow: true,
     },
     openGraph: {
       title: `UK 49s ${drawLabel} Predictions — ${formattedDate}`,
       description: `Statistical analysis and prediction sets for the ${drawTime} ${drawLabel} draw.`,
       type: 'article',
-      url: hubUrl,
+      url: selfUrl,
       images: [{
         url: `${SITE_URL}/api/og?title=${encodeURIComponent(`${drawLabel} Predictions — ${formattedDate}`)}&subtitle=${encodeURIComponent(`${drawTime} Draw — Statistical Analysis`)}&type=prediction`,
         width: 1200, height: 630,
@@ -148,14 +149,17 @@ export default async function BlogPostPage({ params }: Props) {
     );
   }
 
-  // Redirect result blog URLs to canonical result pages
+  // 308 PERMANENT redirect — passes link equity. (Plain redirect() returns
+  // 307 temporary, which Google does NOT treat as a permanent move and does
+  // not transfer ranking signal.)
   if (parsed.type === 'result') {
-    redirect(`/${parsed.drawType}/results/${parsed.date}`);
+    permanentRedirect(`/${parsed.drawType}/results/${parsed.date}`);
   }
 
-  // Redirect old combined prediction URLs to lunchtime version
+  // Old combined-draw prediction URLs (pre-split). Permanent redirect to
+  // the lunchtime version so the dated URL preserves its ranking authority.
   if (parsed.type === 'prediction-combined') {
-    redirect(`/blog/uk-49s-lunchtime-predictions-${parsed.date}`);
+    permanentRedirect(`/blog/uk-49s-lunchtime-predictions-${parsed.date}`);
   }
 
   // ======== DRAW-SPECIFIC PREDICTION POST ========
