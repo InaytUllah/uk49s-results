@@ -232,10 +232,6 @@ export default async function BlogPostPage({ params }: Props) {
           </div>
         </header>
 
-        <p className="text-xs text-yellow-600 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg px-3 py-2 mb-8">
-          Disclaimer: Predictions are based on statistical analysis of past results. Lottery draws are random — no prediction guarantees a win. Play responsibly.
-        </p>
-
         {/* Previous Day Performance */}
         {prevResult && (
           <section className="mb-8">
@@ -349,6 +345,11 @@ export default async function BlogPostPage({ params }: Props) {
             Hot & Cold
           </Link>
         </div>
+
+        {/* Disclaimer */}
+        <p className="text-xs text-yellow-600 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg px-3 py-2 mt-6">
+          Disclaimer: Predictions are based on statistical analysis of past results. Lottery draws are random — no prediction guarantees a win. Play responsibly.
+        </p>
       </article>
 
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([{ name: 'Blog', url: '/blog' }, { name: `${drawLabel} Predictions ${date}`, url: `/blog/${slug}` }])) }} />

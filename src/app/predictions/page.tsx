@@ -72,11 +72,8 @@ export default async function PredictionsPage() {
       <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-2">
         UK 49s Predictions Today
       </h1>
-      <p className="text-gray-600 dark:text-gray-400 mb-2">
+      <p className="text-gray-600 dark:text-gray-400 mb-8">
         Statistical predictions for both Lunchtime and Teatime draws, updated after every result
-      </p>
-      <p className="text-xs text-yellow-600 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg px-3 py-2 mb-8">
-        Disclaimer: Predictions are based on statistical analysis of past results. Lottery draws are random — no prediction guarantees a win.
       </p>
 
       {/* Lunchtime Preview + Link to Full Page */}

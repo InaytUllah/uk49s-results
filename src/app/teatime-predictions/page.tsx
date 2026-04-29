@@ -97,10 +97,6 @@ export default async function TeatimePredictionsPage() {
         <span>Based on {teatimeResults.length} Teatime draws</span>
       </div>
 
-      <p className="text-xs text-yellow-600 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg px-3 py-2 mb-8">
-        Disclaimer: Predictions are based on statistical analysis of past results. Lottery draws are random — no prediction guarantees a win. Play responsibly.
-      </p>
-
       {/* Prediction Sets */}
       <section className="mb-10">
         <h2 className="text-2xl font-bold text-indigo-700 dark:text-indigo-400 mb-4">
@@ -224,6 +220,11 @@ export default async function TeatimePredictionsPage() {
           Number Generator
         </Link>
       </div>
+
+      {/* Disclaimer */}
+      <p className="text-xs text-yellow-600 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg px-3 py-2 mt-6">
+        Disclaimer: Predictions are based on statistical analysis of past results. Lottery draws are random — no prediction guarantees a win. Play responsibly.
+      </p>
 
       {/* Schema */}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([{ name: 'Predictions', url: '/predictions' }, { name: 'Teatime Predictions', url: '/teatime-predictions' }])) }} />
