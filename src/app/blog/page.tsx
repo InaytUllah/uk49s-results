@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { getLatestResults } from '@/lib/data/draws';
+import { getLatestResults, getPredictionDate, getPredictionDateForLunchtime } from '@/lib/data/draws';
 import { PAGE_SEO, ogMeta } from '@/lib/data/seo';
 import { breadcrumbSchema, webPageSchema } from '@/lib/schema';
 
@@ -13,10 +13,39 @@ export const metadata: Metadata = {
 
 export const revalidate = 60;
 
+interface PredictionPost {
+  date: string;
+  drawType: 'lunchtime' | 'teatime';
+  formatted: string;
+  isToday: boolean;
+}
+
 export default async function BlogPage() {
   const results = await getLatestResults();
   const uniqueDates = [...new Set(results.map(r => r.date))].sort((a, b) => b.localeCompare(a));
   const latestDates = uniqueDates.slice(0, 5);
+
+  // Build the recent prediction post list — today's + last 6 dates for both draws
+  const teaInfo = getPredictionDate(results);
+  const lunchInfo = getPredictionDateForLunchtime(results);
+  const fmtDay = (date: string) =>
+    new Date(date + 'T00:00:00').toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+
+  const lunchDates = [...new Set([lunchInfo.date, ...uniqueDates.slice(0, 6)])].slice(0, 7);
+  const teaDates = [...new Set([teaInfo.date, ...uniqueDates.slice(0, 6)])].slice(0, 7);
+
+  const lunchPosts: PredictionPost[] = lunchDates.map(date => ({
+    date,
+    drawType: 'lunchtime' as const,
+    formatted: fmtDay(date),
+    isToday: date === lunchInfo.date,
+  }));
+  const teaPosts: PredictionPost[] = teaDates.map(date => ({
+    date,
+    drawType: 'teatime' as const,
+    formatted: fmtDay(date),
+    isToday: date === teaInfo.date,
+  }));
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
@@ -51,6 +80,68 @@ export default async function BlogPage() {
               Fresh prediction sets for today&apos;s Teatime draw, refreshed after each result.
             </p>
           </Link>
+        </div>
+      </section>
+
+      {/* Recent Prediction Posts — dated, indexable */}
+      <section className="mb-10">
+        <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Recent Prediction Posts</h2>
+        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+          Daily prediction analysis for past Lunchtime and Teatime draws. Each post shows the prediction sets used for that day plus how they compared to the actual result.
+        </p>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Lunchtime column */}
+          <div>
+            <h3 className="text-sm font-bold text-amber-700 dark:text-amber-400 uppercase tracking-wider mb-3 flex items-center gap-2">
+              <span aria-hidden="true">☀️</span>
+              <span>Lunchtime (12:49 PM)</span>
+            </h3>
+            <ul className="space-y-2">
+              {lunchPosts.map(post => (
+                <li key={post.date}>
+                  <Link
+                    href={`/blog/uk-49s-lunchtime-predictions-${post.date}`}
+                    className="flex items-center justify-between p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-amber-300 dark:hover:border-amber-700 transition-colors"
+                  >
+                    <span className="flex items-center gap-2 min-w-0">
+                      {post.isToday && (
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300 flex-shrink-0">TODAY</span>
+                      )}
+                      <span className="text-sm text-gray-900 dark:text-white truncate">{post.formatted}</span>
+                    </span>
+                    <svg aria-hidden="true" className="w-4 h-4 text-amber-600 flex-shrink-0 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Teatime column */}
+          <div>
+            <h3 className="text-sm font-bold text-indigo-700 dark:text-indigo-400 uppercase tracking-wider mb-3 flex items-center gap-2">
+              <span aria-hidden="true">🌙</span>
+              <span>Teatime (5:49 PM)</span>
+            </h3>
+            <ul className="space-y-2">
+              {teaPosts.map(post => (
+                <li key={post.date}>
+                  <Link
+                    href={`/blog/uk-49s-teatime-predictions-${post.date}`}
+                    className="flex items-center justify-between p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-indigo-300 dark:hover:border-indigo-700 transition-colors"
+                  >
+                    <span className="flex items-center gap-2 min-w-0">
+                      {post.isToday && (
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-indigo-100 text-indigo-800 dark:bg-indigo-900/50 dark:text-indigo-300 flex-shrink-0">TODAY</span>
+                      )}
+                      <span className="text-sm text-gray-900 dark:text-white truncate">{post.formatted}</span>
+                    </span>
+                    <svg aria-hidden="true" className="w-4 h-4 text-indigo-600 flex-shrink-0 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </section>
 

@@ -20,16 +20,16 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Quick Links */}
-          <nav aria-label="Footer quick links">
-            <h3 className="text-white font-semibold mb-4">Quick Links</h3>
+          {/* Results & Predictions */}
+          <nav aria-label="Footer results and predictions">
+            <h3 className="text-white font-semibold mb-4">Results &amp; Predictions</h3>
             <ul className="space-y-1 text-sm">
               <li><Link href="/lunchtime" className="block py-1.5 hover:text-white transition-colors focus:outline-none focus-visible:text-white focus-visible:underline">Lunchtime Results</Link></li>
               <li><Link href="/teatime" className="block py-1.5 hover:text-white transition-colors focus:outline-none focus-visible:text-white focus-visible:underline">Teatime Results</Link></li>
               <li><Link href="/history" className="block py-1.5 hover:text-white transition-colors focus:outline-none focus-visible:text-white focus-visible:underline">Past Results</Link></li>
-              <li><Link href="/hot-cold-numbers" className="block py-1.5 hover:text-white transition-colors focus:outline-none focus-visible:text-white focus-visible:underline">Hot &amp; Cold Numbers</Link></li>
-              <li><Link href="/predictions" className="block py-1.5 hover:text-white transition-colors focus:outline-none focus-visible:text-white focus-visible:underline">Predictions</Link></li>
-              <li><Link href="/odds" className="block py-1.5 hover:text-white transition-colors focus:outline-none focus-visible:text-white focus-visible:underline">Odds &amp; Payouts</Link></li>
+              <li><Link href="/lunchtime-predictions" className="block py-1.5 hover:text-white transition-colors focus:outline-none focus-visible:text-white focus-visible:underline">Lunchtime Predictions</Link></li>
+              <li><Link href="/teatime-predictions" className="block py-1.5 hover:text-white transition-colors focus:outline-none focus-visible:text-white focus-visible:underline">Teatime Predictions</Link></li>
+              <li><Link href="/blog" className="block py-1.5 hover:text-white transition-colors focus:outline-none focus-visible:text-white focus-visible:underline">Past Predictions Archive</Link></li>
             </ul>
           </nav>
 
@@ -37,12 +37,12 @@ export default function Footer() {
           <nav aria-label="Footer tools">
             <h3 className="text-white font-semibold mb-4">Tools</h3>
             <ul className="space-y-1 text-sm">
-              <li><Link href="/check" className="block py-1.5 hover:text-white transition-colors focus:outline-none focus-visible:text-white focus-visible:underline">Number Checker</Link></li>
-              <li><Link href="/number-generator" className="block py-1.5 hover:text-white transition-colors focus:outline-none focus-visible:text-white focus-visible:underline">Number Generator</Link></li>
-              <li><Link href="/numbers" className="block py-1.5 hover:text-white transition-colors focus:outline-none focus-visible:text-white focus-visible:underline">Number Stats</Link></li>
+              <li><Link href="/check" className="block py-1.5 hover:text-white transition-colors focus:outline-none focus-visible:text-white focus-visible:underline">Did I Win? (Checker)</Link></li>
+              <li><Link href="/number-generator" className="block py-1.5 hover:text-white transition-colors focus:outline-none focus-visible:text-white focus-visible:underline">Random Number Picker</Link></li>
+              <li><Link href="/hot-cold-numbers" className="block py-1.5 hover:text-white transition-colors focus:outline-none focus-visible:text-white focus-visible:underline">Hot &amp; Cold Numbers</Link></li>
+              <li><Link href="/numbers" className="block py-1.5 hover:text-white transition-colors focus:outline-none focus-visible:text-white focus-visible:underline">Number Statistics</Link></li>
               <li><Link href="/lunchtime-vs-teatime" className="block py-1.5 hover:text-white transition-colors focus:outline-none focus-visible:text-white focus-visible:underline">Lunchtime vs Teatime</Link></li>
-              <li><Link href="/how-to-play" className="block py-1.5 hover:text-white transition-colors focus:outline-none focus-visible:text-white focus-visible:underline">How to Play</Link></li>
-              <li><Link href="/blog" className="block py-1.5 hover:text-white transition-colors focus:outline-none focus-visible:text-white focus-visible:underline">Blog</Link></li>
+              <li><Link href="/odds" className="block py-1.5 hover:text-white transition-colors focus:outline-none focus-visible:text-white focus-visible:underline">Odds &amp; Payouts</Link></li>
             </ul>
           </nav>
 
