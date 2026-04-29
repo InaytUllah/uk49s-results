@@ -236,27 +236,6 @@ export default async function BlogPostPage({ params }: Props) {
           </div>
         </header>
 
-        {/* Previous Day Performance */}
-        {prevResult && (
-          <section className="mb-8">
-            <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6">
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Previous Prediction Performance</h2>
-              <div className={`${drawType === 'lunchtime' ? 'bg-amber-50 dark:bg-amber-950/20' : 'bg-indigo-50 dark:bg-indigo-950/20'} rounded-lg p-4`}>
-                <p className={`text-sm font-semibold ${drawType === 'lunchtime' ? 'text-amber-700 dark:text-amber-400' : 'text-indigo-700 dark:text-indigo-400'} mb-2`}>
-                  {drawLabel} — {formatDate(prevDateStr)}
-                </p>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  {matches.length > 0 ? (
-                    <>Our prediction matched <strong className="text-gray-900 dark:text-white">{matches.length} number{matches.length !== 1 ? 's' : ''}</strong>: {matches.join(', ')}</>
-                  ) : (
-                    <>No direct matches in yesterday&apos;s {drawLabel} draw. Hot number trends continue to evolve.</>
-                  )}
-                </p>
-              </div>
-            </div>
-          </section>
-        )}
-
         {/* Trending Numbers */}
         <section className="mb-8">
           <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 sm:p-8">
@@ -318,6 +297,27 @@ export default async function BlogPostPage({ params }: Props) {
             </div>
           </div>
         </section>
+
+        {/* Previous Day Performance — moved to bottom for honesty without dampening initial excitement */}
+        {prevResult && (
+          <section className="mb-8">
+            <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6">
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Previous Prediction Performance</h2>
+              <div className={`${drawType === 'lunchtime' ? 'bg-amber-50 dark:bg-amber-950/20' : 'bg-indigo-50 dark:bg-indigo-950/20'} rounded-lg p-4`}>
+                <p className={`text-sm font-semibold ${drawType === 'lunchtime' ? 'text-amber-700 dark:text-amber-400' : 'text-indigo-700 dark:text-indigo-400'} mb-2`}>
+                  {drawLabel} — {formatDate(prevDateStr)}
+                </p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  {matches.length > 0 ? (
+                    <>Our prediction matched <strong className="text-gray-900 dark:text-white">{matches.length} number{matches.length !== 1 ? 's' : ''}</strong>: {matches.join(', ')}</>
+                  ) : (
+                    <>No direct matches in yesterday&apos;s {drawLabel} draw. Hot number trends continue to evolve.</>
+                  )}
+                </p>
+              </div>
+            </div>
+          </section>
+        )}
 
         {/* Methodology */}
         <section className="mb-8">
