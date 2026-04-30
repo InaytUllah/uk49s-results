@@ -58,8 +58,11 @@ export default function UpcomingDraw({ drawType, latestDate }: UpcomingDrawProps
       const hasToday = latestDate >= todayUK;
       const time = getTimeUntilDraw(drawType);
 
-      // Show placeholder if: today's results not yet available AND draw hasn't happened yet
-      setShowPlaceholder(!hasToday && !time.isPast);
+      // Keep the card visible until today's actual results are in.
+      // - Before draw time: show countdown
+      // - After draw time but before results arrive: show "Draw in progress"
+      // - Once results arrive: hide (the real result card below takes over)
+      setShowPlaceholder(!hasToday);
       setTimeLeft(time);
     };
 
@@ -80,20 +83,27 @@ export default function UpcomingDraw({ drawType, latestDate }: UpcomingDrawProps
     ? 'bg-gradient-to-r from-amber-500 to-orange-500'
     : 'bg-gradient-to-r from-indigo-500 to-purple-500';
 
+  // Status badge changes based on whether draw time has passed
+  const statusBadge = timeLeft.isPast
+    ? { label: 'DRAW IN PROGRESS', bg: 'bg-emerald-100 text-emerald-700' }
+    : { label: 'UPCOMING', bg: 'bg-blue-100 text-blue-700' };
+
   return (
     <div className={`rounded-xl border-2 ${borderColor} ${bgColor} p-5 mb-6`}>
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <span className={`text-xs font-semibold px-2 py-1 rounded-full ${badgeBg}`}>{label}</span>
-          <span className="text-xs font-semibold px-2 py-1 rounded-full bg-blue-100 text-blue-700">UPCOMING</span>
+          <span className={`text-xs font-semibold px-2 py-1 rounded-full ${statusBadge.bg}`}>
+            {statusBadge.label}
+          </span>
         </div>
         <span className="text-sm text-gray-500">Draw Time: {time} (UK)</span>
       </div>
 
       <p className="text-gray-700 font-medium mb-4">{formatDateLong(todayUK)}</p>
 
-      {/* Placeholder balls */}
-      <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-4">
+      {/* Placeholder balls — pulse when in progress to suggest activity */}
+      <div className={`flex flex-wrap items-center gap-2 sm:gap-3 mb-4 ${timeLeft.isPast ? 'motion-safe:animate-pulse' : ''}`}>
         {[1, 2, 3, 4, 5, 6].map(i => (
           <div
             key={i}
@@ -108,13 +118,22 @@ export default function UpcomingDraw({ drawType, latestDate }: UpcomingDrawProps
         </div>
       </div>
 
-      {/* Countdown timer */}
-      <div className={`${timerBg} rounded-lg p-3 text-white inline-flex items-center gap-3`}>
-        <span className="text-sm font-medium">Draw in:</span>
-        <span className="text-lg font-bold">
-          {String(timeLeft.hours).padStart(2, '0')}h {String(timeLeft.minutes).padStart(2, '0')}m {String(timeLeft.seconds).padStart(2, '0')}s
-        </span>
-      </div>
+      {/* Countdown timer / In-progress state */}
+      {timeLeft.isPast ? (
+        <div className={`${timerBg} rounded-lg p-3 text-white inline-flex items-center gap-2`} role="status" aria-live="polite">
+          <span className="motion-safe:animate-spin inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full" aria-hidden="true" />
+          <span className="text-sm font-semibold">
+            Draw is in progress — results coming soon
+          </span>
+        </div>
+      ) : (
+        <div className={`${timerBg} rounded-lg p-3 text-white inline-flex items-center gap-3`}>
+          <span className="text-sm font-medium">Draw in:</span>
+          <span className="text-lg font-bold">
+            {String(timeLeft.hours).padStart(2, '0')}h {String(timeLeft.minutes).padStart(2, '0')}m {String(timeLeft.seconds).padStart(2, '0')}s
+          </span>
+        </div>
+      )}
     </div>
   );
 }
