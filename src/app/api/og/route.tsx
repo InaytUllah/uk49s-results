@@ -39,22 +39,36 @@ export async function GET(request: NextRequest) {
         >
           <div
             style={{
-              width: '48px',
-              height: '48px',
+              width: '56px',
+              height: '56px',
               borderRadius: '50%',
-              background: '#f59e0b',
+              background: 'radial-gradient(circle at 35% 30%, #34D399 0%, #10B981 45%, #065F46 100%)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: 'white',
-              fontSize: '24px',
-              fontWeight: 'bold',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
             }}
           >
-            49
+            <div
+              style={{
+                width: '70%',
+                height: '70%',
+                border: '2px solid white',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: 'white',
+                fontSize: '20px',
+                fontWeight: 800,
+                letterSpacing: -0.8,
+              }}
+            >
+              49
+            </div>
           </div>
-          <span style={{ color: 'white', fontSize: '28px', fontWeight: 'bold' }}>
-            UK49s Results
+          <span style={{ color: 'white', fontSize: '32px', fontWeight: 800, letterSpacing: -1 }}>
+            UK49s <span style={{ fontWeight: 500, color: '#34D399' }}>Results</span>
           </span>
         </div>
 

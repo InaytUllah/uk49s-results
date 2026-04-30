@@ -88,10 +88,15 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center font-bold text-sm">49</div>
-            <span className="font-bold text-xl hidden sm:inline">UK49s Results</span>
-            <span className="font-bold text-lg sm:hidden">UK49s</span>
+          <Link href="/" aria-label="UK49s Results — Home" className="flex items-center">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/logo-horizontal-dark.svg"
+              alt="UK49s Results"
+              width={210}
+              height={56}
+              className="h-9 sm:h-10 w-auto"
+            />
           </Link>
 
           {/* Desktop Nav */}

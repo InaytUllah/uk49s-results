@@ -9,21 +9,44 @@ export default function AppleIcon() {
     (
       <div
         style={{
-          fontSize: 96,
-          background: 'linear-gradient(135deg, #059669 0%, #0d9488 100%)',
           width: '100%',
           height: '100%',
           display: 'flex',
-          flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          color: 'white',
-          fontWeight: 800,
-          letterSpacing: -2,
+          background: '#0F172A',
+          padding: 18,
         }}
       >
-        <div style={{ display: 'flex', lineHeight: 1 }}>49</div>
-        <div style={{ fontSize: 22, fontWeight: 600, marginTop: 6, letterSpacing: 0 }}>UK Results</div>
+        <div
+          style={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: 'radial-gradient(circle at 35% 30%, #34D399 0%, #10B981 45%, #065F46 100%)',
+            borderRadius: '50%',
+          }}
+        >
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '70%',
+              height: '70%',
+              border: '4px solid white',
+              borderRadius: '50%',
+              color: 'white',
+              fontSize: 64,
+              fontWeight: 800,
+              letterSpacing: -2,
+            }}
+          >
+            49
+          </div>
+        </div>
       </div>
     ),
     { ...size },

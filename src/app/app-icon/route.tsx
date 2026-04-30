@@ -7,10 +7,10 @@ export async function GET(request: Request) {
   const size = parseInt(url.searchParams.get('size') || '192', 10);
   const maskable = url.searchParams.get('maskable') === '1';
 
-  // Maskable icons need extra padding around the safe zone
-  const padding = maskable ? size * 0.18 : 0;
-  const fontSize = (size - padding * 2) * 0.42;
-  const labelSize = (size - padding * 2) * 0.09;
+  // Maskable icons need a 18% safe-zone padding around the visible mark
+  const padding = maskable ? size * 0.18 : size * 0.06;
+  const innerSize = size - padding * 2;
+  const ringFontSize = innerSize * 0.42;
 
   return new ImageResponse(
     (
@@ -21,24 +21,36 @@ export async function GET(request: Request) {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          background: maskable ? '#0d9488' : 'linear-gradient(135deg, #059669 0%, #0d9488 100%)',
+          background: maskable ? '#0F172A' : '#0F172A',
         }}
       >
         <div
           style={{
+            width: `${innerSize}px`,
+            height: `${innerSize}px`,
             display: 'flex',
-            flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            width: `${size - padding * 2}px`,
-            height: `${size - padding * 2}px`,
-            color: 'white',
-            fontWeight: 800,
+            background: 'radial-gradient(circle at 35% 30%, #34D399 0%, #10B981 45%, #065F46 100%)',
+            borderRadius: '50%',
           }}
         >
-          <div style={{ display: 'flex', lineHeight: 1, fontSize: `${fontSize}px` }}>49</div>
-          <div style={{ fontSize: `${labelSize}px`, fontWeight: 600, marginTop: labelSize * 0.3 }}>
-            UK Results
+          <div
+            style={{
+              width: '70%',
+              height: '70%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              border: `${Math.max(2, innerSize * 0.025)}px solid white`,
+              borderRadius: '50%',
+              color: 'white',
+              fontSize: `${ringFontSize}px`,
+              fontWeight: 800,
+              letterSpacing: ringFontSize * -0.04,
+            }}
+          >
+            49
           </div>
         </div>
       </div>
