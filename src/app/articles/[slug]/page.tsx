@@ -1,10 +1,57 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { Fragment } from 'react';
 import { articles, getArticleBySlug, getRelatedArticles } from '@/lib/articles/data';
 import type { ArticleSection } from '@/lib/articles/types';
 import { SITE_NAME, SITE_URL, ogMeta } from '@/lib/data/seo';
 import { breadcrumbSchema } from '@/lib/schema';
+
+/**
+ * Inline markdown parser:
+ *   [link text](/path)  → internal Next.js Link
+ *   [link text](https://...) → external <a> with rel=noopener
+ *   **bold text** → <strong>
+ * Anything else stays as plain text.
+ */
+function renderInline(text: string): React.ReactNode {
+  const parts: React.ReactNode[] = [];
+  const regex = /\[([^\]]+)\]\(([^)]+)\)|\*\*([^*]+)\*\*/g;
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+  let key = 0;
+
+  while ((match = regex.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      parts.push(<Fragment key={`t-${key++}`}>{text.slice(lastIndex, match.index)}</Fragment>);
+    }
+    if (match[1] && match[2]) {
+      const label = match[1];
+      const href = match[2];
+      const isExternal = /^https?:\/\//.test(href);
+      if (isExternal) {
+        parts.push(
+          <a key={`a-${key++}`} href={href} target="_blank" rel="noopener noreferrer" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">
+            {label}
+          </a>,
+        );
+      } else {
+        parts.push(
+          <Link key={`l-${key++}`} href={href} className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">
+            {label}
+          </Link>,
+        );
+      }
+    } else if (match[3]) {
+      parts.push(<strong key={`b-${key++}`} className="text-gray-900 dark:text-white">{match[3]}</strong>);
+    }
+    lastIndex = regex.lastIndex;
+  }
+  if (lastIndex < text.length) {
+    parts.push(<Fragment key={`t-${key++}`}>{text.slice(lastIndex)}</Fragment>);
+  }
+  return parts.length > 0 ? parts : text;
+}
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -42,7 +89,7 @@ function renderSection(section: ArticleSection, idx: number) {
     case 'p':
       return (
         <p key={idx} className="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
-          {section.text}
+          {renderInline(section.text)}
         </p>
       );
     case 'h2':
@@ -61,7 +108,7 @@ function renderSection(section: ArticleSection, idx: number) {
       return (
         <ul key={idx} className="list-disc pl-6 mb-4 space-y-2 text-gray-700 dark:text-gray-300">
           {section.items.map((item, i) => (
-            <li key={i} className="leading-relaxed">{item}</li>
+            <li key={i} className="leading-relaxed">{renderInline(item)}</li>
           ))}
         </ul>
       );
@@ -69,7 +116,7 @@ function renderSection(section: ArticleSection, idx: number) {
       return (
         <ol key={idx} className="list-decimal pl-6 mb-4 space-y-2 text-gray-700 dark:text-gray-300">
           {section.items.map((item, i) => (
-            <li key={i} className="leading-relaxed">{item}</li>
+            <li key={i} className="leading-relaxed">{renderInline(item)}</li>
           ))}
         </ol>
       );
@@ -81,7 +128,7 @@ function renderSection(section: ArticleSection, idx: number) {
             {section.items.map((item, i) => (
               <li key={i} className="flex items-start gap-2 text-sm text-gray-800 dark:text-gray-200 leading-relaxed">
                 <span aria-hidden="true" className="mt-1 w-1.5 h-1.5 rounded-full bg-emerald-600 flex-shrink-0" />
-                <span>{item}</span>
+                <span>{renderInline(item)}</span>
               </li>
             ))}
           </ul>
@@ -100,7 +147,7 @@ function renderSection(section: ArticleSection, idx: number) {
           {section.title && (
             <p className={`text-xs uppercase tracking-wider font-bold ${s.text} mb-2`}>{section.title}</p>
           )}
-          <p className="text-sm text-gray-800 dark:text-gray-200 leading-relaxed">{section.text}</p>
+          <p className="text-sm text-gray-800 dark:text-gray-200 leading-relaxed">{renderInline(section.text)}</p>
         </div>
       );
     }

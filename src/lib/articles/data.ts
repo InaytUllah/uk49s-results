@@ -22,7 +22,7 @@ export const articles: Article[] = [
         'The patterns players think they see in hot and cold numbers are real in the data, but they do not predict anything. Each new draw resets the slate.',
       ]},
       { type: 'p', text: 'If you have played UK 49s for more than a few weeks, you have probably had this thought: "This cannot be random. The same numbers keep coming up." Or the opposite: "Number 7 has not come up in months, it must be due."' },
-      { type: 'p', text: 'These are the two most common mental traps lottery players fall into, and both come from a misunderstanding of what "random" actually means. So let me walk you through what really happens at a UK 49s draw, what the audit trail looks like, and where your instincts are leading you astray.' },
+      { type: 'p', text: 'These are the two most common mental traps lottery players fall into, and both come from a misunderstanding of what "random" actually means. So let me walk you through what really happens at a UK 49s draw, what the audit trail looks like, and where your instincts are leading you astray. (If you want to skip ahead to the actual probabilities, see [the math behind UK 49s](/articles/the-math-behind-uk-49s).)' },
 
       { type: 'h2', text: 'How a UK 49s draw actually works' },
       { type: 'p', text: 'UK 49s is run by 49\'s Limited, a UK-licensed lottery operator. Twice every day, at 12:49 PM and 5:49 PM UK time, they conduct a live draw using a mechanical ball machine. This is the same kind of machine used by the National Lottery and most other regulated lotteries worldwide.' },
@@ -37,7 +37,7 @@ export const articles: Article[] = [
       { type: 'p', text: 'This is called the law of large numbers. It only kicks in over thousands of trials. In a window of even 50 draws, real randomness will look very uneven, with clusters and gaps. That is what genuine randomness looks like, and it fools our brains every time.' },
 
       { type: 'h2', text: 'Why "hot" and "cold" numbers feel real but mean nothing' },
-      { type: 'p', text: 'Open our hot and cold numbers page right now and you will see that some numbers have come up more than others over the last 30 days. That is real data. Number 7 might be drawn 12 times while number 33 has only come up 3 times. The temptation is to bet on 7 because it is "hot", or bet on 33 because it is "due".' },
+      { type: 'p', text: 'Open our [hot and cold numbers page](/hot-cold-numbers) right now and you will see that some numbers have come up more than others over the last 30 days. That is real data. Number 7 might be drawn 12 times while number 33 has only come up 3 times. The temptation is to bet on 7 because it is "hot", or bet on 33 because it is "due".' },
       { type: 'p', text: 'Both arguments are wrong, and they cancel each other out. If 7 was truly more likely to come up because it is hot, then 33 must be less likely. But if 33 is "due", it must be more likely. You cannot have both. The truth is neither is more likely than the other in any single future draw, regardless of recent history.' },
       { type: 'p', text: 'The reason hot and cold numbers exist as a concept is because real randomness is lumpy. In any 30 day window, some numbers will be "hot" purely because of the cluster effect. It tells you what happened, not what will happen.' },
 
@@ -50,7 +50,7 @@ export const articles: Article[] = [
       { type: 'p', text: 'There have been lottery scandals globally, but in every case the fraud was caught quickly and prosecuted. The most famous was the Hot Lotto scandal in the United States in 2017, where a security director programmed a back door into the random number generator. He was caught because his brother-in-law tried to claim the prize. Even that took years to crack and ended in convictions.' },
 
       { type: 'h2', text: 'What this means for how you should play' },
-      { type: 'p', text: 'If draws are genuinely random, then any prediction system, including ours, is essentially picking numbers at carefully chosen random. Our predictions use hot number weightings because some players prefer them, but mathematically, six numbers picked entirely at random have the same chance of winning.' },
+      { type: 'p', text: 'If draws are genuinely random, then any prediction system, including ours, is essentially picking numbers at carefully chosen random. Our [Lunchtime predictions](/lunchtime-predictions) and [Teatime predictions](/teatime-predictions) use hot number weightings because some players prefer them, but mathematically, six numbers picked entirely at random have the same chance of winning. If you want to test your own past picks, our [number checker tool](/check) lets you scan the archive in seconds.' },
       { type: 'p', text: 'The best approach is the boring one. Pick numbers you are happy to see drawn. Stick to a budget. Treat the bet as entertainment rather than an investment. The expected value of any UK 49s bet is negative for the player, the same as it is for every other lottery on Earth. That is how the game funds itself and pays out winners.' },
 
       { type: 'h2', text: 'Quick recap before you go' },
@@ -61,7 +61,7 @@ export const articles: Article[] = [
         'Rigging the draw would risk the entire business for marginal gain. The math already favours the operator.',
         'Pick numbers you enjoy, stick to a budget, treat it as fun rather than investment.',
       ]},
-      { type: 'p', text: 'And if you ever see a "guaranteed winning numbers" service charging you for inside information, that is your cue to walk away. The math says they cannot have what they claim, and the regulator says nobody outside the operator has access to the draw before it happens. If our hot and cold pages or daily predictions help you have fun with the game, that is what they are for. Just keep your expectations honest.' },
+      { type: 'p', text: 'And if you ever see a "guaranteed winning numbers" service charging you for inside information, that is your cue to walk away. The math says they cannot have what they claim, and the regulator says nobody outside the operator has access to the draw before it happens. We have a separate piece on [the most common UK 49s scams](/articles/uk-49s-scams-to-avoid) if you want to spot them quickly. If our [hot and cold pages](/hot-cold-numbers) or daily predictions help you have fun with the game, that is what they are for. Just keep your expectations honest.' },
     ],
   },
 
@@ -149,12 +149,12 @@ export const articles: Article[] = [
       { type: 'p', text: 'Many players play both. They do a Lotto ticket twice a week for the dream factor, and a small UK 49s bet most days for the entertainment. There is nothing wrong with that, as long as the total spend stays inside an entertainment budget you have already decided is fine to lose.' },
 
       { type: 'h2', text: 'A note on tax and claiming prizes' },
-      { type: 'p', text: 'Both games are tax-free for winners in the UK. You do not pay income tax on lottery or fixed-odds betting wins. UK 49s claims happen at your bookmaker, usually instantly for small wins and within a day or two for larger ones. National Lottery wins go through Camelot (the operator), with a 180-day claim window from the draw date.' },
+      { type: 'p', text: 'Both games are tax-free for winners in the UK. You do not pay income tax on lottery or fixed-odds betting wins. UK 49s claims happen at your bookmaker, usually instantly for small wins and within a day or two for larger ones. National Lottery wins go through Camelot (the operator), with a 180-day claim window from the draw date. Our [full guide to claiming UK 49s prizes](/articles/what-happens-when-you-win-uk-49s) covers anonymity, tax, and what to do if you hit big.' },
       { type: 'p', text: 'For both, anonymity is your default unless you choose otherwise. UK 49s keeps you anonymous automatically because it is a private bookmaker bet. National Lottery winners can choose anonymity, though many big winners go public for the publicity.' },
 
       { type: 'h2', text: 'Bottom line' },
       { type: 'p', text: 'These two games are not really competing. They serve different appetites. UK 49s gives you frequent action, better odds of any win, and small stakes. The National Lottery gives you a shot at a fortune and a familiar weekly ritual. Most British lottery players use both, and that is fine, as long as you are honest about why you are playing and how much you are spending.' },
-      { type: 'p', text: 'Whichever you pick, the same rules apply: every draw is independent, no system can predict the outcome, and the only winning long-term strategy is to set a budget and stick to it. Use our free tools (number checker, hot and cold, prediction sets) for the entertainment value. Just do not bet money you cannot afford to lose.' },
+      { type: 'p', text: 'Whichever you pick, the same rules apply: every draw is independent, no system can predict the outcome, and the only winning long-term strategy is to set a budget and stick to it. Use our free tools — [number checker](/check), [hot and cold](/hot-cold-numbers), [random picker](/number-generator), [payout calculator](/odds) — for the entertainment value. Just do not bet money you cannot afford to lose. For more on the actual probabilities, see [the math behind UK 49s](/articles/the-math-behind-uk-49s).' },
     ],
   },
 
@@ -185,9 +185,9 @@ export const articles: Article[] = [
       { type: 'h2', text: 'Step one: confirming you actually won' },
       { type: 'p', text: 'Sounds obvious, but most "I won!" stories online turn out to be miscounted matches. Before you do anything else:' },
       { type: 'ul', items: [
-        'Check the official numbers on at least two sources. Use our results page and one other (49s.co.uk, the bookmaker\'s site).',
-        'Confirm whether your bet was Pick 5, Pick 4, etc. and whether you opted in or out of the Booster ball.',
-        'Note the exact draw date and time. Lunchtime and Teatime have different numbers.',
+        'Check the official numbers on at least two sources. Use our [Lunchtime results](/lunchtime) or [Teatime results](/teatime) page and one other (49s.co.uk, the bookmaker\'s site).',
+        'Confirm whether your bet was Pick 5, Pick 4, etc. and whether you opted in or out of the Booster ball. Our [number checker tool](/check) is the fastest way to scan your numbers against the archive.',
+        'Note the exact draw date and time. Lunchtime and Teatime have different numbers. See [past results by date](/history) if you need to confirm.',
         'Do not announce anything until you have confirmed the bet exists in your bookmaker\'s system.',
       ]},
       { type: 'p', text: 'Almost every "false alarm" win comes from people remembering their numbers wrong, or the bet being placed on the wrong draw type. Take ten minutes to verify before you tell anyone.' },
@@ -249,7 +249,7 @@ export const articles: Article[] = [
 
       { type: 'h2', text: 'Final thought' },
       { type: 'p', text: 'A meaningful UK 49s win is not life-changing in the way a National Lottery jackpot would be, but it can pay off a chunk of debt, fund a holiday, or sit in savings as a buffer. The boring decisions tend to be the right ones. The exciting decisions tend to be the ones lottery winners regret in interviews three years later.' },
-      { type: 'p', text: 'Stay anonymous, pay off debt, sit on the rest. That advice has not changed in decades and probably will not. If you want to estimate what your specific bet would pay out, our payout calculator on the odds page lets you plug in any number combination and stake to see the result. That is the entertainment side of UK 49s. Treat it that way and you will not get burned.' },
+      { type: 'p', text: 'Stay anonymous, pay off debt, sit on the rest. That advice has not changed in decades and probably will not. If you want to estimate what your specific bet would pay out, our [payout calculator on the odds page](/odds) lets you plug in any number combination and stake to see the result. That is the entertainment side of UK 49s. Treat it that way and you will not get burned. For the common pitfalls to avoid before you ever win, read [7 UK 49s mistakes most players make](/articles/uk-49s-mistakes-most-players-make).' },
     ],
   },
 
@@ -286,13 +286,13 @@ export const articles: Article[] = [
 
       { type: 'h2', text: 'Mistake 2: Believing in "due" numbers' },
       { type: 'p', text: 'Number 33 has not come up in 60 days. So it must be due, right? Wrong, but the instinct is so strong that even people who understand probability fall for it.' },
-      { type: 'p', text: 'This is called the gambler\'s fallacy. The ball machine has no memory. Number 33 has the same chance of being drawn today as number 17, regardless of when either was last drawn. Our cold numbers page exists because the data is genuinely interesting, not because cold numbers are more likely to come up.' },
+      { type: 'p', text: 'This is called the gambler\'s fallacy. The ball machine has no memory. Number 33 has the same chance of being drawn today as number 17, regardless of when either was last drawn. Our [hot and cold numbers page](/hot-cold-numbers) exists because the data is genuinely interesting, not because cold numbers are more likely to come up. For why this is mathematically certain, see [are UK 49s draws actually random](/articles/are-uk-49s-draws-actually-random).' },
       { type: 'p', text: 'The fix: if you enjoy picking cold numbers because they feel "due", that is fine, but understand it is a feeling, not a strategy. Your odds are the same whether you bet 33 (cold) or 17 (hot). Pick what you enjoy. Do not increase your stake because a number is "overdue".' },
 
       { type: 'h2', text: 'Mistake 3: Paying for prediction services' },
       { type: 'p', text: 'Telegram groups, WhatsApp tipsters, paid prediction sites — all of them claim to have "inside information" or "guaranteed numbers" or "an algorithm that beats UK 49s". They cost £10 to £100 a month and they all do the same thing: send you semi-random number picks dressed up as expert analysis.' },
       { type: 'p', text: 'The math gives you the answer. UK 49s draws are random. There is no inside information, because the operator does not know the numbers either until the balls drop. Any service claiming a "guaranteed" hit rate above pure chance is either lying or deluded.' },
-      { type: 'p', text: 'The fix: never pay for predictions. Free analysis (like our hot/cold page or daily prediction sets) is fine for entertainment. Paid services are a scam. The math is unambiguous on this and we have a whole separate article on the specific scam patterns to watch for.' },
+      { type: 'p', text: 'The fix: never pay for predictions. Free analysis (like our [hot and cold page](/hot-cold-numbers) or [daily prediction sets](/predictions)) is fine for entertainment. Paid services are a scam. The math is unambiguous on this and we have a whole separate piece on [the specific scam patterns to watch for](/articles/uk-49s-scams-to-avoid).' },
 
       { type: 'h2', text: 'Mistake 4: Birthday-only number selections' },
       { type: 'p', text: 'You pick numbers based on family birthdays. Your daughter is 14, your wedding anniversary is on the 23rd, your dad turns 60 next month. So you bet 14, 23, and use birthdays for everything else.' },
@@ -303,7 +303,7 @@ export const articles: Article[] = [
       { type: 'p', text: 'A surprisingly common belief: "If I bet on 5 numbers instead of 3, I have a better chance of winning." This is intuitive but completely wrong.' },
       { type: 'p', text: 'In UK 49s, betting on more numbers means you need to match ALL of them to win. Pick 5 means you must hit all 5. Pick 3 means you only need to hit 3. The odds get dramatically worse as you pick more, not better. Pick 1 has odds around 1 in 6.5. Pick 5 has odds around 1 in 35,000.' },
       { type: 'p', text: 'The bigger payout on Pick 5 is the trade-off for the worse odds. If you understood that already, great. Many people do not.' },
-      { type: 'p', text: 'The fix: pick the bet type that suits your goals. Pick 1 or Pick 2 for frequent small wins. Pick 4 or 5 for rare big wins. Do not assume "more numbers" is always better. It is not.' },
+      { type: 'p', text: 'The fix: pick the bet type that suits your goals. Pick 1 or Pick 2 for frequent small wins. Pick 4 or 5 for rare big wins. Do not assume "more numbers" is always better. It is not. For a full breakdown by Pick type, see our guide on [how many numbers to bet on UK 49s](/articles/how-many-numbers-to-bet-uk-49s).' },
 
       { type: 'h2', text: 'Mistake 6: No daily budget' },
       { type: 'p', text: 'This is the simplest fix on the list and the one most players ignore. Before you start betting for the day, decide how much you are allowed to lose. Stick to that number. When it is gone, stop.' },
@@ -396,7 +396,7 @@ export const articles: Article[] = [
 
       { type: 'h2', text: 'Why no system can beat random odds' },
       { type: 'p', text: 'Whole books have been written about "lottery systems". They are all wrong, and the math is straightforward.' },
-      { type: 'p', text: 'In a random draw, every combination of numbers has the same probability. There is no pattern that becomes more or less likely based on past draws. Even if you found a "system" that picked numbers a particular way, your expected value per bet would still be around minus 14%, because the system does not change the underlying probabilities.' },
+      { type: 'p', text: 'In a random draw, every combination of numbers has the same probability. There is no pattern that becomes more or less likely based on past draws. Even if you found a "system" that picked numbers a particular way, your expected value per bet would still be around minus 14%, because the system does not change the underlying probabilities. For why "random" really means random, see [are UK 49s draws actually random](/articles/are-uk-49s-draws-actually-random).' },
       { type: 'p', text: 'The only way to "beat" a random lottery would be to influence the draw itself, which is illegal and tightly controlled. People have tried (and gone to prison for it).' },
       { type: 'p', text: 'What "systems" actually offer is the illusion of control, which feels good but does not change outcomes. If a system makes the experience more enjoyable for you, fine, but do not pay for one and do not expect it to win you money over the long term.' },
 
@@ -428,7 +428,7 @@ export const articles: Article[] = [
         'Set a budget that treats your spend as entertainment, not investment.',
         'Accept that any winning streak is variance, not skill, and any losing streak is also variance.',
       ]},
-      { type: 'p', text: 'If you find a bet type and stake size where the entertainment value (the fun, the daily ritual, the small wins) is worth the average loss, that is a healthy way to play. Our payout calculator on the odds page lets you plug in any bet to see the exact numbers. Use it. The math is the math, and knowing it is the only edge you actually have.' },
+      { type: 'p', text: 'If you find a bet type and stake size where the entertainment value (the fun, the daily ritual, the small wins) is worth the average loss, that is a healthy way to play. Our [payout calculator on the odds page](/odds) lets you plug in any bet to see the exact numbers. Use it. The math is the math, and knowing it is the only edge you actually have. For applying this to specific bet types, read [how many numbers to bet on UK 49s](/articles/how-many-numbers-to-bet-uk-49s) and the common [mistakes most players make](/articles/uk-49s-mistakes-most-players-make).' },
     ],
   },
 
@@ -453,7 +453,7 @@ export const articles: Article[] = [
         'Does one draw "favour" certain numbers? Slight differences exist in any 365-day window, but they do not persist into the next year. The differences are noise, not signal.',
         'Practical conclusion: bet on whichever draw you prefer. Neither has an actual edge.',
       ]},
-      { type: 'p', text: 'I get asked this question constantly. "Is Lunchtime luckier?" "Do certain numbers come up more in Teatime?" "Should I focus my bets on one draw or the other?"' },
+      { type: 'p', text: 'I get asked this question constantly. "Is [Lunchtime](/lunchtime) luckier?" "Do certain numbers come up more in [Teatime](/teatime)?" "Should I focus my bets on one draw or the other?"' },
       { type: 'p', text: 'The intuition is reasonable. Two different draws, two different ball machines (often), two different operators on duty. Surely there must be SOMETHING different between them?' },
       { type: 'p', text: 'I pulled a year\'s worth of UK 49s data and ran it through standard statistical analysis. Here is what the numbers actually say, presented honestly.' },
 
@@ -508,7 +508,7 @@ export const articles: Article[] = [
 
       { type: 'h2', text: 'Practical implications for players' },
       { type: 'h3', text: '1. Pick whichever draw you enjoy more.' },
-      { type: 'p', text: 'No statistical edge exists for one over the other. Lunchtime suits people who like checking results in their afternoon (UK time). Teatime suits people who prefer evening draws.' },
+      { type: 'p', text: 'No statistical edge exists for one over the other. [Lunchtime](/lunchtime) suits people who like checking results in their afternoon (UK time). [Teatime](/teatime) suits people who prefer evening draws.' },
       { type: 'h3', text: '2. Hot/cold lists are draw-specific but not predictive.' },
       { type: 'p', text: 'Our hot and cold pages show separate Lunchtime and Teatime stats. They are accurate snapshots of recent history. They do not tell you what will happen next.' },
       { type: 'h3', text: '3. If you bet on both draws, treat each as separate.' },
@@ -519,7 +519,7 @@ export const articles: Article[] = [
       { type: 'h2', text: 'Final word' },
       { type: 'p', text: 'A year of data on UK 49s shows what mathematics predicts: two independent random draws with no statistically significant differences. The patterns players see are real artefacts of small samples, not signals about future draws.' },
       { type: 'p', text: 'If you have a "lucky" draw type because you won there once, that is fine for entertainment. Do not let it drive your bet size or frequency. Both draws are mathematically equivalent. Bet on whichever one fits your daily routine, set a budget, and treat it as the entertainment product it is.' },
-      { type: 'p', text: 'Our hot/cold and number stats pages let you explore the data yourself. Spend 10 minutes there if you want to see the patterns directly. The data is interesting. Just do not mistake it for predictive.' },
+      { type: 'p', text: 'Our [hot and cold numbers page](/hot-cold-numbers), [number stats page](/numbers), and [Lunchtime vs Teatime comparison](/lunchtime-vs-teatime) let you explore the data yourself. Spend 10 minutes there if you want to see the patterns directly. The data is interesting. Just do not mistake it for predictive. For the deeper "why", see [the math behind UK 49s](/articles/the-math-behind-uk-49s).' },
     ],
   },
 
@@ -604,7 +604,7 @@ export const articles: Article[] = [
 
       { type: 'h2', text: 'A note on what we publish here' },
       { type: 'p', text: 'We do not run a "big winners" wall on this site, partly because most big winners want privacy and partly because publicising wins encourages magical thinking in other players. Our predictions, hot/cold pages, and number checker exist for entertainment, not as part of any system to "land" a big win.' },
-      { type: 'p', text: 'If you want to imagine what a big win would feel like, our payout calculator on the odds page lets you plug in any combination and stake to see the exact payout. Use it. Imagining is fun. Just do not let imagination drive your stake size.' },
+      { type: 'p', text: 'If you want to imagine what a big win would feel like, our [payout calculator on the odds page](/odds) lets you plug in any combination and stake to see the exact payout. Use it. Imagining is fun. Just do not let imagination drive your stake size. For practical advice on what to actually do if you win, read [what happens when you win UK 49s](/articles/what-happens-when-you-win-uk-49s). And to understand why bigger Picks are not always smarter, see [how many numbers to bet on UK 49s](/articles/how-many-numbers-to-bet-uk-49s).' },
     ],
   },
 
@@ -683,7 +683,7 @@ export const articles: Article[] = [
       { type: 'h2', text: 'A final cultural note' },
       { type: 'p', text: 'It is genuinely fascinating that a British product ended up dominating a different country\'s betting market. Most cultural exports go the other way (American TV, Korean music, Japanese games). UK 49s is one of the few examples of a small UK product becoming bigger overseas than at home.' },
       { type: 'p', text: 'The reason comes down to product-market fit. UK 49s solved a problem the South African market actually had (daily entertainment with low stakes), while the UK market already had its dominant lottery option. Sometimes products find their audience in unexpected places.' },
-      { type: 'p', text: 'Whether you are playing from Cape Town, Coventry, or Karachi, the practical advice is the same: small budget, treat it as entertainment, do not chase losses, ignore paid prediction services. The geography changes; the math does not.' },
+      { type: 'p', text: 'Whether you are playing from Cape Town, Coventry, or Karachi, the practical advice is the same: small budget, treat it as entertainment, do not chase losses, ignore [paid prediction services](/articles/uk-49s-scams-to-avoid). The geography changes; [the math](/articles/the-math-behind-uk-49s) does not. For the actual probability tables, see our [odds and payout calculator](/odds).' },
     ],
   },
 
@@ -709,7 +709,7 @@ export const articles: Article[] = [
         'Pick 5: Lottery-style dream bet. Almost never wins, but pays out big when it does. Highest house edge.',
         'Bottom line: pick the bet type that matches your goal and stake size, not the one with the biggest theoretical payout.',
       ]},
-      { type: 'p', text: 'When you place a UK 49s bet, you choose how many numbers to play. This is the single most important decision in the game, far more than which specific numbers you pick. Each Pick type is essentially a different product with different math.' },
+      { type: 'p', text: 'When you place a UK 49s bet, you choose how many numbers to play. This is the single most important decision in the game, far more than which specific numbers you pick. Each Pick type is essentially a different product with different math. (For the underlying probability theory, see [the math behind UK 49s](/articles/the-math-behind-uk-49s).)' },
       { type: 'p', text: 'Most players default to "the same Pick type my friend uses" or "the one with the biggest payout I saw advertised". Both are bad reasons. Let me walk through what each Pick type actually offers and who it suits.' },
 
       { type: 'h2', text: 'Pick 1: the entertainment bet' },
@@ -792,7 +792,7 @@ export const articles: Article[] = [
         'Lottery dreamer with strict budget: Pick 4 or 5 at £1, never more.',
         'Mix of everything: spread your stake across 2 bet types.',
       ]},
-      { type: 'p', text: 'Whatever you choose, set a daily budget first, stick to it, and remember that no Pick type changes the underlying randomness. The math is the math. Picking the bet type that matches your actual goals is the closest thing to "smart play" UK 49s offers.' },
+      { type: 'p', text: 'Whatever you choose, set a daily budget first, stick to it, and remember that no Pick type changes the underlying randomness. [The math](/articles/the-math-behind-uk-49s) is the math. Picking the bet type that matches your actual goals is the closest thing to "smart play" UK 49s offers. Plug in your specific bet on the [payout calculator](/odds) to see the exact numbers, and read [the 7 mistakes most players make](/articles/uk-49s-mistakes-most-players-make) before you commit.' },
     ],
   },
 
@@ -915,7 +915,7 @@ export const articles: Article[] = [
       { type: 'h2', text: 'A final note on common sense' },
       { type: 'p', text: 'If a "prediction service" was actually predictive, it would be the most valuable financial discovery in human history. The person who invented it would not be selling £20 monthly subscriptions on Telegram. They would be a billionaire who quietly bet their own money for a few years until lottery operators noticed and changed the rules.' },
       { type: 'p', text: 'The fact that you can find dozens of "prediction services" online, charging small monthly fees, is itself the proof that they do not work. Their actual product is not predictions. It is hope. They sell you hope, you pay for hope, and hope does not pay your rent.' },
-      { type: 'p', text: 'Use free tools. Set a budget. Treat UK 49s as entertainment. Ignore anyone selling "guaranteed" anything. That is the playbook. It will not make you win, but it will stop you from losing more than you should.' },
+      { type: 'p', text: 'Use free tools — our [hot and cold numbers](/hot-cold-numbers), [number checker](/check), [random picker](/number-generator), [payout calculator](/odds), and [daily prediction sets](/predictions). Set a budget. Treat UK 49s as entertainment. Ignore anyone selling "guaranteed" anything. That is the playbook. For the underlying reasons, read [the math behind UK 49s](/articles/the-math-behind-uk-49s) and [are UK 49s draws actually random](/articles/are-uk-49s-draws-actually-random). It will not make you win, but it will stop you from losing more than you should.' },
     ],
   },
 ];
