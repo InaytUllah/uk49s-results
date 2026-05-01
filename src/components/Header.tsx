@@ -51,6 +51,7 @@ const menuCategories: MenuCategory[] = [
     label: 'Help',
     icon: 'ℹ️',
     items: [
+      { href: '/articles', icon: '📚', title: 'Articles & Guides', description: 'In-depth pieces on strategy, math, and more' },
       { href: '/how-to-play', icon: '📖', title: 'How to Play', description: 'Rules, draw times, betting basics' },
       { href: '/faq', icon: '❓', title: 'FAQ', description: 'Frequently asked questions' },
       { href: '/about', icon: '👥', title: 'About Us', description: 'Who we are and what we do' },

@@ -52,9 +52,16 @@ export default async function BlogPage() {
       <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-2">
         UK 49s Blog
       </h1>
-      <p className="text-gray-600 dark:text-gray-400 mb-8">
+      <p className="text-gray-600 dark:text-gray-400 mb-4">
         Predictions, analysis and number trends for UK 49s Lunchtime and Teatime draws
       </p>
+      <Link
+        href="/articles"
+        className="inline-flex items-center gap-2 mb-8 px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium transition-colors"
+      >
+        📚 Read our articles &amp; guides
+        <svg aria-hidden="true" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
+      </Link>
 
       {/* Today's Predictions — hub pages */}
       <section className="mb-10">

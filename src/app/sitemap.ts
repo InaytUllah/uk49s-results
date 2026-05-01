@@ -1,6 +1,7 @@
 import { MetadataRoute } from 'next';
 import { getRecentDates, getLatestResults, getPredictionDate, getPredictionDateForLunchtime } from '@/lib/data/draws';
 import { SITE_URL } from '@/lib/data/seo';
+import { articles } from '@/lib/articles/data';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [dates, allResults] = await Promise.all([
@@ -28,6 +29,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/history`, lastModified: now, changeFrequency: 'daily' as const, priority: 0.7 },
     { url: `${SITE_URL}/how-to-play`, changeFrequency: 'monthly' as const, priority: 0.6 },
     { url: `${SITE_URL}/blog`, lastModified: now, changeFrequency: 'daily' as const, priority: 0.7 },
+    { url: `${SITE_URL}/articles`, lastModified: now, changeFrequency: 'weekly' as const, priority: 0.8 },
     { url: `${SITE_URL}/faq`, changeFrequency: 'monthly' as const, priority: 0.7 },
     { url: `${SITE_URL}/odds`, changeFrequency: 'monthly' as const, priority: 0.7 },
     { url: `${SITE_URL}/lunchtime-vs-teatime`, lastModified: now, changeFrequency: 'daily' as const, priority: 0.7 },
@@ -89,11 +91,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
   ];
 
+  // Evergreen articles — high SEO value, target long-tail queries
+  const articlePages = articles.map(a => ({
+    url: `${SITE_URL}/articles/${a.slug}`,
+    lastModified: new Date(a.updatedDate),
+    changeFrequency: 'monthly' as const,
+    priority: 0.7,
+  }));
+
   return [
     ...staticPages,
     ...numberPages,
     ...lunchtimeResultPages,
     ...teatimeResultPages,
     ...predictionBlogPages,
+    ...articlePages,
   ];
 }
