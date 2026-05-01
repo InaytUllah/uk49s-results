@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { getLatestResults, getPredictionDate, getPredictionDateForLunchtime } from '@/lib/data/draws';
 import { PAGE_SEO, ogMeta } from '@/lib/data/seo';
 import { breadcrumbSchema, webPageSchema } from '@/lib/schema';
+import { articles } from '@/lib/articles/data';
 
 export const metadata: Metadata = {
   title: PAGE_SEO.blog.title,
@@ -52,16 +53,9 @@ export default async function BlogPage() {
       <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-2">
         UK 49s Blog
       </h1>
-      <p className="text-gray-600 dark:text-gray-400 mb-4">
-        Predictions, analysis and number trends for UK 49s Lunchtime and Teatime draws
+      <p className="text-gray-600 dark:text-gray-400 mb-8">
+        Daily predictions, in-depth guides, and number analysis for UK 49s Lunchtime and Teatime draws.
       </p>
-      <Link
-        href="/articles"
-        className="inline-flex items-center gap-2 mb-8 px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium transition-colors"
-      >
-        📚 Read our articles &amp; guides
-        <svg aria-hidden="true" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
-      </Link>
 
       {/* Today's Predictions — hub pages */}
       <section className="mb-10">
@@ -149,6 +143,45 @@ export default async function BlogPage() {
               ))}
             </ul>
           </div>
+        </div>
+      </section>
+
+      {/* Featured Guides — evergreen articles */}
+      <section className="mb-10">
+        <div className="flex items-end justify-between mb-4 flex-wrap gap-2">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white">Guides &amp; Strategy</h2>
+          <Link
+            href="/articles"
+            className="text-sm font-medium text-emerald-600 dark:text-emerald-400 hover:underline"
+          >
+            View all guides &rarr;
+          </Link>
+        </div>
+        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+          In-depth articles on UK 49s strategy, the math behind the game, and what to avoid. Written for actual reading.
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {[...articles]
+            .sort((a, b) => b.publishedDate.localeCompare(a.publishedDate))
+            .slice(0, 4)
+            .map(a => (
+              <Link
+                key={a.slug}
+                href={`/articles/${a.slug}`}
+                className="block rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-5 hover:border-emerald-300 dark:hover:border-emerald-700 hover:shadow-md transition-all"
+              >
+                <div className="flex items-center gap-2 mb-2 flex-wrap">
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300">
+                    {a.category}
+                  </span>
+                  <span className="text-[10px] text-gray-500 dark:text-gray-400">{a.readingTimeMinutes} min</span>
+                </div>
+                <h3 className="text-base font-bold text-gray-900 dark:text-white mb-2 leading-snug">
+                  {a.title}
+                </h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed line-clamp-3">{a.excerpt}</p>
+              </Link>
+            ))}
         </div>
       </section>
 

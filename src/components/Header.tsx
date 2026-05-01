@@ -33,7 +33,6 @@ const menuCategories: MenuCategory[] = [
     items: [
       { href: '/lunchtime-predictions', icon: '☀️', title: 'Lunchtime Predictions', description: 'For today\'s 12:49 PM draw' },
       { href: '/teatime-predictions', icon: '🌙', title: 'Teatime Predictions', description: 'For today\'s 5:49 PM draw' },
-      { href: '/blog', icon: '📰', title: 'Past Predictions', description: 'Daily prediction archive — see how we did' },
       { href: '/hot-cold-numbers', icon: '🔥', title: 'Hot & Cold Numbers', description: 'Most and least drawn numbers' },
     ],
   },
@@ -48,10 +47,17 @@ const menuCategories: MenuCategory[] = [
     ],
   },
   {
+    label: 'Blog',
+    icon: '📰',
+    items: [
+      { href: '/blog', icon: '📰', title: 'Latest Posts', description: 'Daily predictions, analysis, and updates' },
+      { href: '/articles', icon: '📚', title: 'Guides & Strategy', description: 'In-depth pieces on the math, strategy, scams to avoid' },
+    ],
+  },
+  {
     label: 'Help',
     icon: 'ℹ️',
     items: [
-      { href: '/articles', icon: '📚', title: 'Articles & Guides', description: 'In-depth pieces on strategy, math, and more' },
       { href: '/how-to-play', icon: '📖', title: 'How to Play', description: 'Rules, draw times, betting basics' },
       { href: '/faq', icon: '❓', title: 'FAQ', description: 'Frequently asked questions' },
       { href: '/about', icon: '👥', title: 'About Us', description: 'Who we are and what we do' },

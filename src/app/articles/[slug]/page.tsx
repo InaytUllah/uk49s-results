@@ -131,7 +131,9 @@ export default async function ArticlePage({ params }: Props) {
         <ol className="flex items-center gap-1 flex-wrap">
           <li><Link href="/" className="hover:text-emerald-600">Home</Link></li>
           <li><span className="mx-1">/</span></li>
-          <li><Link href="/articles" className="hover:text-emerald-600">Articles</Link></li>
+          <li><Link href="/blog" className="hover:text-emerald-600">Blog</Link></li>
+          <li><span className="mx-1">/</span></li>
+          <li><Link href="/articles" className="hover:text-emerald-600">Guides</Link></li>
           <li><span className="mx-1">/</span></li>
           <li className="text-gray-900 dark:text-white font-medium truncate max-w-xs">{article.title}</li>
         </ol>
@@ -193,7 +195,8 @@ export default async function ArticlePage({ params }: Props) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([
-          { name: 'Articles', url: '/articles' },
+          { name: 'Blog', url: '/blog' },
+          { name: 'Guides & Strategy', url: '/articles' },
           { name: article.title, url: `/articles/${article.slug}` },
         ])) }}
       />

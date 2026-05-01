@@ -34,15 +34,23 @@ export default function ArticlesIndexPage() {
         <ol className="flex items-center gap-1">
           <li><Link href="/" className="hover:text-emerald-600">Home</Link></li>
           <li><span className="mx-1">/</span></li>
-          <li className="text-gray-900 dark:text-white font-medium">Articles</li>
+          <li><Link href="/blog" className="hover:text-emerald-600">Blog</Link></li>
+          <li><span className="mx-1">/</span></li>
+          <li className="text-gray-900 dark:text-white font-medium">Guides &amp; Strategy</li>
         </ol>
       </nav>
 
       <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-3">
-        UK 49s Articles &amp; Guides
+        UK 49s Guides &amp; Strategy
       </h1>
-      <p className="text-lg text-gray-600 dark:text-gray-400 leading-relaxed mb-8">
+      <p className="text-lg text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
         Honest, in-depth pieces on UK 49s strategy, math, common mistakes, and how the game actually works. No hype, no fake tips, no paid predictions.
+      </p>
+      <p className="text-sm text-gray-500 dark:text-gray-400 mb-8">
+        Looking for daily prediction posts instead?{' '}
+        <Link href="/blog" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">
+          See the latest blog posts
+        </Link>.
       </p>
 
       {/* Latest articles */}
@@ -99,7 +107,10 @@ export default function ArticlesIndexPage() {
 
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([{ name: 'Articles', url: '/articles' }])) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([
+          { name: 'Blog', url: '/blog' },
+          { name: 'Guides & Strategy', url: '/articles' },
+        ])) }}
       />
       <script
         type="application/ld+json"

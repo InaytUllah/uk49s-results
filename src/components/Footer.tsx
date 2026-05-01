@@ -29,7 +29,8 @@ export default function Footer() {
               <li><Link href="/history" className="block py-1.5 hover:text-white transition-colors focus:outline-none focus-visible:text-white focus-visible:underline">Past Results</Link></li>
               <li><Link href="/lunchtime-predictions" className="block py-1.5 hover:text-white transition-colors focus:outline-none focus-visible:text-white focus-visible:underline">Lunchtime Predictions</Link></li>
               <li><Link href="/teatime-predictions" className="block py-1.5 hover:text-white transition-colors focus:outline-none focus-visible:text-white focus-visible:underline">Teatime Predictions</Link></li>
-              <li><Link href="/blog" className="block py-1.5 hover:text-white transition-colors focus:outline-none focus-visible:text-white focus-visible:underline">Past Predictions Archive</Link></li>
+              <li><Link href="/blog" className="block py-1.5 hover:text-white transition-colors focus:outline-none focus-visible:text-white focus-visible:underline">Blog &amp; Predictions</Link></li>
+              <li><Link href="/articles" className="block py-1.5 hover:text-white transition-colors focus:outline-none focus-visible:text-white focus-visible:underline">Guides &amp; Strategy</Link></li>
             </ul>
           </nav>
 
