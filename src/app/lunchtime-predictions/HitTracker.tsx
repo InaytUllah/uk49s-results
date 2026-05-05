@@ -1,41 +1,16 @@
 import LotteryBalls from '@/components/LotteryBalls';
 import type { UK49sResult } from '@/lib/types';
+import { generateDailyPredictions } from '@/lib/data/predictions';
 
 interface Props {
   drawType: 'lunchtime' | 'teatime';
   drawResults: UK49sResult[];
   hotNumbers: number[];
+  coldNumbers: number[];
   seedOffsetStart: number;
 }
 
-function seededRandom(seed: number): () => number {
-  let s = seed;
-  return () => {
-    s = (s * 1664525 + 1013904223) & 0x7fffffff;
-    return s / 0x7fffffff;
-  };
-}
-
-function generatePrediction(hot: number[], seed: number): { numbers: number[]; booster: number } {
-  const random = seededRandom(seed);
-  const pool = Array.from({ length: 49 }, (_, i) => i + 1);
-  const selected: number[] = [];
-  const hotPicks = hot.slice(0, 4);
-  for (const num of hotPicks) {
-    if (selected.length < 4) selected.push(num);
-  }
-  const remaining = pool.filter(n => !selected.includes(n));
-  while (selected.length < 6) {
-    const idx = Math.floor(random() * remaining.length);
-    selected.push(remaining[idx]);
-    remaining.splice(idx, 1);
-  }
-  selected.sort((a, b) => a - b);
-  const booster = remaining[Math.floor(random() * remaining.length)];
-  return { numbers: selected, booster };
-}
-
-export default function HitTracker({ drawType, drawResults, hotNumbers, seedOffsetStart }: Props) {
+export default function HitTracker({ drawType, drawResults, hotNumbers, coldNumbers, seedOffsetStart }: Props) {
   const drawLabel = drawType === 'lunchtime' ? 'Lunchtime' : 'Teatime';
   const recent = drawResults.slice(0, 7);
 
@@ -49,12 +24,7 @@ export default function HitTracker({ drawType, drawResults, hotNumbers, seedOffs
   let boostersChecked = 0;
 
   const dailyBreakdown = recent.map(actual => {
-    const dateSeed = parseInt(actual.date.replace(/-/g, ''), 10);
-    const predictions = [
-      generatePrediction(hotNumbers, dateSeed + seedOffsetStart),
-      generatePrediction(hotNumbers, dateSeed + seedOffsetStart + 1),
-      generatePrediction(hotNumbers, dateSeed + seedOffsetStart + 2),
-    ];
+    const predictions = generateDailyPredictions(hotNumbers, coldNumbers, actual.date, seedOffsetStart);
 
     const setHits = predictions.map(pred => {
       const matched = pred.numbers.filter(n => actual.numbers.includes(n));

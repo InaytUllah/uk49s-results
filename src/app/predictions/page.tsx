@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import LotteryBalls from '@/components/LotteryBalls';
 import { getLatestResults, getHotNumbers, getColdNumbers, getPredictionDate, getPredictionDateForLunchtime } from '@/lib/data/draws';
+import { generatePrediction } from '@/lib/data/predictions';
 import { PAGE_SEO, SITE_URL } from '@/lib/data/seo';
 import { breadcrumbSchema, webPageSchema } from '@/lib/schema';
 
@@ -22,50 +23,25 @@ export const metadata: Metadata = {
 
 export const revalidate = 60;
 
-function seededRandom(seed: number): () => number {
-  let s = seed;
-  return () => {
-    s = (s * 1664525 + 1013904223) & 0x7fffffff;
-    return s / 0x7fffffff;
-  };
-}
-
-function generatePrediction(hot: number[], seed: number): { numbers: number[]; booster: number } {
-  const random = seededRandom(seed);
-  const pool = Array.from({ length: 49 }, (_, i) => i + 1);
-  const selected: number[] = [];
-  const hotPicks = hot.slice(0, 4);
-  for (const num of hotPicks) {
-    if (selected.length < 4) selected.push(num);
-  }
-  const remaining = pool.filter(n => !selected.includes(n));
-  while (selected.length < 6) {
-    const idx = Math.floor(random() * remaining.length);
-    selected.push(remaining[idx]);
-    remaining.splice(idx, 1);
-  }
-  selected.sort((a, b) => a - b);
-  const booster = remaining[Math.floor(random() * remaining.length)];
-  return { numbers: selected, booster };
-}
-
 export default async function PredictionsPage() {
   const allResults = await getLatestResults();
   const lunchtimeResults = allResults.filter(r => r.drawType === 'lunchtime');
   const teatimeResults = allResults.filter(r => r.drawType === 'teatime');
 
   const hotLunch = getHotNumbers(lunchtimeResults, 10);
+  const coldLunch = getColdNumbers(lunchtimeResults, 10);
   const hotTea = getHotNumbers(teatimeResults, 10);
+  const coldTea = getColdNumbers(teatimeResults, 10);
 
   const predInfo = getPredictionDate(allResults);
   const lunchInfo = getPredictionDateForLunchtime(allResults);
 
-  const dateSeed = parseInt(predInfo.date.replace(/-/g, ''), 10);
   const lunchDateSeed = parseInt(lunchInfo.date.replace(/-/g, ''), 10);
+  const teaDateSeed = parseInt(predInfo.date.replace(/-/g, ''), 10);
 
-  // Show top prediction set for each draw as preview
-  const lunchPreview = generatePrediction(hotLunch, lunchDateSeed + 1);
-  const teaPreview = generatePrediction(hotTea, dateSeed + 4);
+  // Hub page shows ONE preview per draw — the "Hot Streak" set (boldest play).
+  const lunchPreview = generatePrediction(hotLunch, coldLunch, lunchDateSeed + 1, 'hot-streak');
+  const teaPreview = generatePrediction(hotTea, coldTea, teaDateSeed + 4, 'hot-streak');
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">

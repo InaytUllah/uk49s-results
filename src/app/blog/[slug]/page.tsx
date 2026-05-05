@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { permanentRedirect } from 'next/navigation';
 import LotteryBalls from '@/components/LotteryBalls';
 import { getLatestResults, getHotNumbers, getColdNumbers, getPredictionDate, getPredictionDateForLunchtime, calculateFrequency } from '@/lib/data/draws';
+import { generateDailyPredictions, generatePrediction as generatePredictionShared, STRATEGY_META } from '@/lib/data/predictions';
 import { SITE_NAME, SITE_URL } from '@/lib/data/seo';
 import { breadcrumbSchema } from '@/lib/schema';
 
@@ -43,32 +44,6 @@ function formatDate(date: string): string {
   });
 }
 
-function seededRandom(seed: number): () => number {
-  let s = seed;
-  return () => {
-    s = (s * 1664525 + 1013904223) & 0x7fffffff;
-    return s / 0x7fffffff;
-  };
-}
-
-function generatePrediction(hot: number[], seed: number): { numbers: number[]; booster: number } {
-  const random = seededRandom(seed);
-  const pool = Array.from({ length: 49 }, (_, i) => i + 1);
-  const selected: number[] = [];
-  const hotPicks = hot.slice(0, 4);
-  for (const num of hotPicks) {
-    if (selected.length < 4) selected.push(num);
-  }
-  const remaining = pool.filter(n => !selected.includes(n));
-  while (selected.length < 6) {
-    const idx = Math.floor(random() * remaining.length);
-    selected.push(remaining[idx]);
-    remaining.splice(idx, 1);
-  }
-  selected.sort((a, b) => a - b);
-  const booster = remaining[Math.floor(random() * remaining.length)];
-  return { numbers: selected, booster };
-}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
@@ -177,13 +152,8 @@ export default async function BlogPostPage({ params }: Props) {
   const cold = getColdNumbers(drawResults, 7);
   const freq = calculateFrequency(drawResults);
 
-  const dateSeed = parseInt(date.replace(/-/g, ''), 10);
   const seedOffset = drawType === 'lunchtime' ? 1 : 4;
-  const predictions = [
-    generatePrediction(hot, dateSeed + seedOffset),
-    generatePrediction(hot, dateSeed + seedOffset + 1),
-    generatePrediction(hot, dateSeed + seedOffset + 2),
-  ];
+  const predictions = generateDailyPredictions(hot, cold, date, seedOffset);
 
   const topTrending = hot.slice(0, 5);
 
@@ -192,8 +162,9 @@ export default async function BlogPostPage({ params }: Props) {
   prevDate.setDate(prevDate.getDate() - 1);
   const prevDateStr = prevDate.toISOString().substring(0, 10);
   const prevResult = allResults.find(r => r.date === prevDateStr && r.drawType === drawType);
+  // Backtest previous day with the "hot-streak" strategy (Set 1) for headline match count
   const prevSeed = parseInt(prevDateStr.replace(/-/g, ''), 10);
-  const prevPred = generatePrediction(hot, prevSeed + seedOffset);
+  const prevPred = generatePredictionShared(hot, cold, prevSeed + seedOffset, 'hot-streak');
   const matches = prevResult ? prevPred.numbers.filter(n => prevResult.numbers.includes(n)) : [];
 
   const bgLight = `bg-${themeColor}-50 dark:bg-${themeColor}-950/20`;
@@ -272,14 +243,27 @@ export default async function BlogPostPage({ params }: Props) {
             Based on weighted analysis of the top {hot.length} hot {drawLabel} numbers. Each set combines 4 statistically favoured numbers with 2 randomised picks.
           </p>
           <div className="space-y-4">
-            {predictions.map((pred, i) => (
-              <div key={i} className={`${drawType === 'lunchtime' ? 'bg-amber-50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-800' : 'bg-indigo-50 dark:bg-indigo-950/20 border-indigo-200 dark:border-indigo-800'} border rounded-xl p-4`}>
-                <p className={`text-sm font-semibold ${drawType === 'lunchtime' ? 'text-amber-700 dark:text-amber-400' : 'text-indigo-700 dark:text-indigo-400'} mb-3`}>
-                  Prediction Set {i + 1}
-                </p>
-                <LotteryBalls numbers={pred.numbers} booster={pred.booster} size="md" animated={false} />
-              </div>
-            ))}
+            {predictions.map((pred, i) => {
+              const meta = STRATEGY_META[pred.strategy];
+              const labelColor = drawType === 'lunchtime' ? 'text-amber-700 dark:text-amber-400' : 'text-indigo-700 dark:text-indigo-400';
+              const badgeBg = drawType === 'lunchtime' ? 'bg-amber-100 dark:bg-amber-900/50 text-amber-800 dark:text-amber-300' : 'bg-indigo-100 dark:bg-indigo-900/50 text-indigo-800 dark:text-indigo-300';
+              return (
+                <div key={i} className={`${drawType === 'lunchtime' ? 'bg-amber-50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-800' : 'bg-indigo-50 dark:bg-indigo-950/20 border-indigo-200 dark:border-indigo-800'} border rounded-xl p-4`}>
+                  <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
+                    <div className="flex items-center gap-2">
+                      <span className={`text-sm font-semibold ${labelColor}`}>Set {i + 1}</span>
+                      <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${badgeBg} inline-flex items-center gap-1`}>
+                        <span aria-hidden="true">{meta.emoji}</span>
+                        {meta.label}
+                      </span>
+                    </div>
+                    <span className="text-xs text-gray-600 dark:text-gray-400 hidden sm:block">{meta.tagline}</span>
+                  </div>
+                  <p className="text-xs text-gray-600 dark:text-gray-400 mb-3 sm:hidden">{meta.tagline}</p>
+                  <LotteryBalls numbers={pred.numbers} booster={pred.booster} size="md" animated={false} />
+                </div>
+              );
+            })}
           </div>
         </section>
 

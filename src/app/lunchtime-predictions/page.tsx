@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import LotteryBalls from '@/components/LotteryBalls';
 import { getLatestResults, getHotNumbers, getColdNumbers, getPredictionDateForLunchtime, calculateFrequency } from '@/lib/data/draws';
+import { generateDailyPredictions, STRATEGY_META } from '@/lib/data/predictions';
 import { SITE_NAME, SITE_URL } from '@/lib/data/seo';
 import { breadcrumbSchema } from '@/lib/schema';
 import HitTracker from './HitTracker';
@@ -28,33 +29,6 @@ export const metadata: Metadata = {
 
 export const revalidate = 60;
 
-function seededRandom(seed: number): () => number {
-  let s = seed;
-  return () => {
-    s = (s * 1664525 + 1013904223) & 0x7fffffff;
-    return s / 0x7fffffff;
-  };
-}
-
-function generatePrediction(hot: number[], seed: number): { numbers: number[]; booster: number } {
-  const random = seededRandom(seed);
-  const pool = Array.from({ length: 49 }, (_, i) => i + 1);
-  const selected: number[] = [];
-  const hotPicks = hot.slice(0, 4);
-  for (const num of hotPicks) {
-    if (selected.length < 4) selected.push(num);
-  }
-  const remaining = pool.filter(n => !selected.includes(n));
-  while (selected.length < 6) {
-    const idx = Math.floor(random() * remaining.length);
-    selected.push(remaining[idx]);
-    remaining.splice(idx, 1);
-  }
-  selected.sort((a, b) => a - b);
-  const booster = remaining[Math.floor(random() * remaining.length)];
-  return { numbers: selected, booster };
-}
-
 export default async function LunchtimePredictionsPage() {
   const allResults = await getLatestResults();
   const lunchtimeResults = allResults.filter(r => r.drawType === 'lunchtime');
@@ -62,13 +36,10 @@ export default async function LunchtimePredictionsPage() {
   const cold = getColdNumbers(lunchtimeResults, 10);
   const freq = calculateFrequency(lunchtimeResults);
   const lunchInfo = getPredictionDateForLunchtime(allResults);
-  const dateSeed = parseInt(lunchInfo.date.replace(/-/g, ''), 10);
 
-  const predictions = [
-    generatePrediction(hot, dateSeed + 1),
-    generatePrediction(hot, dateSeed + 2),
-    generatePrediction(hot, dateSeed + 3),
-  ];
+  // Three sets, three distinct strategies (Hot Streak / Balanced / Spread).
+  // Each set looks visually different — much better for FB shares.
+  const predictions = generateDailyPredictions(hot, cold, lunchInfo.date, 1);
 
   const topTrending = hot.slice(0, 5);
 
@@ -103,14 +74,27 @@ export default async function LunchtimePredictionsPage() {
           Lunchtime Prediction Sets — {lunchInfo.formatted}
         </h2>
         <div className="space-y-4">
-          {predictions.map((pred, i) => (
-            <div key={i} className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-xl p-4">
-              <p className="text-sm font-semibold text-amber-700 dark:text-amber-400 mb-3">
-                Prediction Set {i + 1}
-              </p>
-              <LotteryBalls numbers={pred.numbers} booster={pred.booster} size="md" animated={false} />
-            </div>
-          ))}
+          {predictions.map((pred, i) => {
+            const meta = STRATEGY_META[pred.strategy];
+            return (
+              <div key={i} className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-xl p-4">
+                <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-semibold text-amber-700 dark:text-amber-400">
+                      Set {i + 1}
+                    </span>
+                    <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-amber-100 dark:bg-amber-900/50 text-amber-800 dark:text-amber-300 inline-flex items-center gap-1">
+                      <span aria-hidden="true">{meta.emoji}</span>
+                      {meta.label}
+                    </span>
+                  </div>
+                  <span className="text-xs text-gray-600 dark:text-gray-400 hidden sm:block">{meta.tagline}</span>
+                </div>
+                <p className="text-xs text-gray-600 dark:text-gray-400 mb-3 sm:hidden">{meta.tagline}</p>
+                <LotteryBalls numbers={pred.numbers} booster={pred.booster} size="md" animated={false} />
+              </div>
+            );
+          })}
         </div>
       </section>
 
@@ -119,6 +103,7 @@ export default async function LunchtimePredictionsPage() {
         drawType="lunchtime"
         drawResults={lunchtimeResults}
         hotNumbers={hot}
+        coldNumbers={cold}
         seedOffsetStart={1}
       />
 
