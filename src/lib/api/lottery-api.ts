@@ -1,8 +1,8 @@
-import { UK49sResult } from '../types';
+import { UK49sResult, DrawType, DRAW_META } from '../types';
 
 const RESULTS_DIR = process.cwd() + '/data/results';
 
-// Fetch UK 49s results from free API
+// Fetch UK 49s results from free API (legacy: returns lunchtime + teatime only)
 export async function fetchUK49sResults(): Promise<{ lunchtime: UK49sResult | null; teatime: UK49sResult | null }> {
   try {
     // Try multiple free API sources
@@ -59,20 +59,20 @@ async function scrapeUK49sResults(): Promise<{ lunchtime: UK49sResult | null; te
   }
 }
 
-function parseAPIResult(data: Record<string, unknown>, drawType: 'lunchtime' | 'teatime'): UK49sResult {
+function parseAPIResult(data: Record<string, unknown>, drawType: DrawType): UK49sResult {
   return {
     date: data.date as string || new Date().toISOString().split('T')[0],
     drawType,
     numbers: (data.numbers as number[]) || [],
     booster: (data.booster as number) || 0,
-    drawTime: drawType === 'lunchtime' ? '12:49 PM' : '5:49 PM',
+    drawTime: DRAW_META[drawType].ukDrawTime,
   };
 }
 
-function parseScrapedResult(html: string, drawType: 'lunchtime' | 'teatime'): UK49sResult | null {
+function parseScrapedResult(html: string, drawType: DrawType): UK49sResult | null {
   try {
     // Parse numbers from HTML using regex patterns
-    const section = drawType === 'lunchtime' ? 'Lunchtime' : 'Teatime';
+    const section = DRAW_META[drawType].label;
     const regex = new RegExp(`${section}[\\s\\S]*?(\\d{1,2})[\\s,]+(\\d{1,2})[\\s,]+(\\d{1,2})[\\s,]+(\\d{1,2})[\\s,]+(\\d{1,2})[\\s,]+(\\d{1,2})[\\s\\S]*?Booster[:\\s]*(\\d{1,2})`);
     const match = html.match(regex);
 
@@ -90,7 +90,7 @@ function parseScrapedResult(html: string, drawType: 'lunchtime' | 'teatime'): UK
         parseInt(match[6]),
       ],
       booster: parseInt(match[7]),
-      drawTime: drawType === 'lunchtime' ? '12:49 PM' : '5:49 PM',
+      drawTime: DRAW_META[drawType].ukDrawTime,
     };
   } catch {
     return null;
@@ -125,12 +125,12 @@ export async function saveResult(result: UK49sResult): Promise<void> {
 }
 
 // Load results from JSON files
-export async function loadResults(drawType?: 'lunchtime' | 'teatime', limit: number = 30): Promise<UK49sResult[]> {
+export async function loadResults(drawType?: DrawType, limit: number = 30): Promise<UK49sResult[]> {
   const fs = await import('fs/promises');
   const path = await import('path');
 
   const results: UK49sResult[] = [];
-  const types = drawType ? [drawType] : ['lunchtime', 'teatime'] as const;
+  const types: DrawType[] = drawType ? [drawType] : ['brunchtime', 'lunchtime', 'drivetime', 'teatime'];
 
   for (const type of types) {
     const dir = path.join(RESULTS_DIR, type);

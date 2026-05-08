@@ -2,31 +2,34 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { permanentRedirect } from 'next/navigation';
 import LotteryBalls from '@/components/LotteryBalls';
-import { getLatestResults, getHotNumbers, getColdNumbers, getPredictionDate, getPredictionDateForLunchtime, calculateFrequency } from '@/lib/data/draws';
+import { getLatestResults, getHotNumbers, getColdNumbers, getPredictionDate, getPredictionDateForDraw, calculateFrequency } from '@/lib/data/draws';
 import { generateDailyPredictions, generatePrediction as generatePredictionShared, STRATEGY_META } from '@/lib/data/predictions';
 import { SITE_NAME, SITE_URL } from '@/lib/data/seo';
 import { breadcrumbSchema } from '@/lib/schema';
+import { DrawType, DRAW_META, ALL_DRAW_TYPES } from '@/lib/types';
 
 interface Props {
   params: Promise<{ slug: string }>;
 }
 
 type SlugInfo =
-  | { type: 'result'; drawType: 'lunchtime' | 'teatime'; date: string }
+  | { type: 'result'; drawType: DrawType; date: string }
   | { type: 'prediction-combined'; date: string }
-  | { type: 'prediction'; drawType: 'lunchtime' | 'teatime'; date: string };
+  | { type: 'prediction'; drawType: DrawType; date: string };
+
+const DRAW_PATTERN = '(brunchtime|lunchtime|drivetime|teatime)';
 
 function parseSlug(slug: string): SlugInfo | null {
   // Result slug: uk-49s-lunchtime-results-2026-03-18
-  const resultMatch = slug.match(/^uk-49s-(lunchtime|teatime)-results-(\d{4}-\d{2}-\d{2})$/);
+  const resultMatch = slug.match(new RegExp(`^uk-49s-${DRAW_PATTERN}-results-(\\d{4}-\\d{2}-\\d{2})$`));
   if (resultMatch) {
-    return { type: 'result', drawType: resultMatch[1] as 'lunchtime' | 'teatime', date: resultMatch[2] };
+    return { type: 'result', drawType: resultMatch[1] as DrawType, date: resultMatch[2] };
   }
 
-  // NEW: Separate prediction slugs: uk-49s-lunchtime-predictions-2026-03-30
-  const drawPredMatch = slug.match(/^uk-49s-(lunchtime|teatime)-predictions-(\d{4}-\d{2}-\d{2})$/);
+  // Per-draw prediction slug: uk-49s-lunchtime-predictions-2026-03-30
+  const drawPredMatch = slug.match(new RegExp(`^uk-49s-${DRAW_PATTERN}-predictions-(\\d{4}-\\d{2}-\\d{2})$`));
   if (drawPredMatch) {
-    return { type: 'prediction', drawType: drawPredMatch[1] as 'lunchtime' | 'teatime', date: drawPredMatch[2] };
+    return { type: 'prediction', drawType: drawPredMatch[1] as DrawType, date: drawPredMatch[2] };
   }
 
   // OLD combined prediction slug: uk-49s-predictions-2026-03-19 → redirect
@@ -44,6 +47,53 @@ function formatDate(date: string): string {
   });
 }
 
+// Per-draw theme classes (Tailwind needs literals at build time)
+const DRAW_THEME: Record<DrawType, {
+  badgeBg: string;
+  bg: string;
+  border: string;
+  text: string;
+  accentBg: string;
+  accentBgHover: string;
+  bar: string;
+}> = {
+  brunchtime: {
+    badgeBg: 'bg-orange-100 text-orange-800 dark:bg-orange-900/50 dark:text-orange-300',
+    bg: 'bg-orange-50 dark:bg-orange-950/20',
+    border: 'border-orange-200 dark:border-orange-800',
+    text: 'text-orange-700 dark:text-orange-400',
+    accentBg: 'bg-orange-500',
+    accentBgHover: 'hover:bg-orange-600',
+    bar: 'bg-orange-500',
+  },
+  lunchtime: {
+    badgeBg: 'bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300',
+    bg: 'bg-amber-50 dark:bg-amber-950/20',
+    border: 'border-amber-200 dark:border-amber-800',
+    text: 'text-amber-700 dark:text-amber-400',
+    accentBg: 'bg-amber-500',
+    accentBgHover: 'hover:bg-amber-600',
+    bar: 'bg-amber-500',
+  },
+  drivetime: {
+    badgeBg: 'bg-rose-100 text-rose-800 dark:bg-rose-900/50 dark:text-rose-300',
+    bg: 'bg-rose-50 dark:bg-rose-950/20',
+    border: 'border-rose-200 dark:border-rose-800',
+    text: 'text-rose-700 dark:text-rose-400',
+    accentBg: 'bg-rose-500',
+    accentBgHover: 'hover:bg-rose-600',
+    bar: 'bg-rose-500',
+  },
+  teatime: {
+    badgeBg: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/50 dark:text-indigo-300',
+    bg: 'bg-indigo-50 dark:bg-indigo-950/20',
+    border: 'border-indigo-200 dark:border-indigo-800',
+    text: 'text-indigo-700 dark:text-indigo-400',
+    accentBg: 'bg-indigo-500',
+    accentBgHover: 'hover:bg-indigo-600',
+    bar: 'bg-indigo-500',
+  },
+};
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
@@ -55,37 +105,32 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   const { drawType, date } = parsed;
-  const drawLabel = drawType === 'lunchtime' ? 'Lunchtime' : 'Teatime';
-  const drawTime = drawType === 'lunchtime' ? '12:49 PM' : '5:49 PM';
+  const meta = DRAW_META[drawType];
   const formattedDate = formatDate(date);
-  // Each dated post is a self-canonical, indexable page. It targets long-tail
-  // queries like "uk 49s lunchtime predictions 30 april 2026" — unique date,
-  // unique numbers, unique content. The /lunchtime-predictions hub targets
-  // "uk 49s lunchtime predictions today" — different keyword, different intent.
   const selfUrl = `${SITE_URL}/blog/${slug}`;
 
   return {
-    title: `UK 49s ${drawLabel} Predictions for ${formattedDate} — Analysis & Hot Numbers | ${SITE_NAME}`,
-    description: `In-depth UK 49s ${drawLabel} predictions for ${formattedDate}. Statistical analysis of hot & cold number trends and 3 weighted prediction sets for the ${drawTime} draw.`,
+    title: `UK 49s ${meta.label} Predictions for ${formattedDate} — Analysis & Hot Numbers | ${SITE_NAME}`,
+    description: `In-depth UK 49s ${meta.label} predictions for ${formattedDate}. Statistical analysis of hot & cold number trends and 3 weighted prediction sets for the ${meta.ukDrawTime} draw.`,
     alternates: { canonical: selfUrl },
     robots: {
       index: true,
       follow: true,
     },
     openGraph: {
-      title: `UK 49s ${drawLabel} Predictions — ${formattedDate}`,
-      description: `Statistical analysis and prediction sets for the ${drawTime} ${drawLabel} draw.`,
+      title: `UK 49s ${meta.label} Predictions — ${formattedDate}`,
+      description: `Statistical analysis and prediction sets for the ${meta.ukDrawTime} ${meta.label} draw.`,
       type: 'article',
       url: selfUrl,
       images: [{
-        url: `${SITE_URL}/api/og?title=${encodeURIComponent(`${drawLabel} Predictions — ${formattedDate}`)}&subtitle=${encodeURIComponent(`${drawTime} Draw — Statistical Analysis`)}&type=prediction`,
+        url: `${SITE_URL}/api/og?title=${encodeURIComponent(`${meta.label} Predictions — ${formattedDate}`)}&subtitle=${encodeURIComponent(`${meta.ukDrawTime} Draw — Statistical Analysis`)}&type=prediction`,
         width: 1200, height: 630,
       }],
     },
     twitter: {
       card: 'summary_large_image',
-      title: `UK 49s ${drawLabel} Predictions — ${formattedDate}`,
-      images: [`${SITE_URL}/api/og?title=${encodeURIComponent(`${drawLabel} Predictions — ${formattedDate}`)}&subtitle=${encodeURIComponent(`${drawTime} Draw — Statistical Analysis`)}&type=prediction`],
+      title: `UK 49s ${meta.label} Predictions — ${formattedDate}`,
+      images: [`${SITE_URL}/api/og?title=${encodeURIComponent(`${meta.label} Predictions — ${formattedDate}`)}&subtitle=${encodeURIComponent(`${meta.ukDrawTime} Draw — Statistical Analysis`)}&type=prediction`],
     },
   };
 }
@@ -97,15 +142,19 @@ export async function generateStaticParams() {
   const results = await getLatestResults();
   const dates = [...new Set(results.map(r => r.date))].sort((a, b) => b.localeCompare(a));
   const predDate = getPredictionDate(results);
-  const lunchDate = getPredictionDateForLunchtime(results);
+
+  // Collect today/tomorrow/most-recent dates per draw
+  const dateSet = new Set<string>([predDate.date, ...dates.slice(0, 5)]);
+  for (const drawType of ALL_DRAW_TYPES) {
+    dateSet.add(getPredictionDateForDraw(drawType, results).date);
+  }
+  const uniqueDates = [...dateSet];
 
   const slugs: { slug: string }[] = [];
-  const allDates = [predDate.date, lunchDate.date, ...dates.slice(0, 5)];
-  const uniqueDates = [...new Set(allDates)];
-
   for (const date of uniqueDates) {
-    slugs.push({ slug: `uk-49s-lunchtime-predictions-${date}` });
-    slugs.push({ slug: `uk-49s-teatime-predictions-${date}` });
+    for (const drawType of ALL_DRAW_TYPES) {
+      slugs.push({ slug: `uk-49s-${drawType}-predictions-${date}` });
+    }
   }
 
   return slugs;
@@ -139,12 +188,21 @@ export default async function BlogPostPage({ params }: Props) {
 
   // ======== DRAW-SPECIFIC PREDICTION POST ========
   const { drawType, date } = parsed;
-  const drawLabel = drawType === 'lunchtime' ? 'Lunchtime' : 'Teatime';
-  const otherDraw = drawType === 'lunchtime' ? 'teatime' : 'lunchtime';
-  const otherLabel = drawType === 'lunchtime' ? 'Teatime' : 'Lunchtime';
-  const drawTime = drawType === 'lunchtime' ? '12:49 PM' : '5:49 PM';
-  const themeColor = drawType === 'lunchtime' ? 'amber' : 'indigo';
+  const drawMeta = DRAW_META[drawType];
+  const drawLabel = drawMeta.label;
+  const drawTime = drawMeta.ukDrawTime;
+  const theme = DRAW_THEME[drawType];
   const formattedDate = formatDate(date);
+
+  // Pick a sensible "other draw" for the cross-link — Lunchtime <-> Teatime,
+  // Brunchtime <-> Drivetime keep within the closer halves of the day.
+  const otherDraw: DrawType =
+    drawType === 'lunchtime' ? 'teatime'
+    : drawType === 'teatime' ? 'lunchtime'
+    : drawType === 'brunchtime' ? 'drivetime'
+    : 'brunchtime';
+  const otherMeta = DRAW_META[otherDraw];
+  const otherTheme = DRAW_THEME[otherDraw];
 
   const allResults = await getLatestResults();
   const drawResults = allResults.filter(r => r.drawType === drawType);
@@ -152,7 +210,7 @@ export default async function BlogPostPage({ params }: Props) {
   const cold = getColdNumbers(drawResults, 7);
   const freq = calculateFrequency(drawResults);
 
-  const seedOffset = drawType === 'lunchtime' ? 1 : 4;
+  const seedOffset = drawMeta.predictionSeedOffset;
   const predictions = generateDailyPredictions(hot, cold, date, seedOffset);
 
   const topTrending = hot.slice(0, 5);
@@ -167,10 +225,6 @@ export default async function BlogPostPage({ params }: Props) {
   const prevPred = generatePredictionShared(hot, cold, prevSeed + seedOffset, 'hot-streak');
   const matches = prevResult ? prevPred.numbers.filter(n => prevResult.numbers.includes(n)) : [];
 
-  const bgLight = `bg-${themeColor}-50 dark:bg-${themeColor}-950/20`;
-  const borderColor = `border-${themeColor}-200 dark:border-${themeColor}-800`;
-  const textColor = `text-${themeColor}-700 dark:text-${themeColor}-400`;
-
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       <nav className="text-sm text-gray-500 dark:text-gray-400 mb-6">
@@ -184,11 +238,7 @@ export default async function BlogPostPage({ params }: Props) {
       <article>
         <header className="mb-8">
           <div className="flex items-center gap-2 mb-3">
-            <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-              drawType === 'lunchtime'
-                ? 'bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300'
-                : 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/50 dark:text-indigo-300'
-            }`}>
+            <span className={`px-3 py-1 rounded-full text-xs font-semibold ${theme.badgeBg}`}>
               {drawLabel} Predictions
             </span>
             <time className="text-sm text-gray-500 dark:text-gray-400">{formattedDate}</time>
@@ -224,7 +274,7 @@ export default async function BlogPostPage({ params }: Props) {
                         <span className="font-semibold text-gray-900 dark:text-white">{pct}%</span>
                       </div>
                       <div className="w-full bg-gray-100 dark:bg-gray-700 rounded-full h-2 mt-1">
-                        <div className={`h-2 rounded-full ${drawType === 'lunchtime' ? 'bg-amber-500' : 'bg-indigo-500'}`} style={{ width: `${Math.min(parseFloat(pct) * 3, 100)}%` }} />
+                        <div className={`h-2 rounded-full ${theme.bar}`} style={{ width: `${Math.min(parseFloat(pct) * 3, 100)}%` }} />
                       </div>
                     </div>
                   </div>
@@ -236,23 +286,21 @@ export default async function BlogPostPage({ params }: Props) {
 
         {/* Prediction Sets */}
         <section className="mb-8">
-          <h2 className={`text-2xl font-bold ${drawType === 'lunchtime' ? 'text-amber-700 dark:text-amber-400' : 'text-indigo-700 dark:text-indigo-400'} mb-4`}>
+          <h2 className={`text-2xl font-bold ${theme.text} mb-4`}>
             {drawLabel} Prediction Sets — {formattedDate}
           </h2>
           <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-            Based on weighted analysis of the top {hot.length} hot {drawLabel} numbers. Each set combines 4 statistically favoured numbers with 2 randomised picks.
+            Based on weighted analysis of the top {hot.length} hot {drawLabel} numbers. Each set combines statistically favoured numbers with randomised picks.
           </p>
           <div className="space-y-4">
             {predictions.map((pred, i) => {
               const meta = STRATEGY_META[pred.strategy];
-              const labelColor = drawType === 'lunchtime' ? 'text-amber-700 dark:text-amber-400' : 'text-indigo-700 dark:text-indigo-400';
-              const badgeBg = drawType === 'lunchtime' ? 'bg-amber-100 dark:bg-amber-900/50 text-amber-800 dark:text-amber-300' : 'bg-indigo-100 dark:bg-indigo-900/50 text-indigo-800 dark:text-indigo-300';
               return (
-                <div key={i} className={`${drawType === 'lunchtime' ? 'bg-amber-50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-800' : 'bg-indigo-50 dark:bg-indigo-950/20 border-indigo-200 dark:border-indigo-800'} border rounded-xl p-4`}>
+                <div key={i} className={`${theme.bg} ${theme.border} border rounded-xl p-4`}>
                   <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
                     <div className="flex items-center gap-2">
-                      <span className={`text-sm font-semibold ${labelColor}`}>Set {i + 1}</span>
-                      <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${badgeBg} inline-flex items-center gap-1`}>
+                      <span className={`text-sm font-semibold ${theme.text}`}>Set {i + 1}</span>
+                      <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${theme.badgeBg} inline-flex items-center gap-1`}>
                         <span aria-hidden="true">{meta.emoji}</span>
                         {meta.label}
                       </span>
@@ -282,13 +330,13 @@ export default async function BlogPostPage({ params }: Props) {
           </div>
         </section>
 
-        {/* Previous Day Performance — moved to bottom for honesty without dampening initial excitement */}
+        {/* Previous Day Performance */}
         {prevResult && (
           <section className="mb-8">
             <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6">
               <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Previous Prediction Performance</h2>
-              <div className={`${drawType === 'lunchtime' ? 'bg-amber-50 dark:bg-amber-950/20' : 'bg-indigo-50 dark:bg-indigo-950/20'} rounded-lg p-4`}>
-                <p className={`text-sm font-semibold ${drawType === 'lunchtime' ? 'text-amber-700 dark:text-amber-400' : 'text-indigo-700 dark:text-indigo-400'} mb-2`}>
+              <div className={`${theme.bg} rounded-lg p-4`}>
+                <p className={`text-sm font-semibold ${theme.text} mb-2`}>
                   {drawLabel} — {formatDate(prevDateStr)}
                 </p>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
@@ -309,10 +357,10 @@ export default async function BlogPostPage({ params }: Props) {
             <div className="space-y-4">
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white">How these predictions work</h2>
               <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                These <strong className="text-gray-900 dark:text-white">UK 49s {drawLabel} predictions</strong> for {formattedDate} are based on number frequency from the <strong className="text-gray-900 dark:text-white">{drawTime} {drawLabel} draw</strong> only. We don&apos;t mix {drawLabel} data with <Link href={`/blog/uk-49s-${otherDraw}-predictions-${date}`} className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">{otherLabel} predictions</Link> because the draws are separate events.
+                These <strong className="text-gray-900 dark:text-white">UK 49s {drawLabel} predictions</strong> for {formattedDate} are based on number frequency from the <strong className="text-gray-900 dark:text-white">{drawTime} {drawLabel} draw</strong> only. We don&apos;t mix {drawLabel} data with <Link href={`/blog/uk-49s-${otherDraw}-predictions-${date}`} className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">{otherMeta.label} predictions</Link> because the four daily UK 49s draws are separate events.
               </p>
               <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                Each set picks 4 numbers from the top 10 <Link href="/hot-cold-numbers" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">hot {drawLabel} numbers</Link> and 2 random ones. The Booster is picked separately. Once today&apos;s {drawLabel} results come in, the predictions update.
+                Each set blends top-hot {drawLabel} numbers with random picks for variety. The Booster is picked separately. Once today&apos;s {drawLabel} results come in, the predictions update. See our <Link href="/hot-cold-numbers" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">hot &amp; cold numbers</Link> page for the full {drawLabel} breakdown.
               </p>
             </div>
           </div>
@@ -320,13 +368,13 @@ export default async function BlogPostPage({ params }: Props) {
 
         {/* Links */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
-          <Link href={`/blog/uk-49s-${otherDraw}-predictions-${date}`} className={`px-2 sm:px-4 py-3 ${drawType === 'lunchtime' ? 'bg-indigo-500 hover:bg-indigo-600' : 'bg-amber-500 hover:bg-amber-600'} text-white rounded-lg font-medium text-center text-xs sm:text-sm leading-tight transition-colors`}>
-            {otherLabel} Predictions
+          <Link href={`/blog/uk-49s-${otherDraw}-predictions-${date}`} className={`px-2 sm:px-4 py-3 ${otherTheme.accentBg} ${otherTheme.accentBgHover} text-white rounded-lg font-medium text-center text-xs sm:text-sm leading-tight transition-colors`}>
+            {otherMeta.label} Predictions
           </Link>
           <Link href={`/${drawType}-predictions`} className="px-2 sm:px-4 py-3 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 transition-colors font-medium text-center text-xs sm:text-sm leading-tight">
             Live {drawLabel}
           </Link>
-          <Link href={`/${drawType}`} className={`px-2 sm:px-4 py-3 ${drawType === 'lunchtime' ? 'bg-amber-500 hover:bg-amber-600' : 'bg-indigo-500 hover:bg-indigo-600'} text-white rounded-lg font-medium text-center text-xs sm:text-sm leading-tight transition-colors`}>
+          <Link href={`/${drawType}`} className={`px-2 sm:px-4 py-3 ${theme.accentBg} ${theme.accentBgHover} text-white rounded-lg font-medium text-center text-xs sm:text-sm leading-tight transition-colors`}>
             {drawLabel} Results
           </Link>
           <Link href="/hot-cold-numbers" className="px-2 sm:px-4 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors font-medium text-center text-xs sm:text-sm leading-tight">
@@ -353,7 +401,7 @@ export default async function BlogPostPage({ params }: Props) {
         '@context': 'https://schema.org', '@type': 'FAQPage',
         mainEntity: [
           { '@type': 'Question', name: `What are the UK 49s ${drawLabel} predictions for ${formattedDate}?`, acceptedAnswer: { '@type': 'Answer', text: `Our statistical predictions for the ${formattedDate} ${drawLabel} draw use weighted analysis of hot numbers from recent ${drawLabel} draws. We provide 3 unique prediction sets.` } },
-          { '@type': 'Question', name: `How are ${drawLabel} predictions calculated?`, acceptedAnswer: { '@type': 'Answer', text: `Predictions analyse number frequency from recent ${drawLabel} draws only. 4 numbers from the top 10 most drawn, 2 random for balance. ${drawLabel} data is separate from ${otherLabel}.` } },
+          { '@type': 'Question', name: `How are ${drawLabel} predictions calculated?`, acceptedAnswer: { '@type': 'Answer', text: `Predictions analyse number frequency from recent ${drawLabel} draws only. Top hot numbers are blended with random picks for balance. ${drawLabel} data is kept separate from the other three daily UK 49s draws.` } },
         ],
       }) }} />
     </div>

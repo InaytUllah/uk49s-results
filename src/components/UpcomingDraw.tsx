@@ -1,9 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { DrawType, DRAW_META } from '@/lib/types';
 
 interface UpcomingDrawProps {
-  drawType: 'lunchtime' | 'teatime';
+  drawType: DrawType;
   latestDate: string; // ISO date of the latest result e.g. "2026-03-18"
 }
 
@@ -23,16 +24,13 @@ function formatDateLong(isoDate: string): string {
   });
 }
 
-function getTimeUntilDraw(drawType: 'lunchtime' | 'teatime'): { hours: number; minutes: number; seconds: number; isPast: boolean } {
+function getTimeUntilDraw(drawType: DrawType): { hours: number; minutes: number; seconds: number; isPast: boolean } {
+  const meta = DRAW_META[drawType];
   const now = new Date();
   const ukTime = new Date(now.toLocaleString('en-US', { timeZone: 'Europe/London' }));
 
   const target = new Date(ukTime);
-  if (drawType === 'lunchtime') {
-    target.setHours(12, 49, 0, 0);
-  } else {
-    target.setHours(17, 49, 0, 0);
-  }
+  target.setHours(meta.ukHour, meta.ukMinute, 0, 0);
 
   const diff = target.getTime() - ukTime.getTime();
 
@@ -47,6 +45,40 @@ function getTimeUntilDraw(drawType: 'lunchtime' | 'teatime'): { hours: number; m
     isPast: false,
   };
 }
+
+// Tailwind needs full literal class strings to be present at build time.
+// Map each theme color to its concrete classes here.
+const THEME_CLASSES: Record<DrawType, {
+  border: string;
+  bg: string;
+  badge: string;
+  timer: string;
+}> = {
+  brunchtime: {
+    border: 'border-orange-300',
+    bg: 'bg-orange-50',
+    badge: 'bg-orange-100 text-orange-700',
+    timer: 'bg-gradient-to-r from-orange-500 to-red-500',
+  },
+  lunchtime: {
+    border: 'border-amber-300',
+    bg: 'bg-amber-50',
+    badge: 'bg-amber-100 text-amber-700',
+    timer: 'bg-gradient-to-r from-amber-500 to-orange-500',
+  },
+  drivetime: {
+    border: 'border-rose-300',
+    bg: 'bg-rose-50',
+    badge: 'bg-rose-100 text-rose-700',
+    timer: 'bg-gradient-to-r from-rose-500 to-pink-500',
+  },
+  teatime: {
+    border: 'border-indigo-300',
+    bg: 'bg-indigo-50',
+    badge: 'bg-indigo-100 text-indigo-700',
+    timer: 'bg-gradient-to-r from-indigo-500 to-purple-500',
+  },
+};
 
 export default function UpcomingDraw({ drawType, latestDate }: UpcomingDrawProps) {
   const [timeLeft, setTimeLeft] = useState({ hours: 0, minutes: 0, seconds: 0, isPast: false });
@@ -73,15 +105,9 @@ export default function UpcomingDraw({ drawType, latestDate }: UpcomingDrawProps
 
   if (!showPlaceholder) return null;
 
+  const meta = DRAW_META[drawType];
   const todayUK = getTodayUK();
-  const label = drawType === 'lunchtime' ? 'Lunchtime' : 'Teatime';
-  const time = drawType === 'lunchtime' ? '12:49 PM' : '5:49 PM';
-  const borderColor = drawType === 'lunchtime' ? 'border-amber-300' : 'border-indigo-300';
-  const bgColor = drawType === 'lunchtime' ? 'bg-amber-50' : 'bg-indigo-50';
-  const badgeBg = drawType === 'lunchtime' ? 'bg-amber-100 text-amber-700' : 'bg-indigo-100 text-indigo-700';
-  const timerBg = drawType === 'lunchtime'
-    ? 'bg-gradient-to-r from-amber-500 to-orange-500'
-    : 'bg-gradient-to-r from-indigo-500 to-purple-500';
+  const theme = THEME_CLASSES[drawType];
 
   // Status badge changes based on whether draw time has passed
   const statusBadge = timeLeft.isPast
@@ -89,15 +115,15 @@ export default function UpcomingDraw({ drawType, latestDate }: UpcomingDrawProps
     : { label: 'UPCOMING', bg: 'bg-blue-100 text-blue-700' };
 
   return (
-    <div className={`rounded-xl border-2 ${borderColor} ${bgColor} p-5 mb-6`}>
+    <div className={`rounded-xl border-2 ${theme.border} ${theme.bg} p-5 mb-6`}>
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <span className={`text-xs font-semibold px-2 py-1 rounded-full ${badgeBg}`}>{label}</span>
+          <span className={`text-xs font-semibold px-2 py-1 rounded-full ${theme.badge}`}>{meta.label}</span>
           <span className={`text-xs font-semibold px-2 py-1 rounded-full ${statusBadge.bg}`}>
             {statusBadge.label}
           </span>
         </div>
-        <span className="text-sm text-gray-500">Draw Time: {time} (UK)</span>
+        <span className="text-sm text-gray-500">Draw Time: {meta.ukDrawTime} (UK)</span>
       </div>
 
       <p className="text-gray-700 font-medium mb-4">{formatDateLong(todayUK)}</p>
@@ -120,14 +146,14 @@ export default function UpcomingDraw({ drawType, latestDate }: UpcomingDrawProps
 
       {/* Countdown timer / In-progress state */}
       {timeLeft.isPast ? (
-        <div className={`${timerBg} rounded-lg p-3 text-white inline-flex items-center gap-2`} role="status" aria-live="polite">
+        <div className={`${theme.timer} rounded-lg p-3 text-white inline-flex items-center gap-2`} role="status" aria-live="polite">
           <span className="motion-safe:animate-spin inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full" aria-hidden="true" />
           <span className="text-sm font-semibold">
             Draw is in progress — results coming soon
           </span>
         </div>
       ) : (
-        <div className={`${timerBg} rounded-lg p-3 text-white inline-flex items-center gap-3`}>
+        <div className={`${theme.timer} rounded-lg p-3 text-white inline-flex items-center gap-3`}>
           <span className="text-sm font-medium">Draw in:</span>
           <span className="text-lg font-bold">
             {String(timeLeft.hours).padStart(2, '0')}h {String(timeLeft.minutes).padStart(2, '0')}m {String(timeLeft.seconds).padStart(2, '0')}s

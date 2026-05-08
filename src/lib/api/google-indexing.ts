@@ -1,5 +1,6 @@
 import { GoogleAuth } from 'google-auth-library';
 import { SITE_URL } from '@/lib/data/seo';
+import { ALL_DRAW_TYPES } from '@/lib/types';
 
 const INDEXING_API_URL = 'https://indexing.googleapis.com/v3/urlNotifications:publish';
 const BATCH_SIZE = 10;
@@ -127,14 +128,16 @@ export async function buildNotificationUrls(): Promise<string[]> {
 
   const urls = new Set<string>();
 
-  // Today's result pages (unique per date — Google indexes these well)
-  urls.add(`${SITE_URL}/lunchtime/results/${todayStr}`);
-  urls.add(`${SITE_URL}/teatime/results/${todayStr}`);
+  // Today's result pages for all four draws (unique per date — Google indexes these well)
+  for (const drawType of ALL_DRAW_TYPES) {
+    urls.add(`${SITE_URL}/${drawType}/results/${todayStr}`);
+  }
 
   // Rolling hub pages (same URL, refreshed content — Google loves this pattern)
   urls.add(`${SITE_URL}/predictions`);
-  urls.add(`${SITE_URL}/lunchtime-predictions`);
-  urls.add(`${SITE_URL}/teatime-predictions`);
+  for (const drawType of ALL_DRAW_TYPES) {
+    urls.add(`${SITE_URL}/${drawType}-predictions`);
+  }
   urls.add(`${SITE_URL}/hot-cold-numbers`);
   urls.add(`${SITE_URL}/numbers`);
 
@@ -164,11 +167,9 @@ export async function buildDailyNotificationUrls(): Promise<string[]> {
   // Core static + rolling pages
   const corePages = [
     '/',
-    '/lunchtime',
-    '/teatime',
+    ...ALL_DRAW_TYPES.map(d => `/${d}`),
     '/predictions',
-    '/lunchtime-predictions',
-    '/teatime-predictions',
+    ...ALL_DRAW_TYPES.map(d => `/${d}-predictions`),
     '/hot-cold-numbers',
     '/numbers',
     '/history',
@@ -178,8 +179,8 @@ export async function buildDailyNotificationUrls(): Promise<string[]> {
     urls.add(`${SITE_URL}${page}`);
   }
 
-  // Recent result pages (unique content per date)
-  for (const game of ['lunchtime', 'teatime']) {
+  // Recent result pages (unique content per date) for all four draws
+  for (const game of ALL_DRAW_TYPES) {
     urls.add(`${SITE_URL}/${game}/results/${todayStr}`);
     urls.add(`${SITE_URL}/${game}/results/${yesterdayStr}`);
   }

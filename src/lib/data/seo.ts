@@ -1,6 +1,6 @@
 export const SITE_NAME = 'UK49s Results';
 export const SITE_URL = 'https://uk49sresults.co.uk';
-export const SITE_DESCRIPTION = 'Get the latest UK 49s Lunchtime and Teatime results. Updated daily with winning numbers, hot & cold numbers, predictions, and number generator.';
+export const SITE_DESCRIPTION = 'Get the latest UK 49s results — Brunchtime, Lunchtime, Drivetime and Teatime winning numbers updated within minutes of every draw, plus hot & cold numbers, predictions, and a number generator.';
 
 export function generateTitle(page: string): string {
   if (page === 'home') return `UK 49s Results Today - Lunchtime & Teatime Winning Numbers | ${SITE_NAME}`;
@@ -38,13 +38,29 @@ export const PAGE_SEO = {
     title: `UK 49s Results Today - Lunchtime & Teatime Winning Numbers | ${SITE_NAME}`,
     description: 'Today\'s UK 49s Lunchtime and Teatime winning numbers. Results go up within minutes of each draw. Also includes hot & cold numbers, predictions, and past results.',
   },
+  brunchtime: {
+    title: `UK 49s Brunchtime Results Today - Winning Numbers | ${SITE_NAME}`,
+    description: 'UK 49s Brunchtime results for today. The 10:49 AM draw numbers are posted here within minutes. Past brunchtime results also available.',
+  },
   lunchtime: {
     title: `UK 49s Lunchtime Results Today - Winning Numbers | ${SITE_NAME}`,
     description: 'UK 49s Lunchtime results for today. The 12:49 PM draw numbers are posted here within minutes. Past lunchtime results also available.',
   },
+  drivetime: {
+    title: `UK 49s Drivetime Results Today - Winning Numbers | ${SITE_NAME}`,
+    description: 'UK 49s Drivetime results for today. The 4:49 PM draw numbers are posted here within minutes. Past drivetime results also available.',
+  },
   teatime: {
     title: `UK 49s Teatime Results Today - Winning Numbers | ${SITE_NAME}`,
     description: 'UK 49s Teatime results for today. The 5:49 PM draw numbers are posted here within minutes. Past teatime results also available.',
+  },
+  brunchtimePredictions: {
+    title: `UK 49s Brunchtime Predictions Today - 10:49 AM Draw | ${SITE_NAME}`,
+    description: 'UK 49s Brunchtime predictions for today\'s 10:49 AM draw. Three data-driven prediction sets using hot streak, balanced, and spread strategies.',
+  },
+  drivetimePredictions: {
+    title: `UK 49s Drivetime Predictions Today - 4:49 PM Draw | ${SITE_NAME}`,
+    description: 'UK 49s Drivetime predictions for today\'s 4:49 PM draw. Three data-driven prediction sets using hot streak, balanced, and spread strategies.',
   },
   hotCold: {
     title: `49s Hot and Cold Numbers Today - UK 49s Lunchtime & Teatime | ${SITE_NAME}`,

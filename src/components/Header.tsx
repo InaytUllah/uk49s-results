@@ -21,17 +21,21 @@ const menuCategories: MenuCategory[] = [
     label: 'Results',
     icon: '🎱',
     items: [
+      { href: '/brunchtime', icon: '🥐', title: 'Brunchtime Results', description: 'Today\'s 10:49 AM winning numbers' },
       { href: '/lunchtime', icon: '☀️', title: 'Lunchtime Results', description: 'Today\'s 12:49 PM winning numbers' },
+      { href: '/drivetime', icon: '🚗', title: 'Drivetime Results', description: 'Today\'s 4:49 PM winning numbers' },
       { href: '/teatime', icon: '🌙', title: 'Teatime Results', description: 'Today\'s 5:49 PM winning numbers' },
       { href: '/history', icon: '📊', title: 'Past Results Archive', description: 'Browse results by date' },
-      { href: '/lunchtime-vs-teatime', icon: '⚖️', title: 'Lunchtime vs Teatime', description: 'Compare both daily draws side by side' },
+      { href: '/lunchtime-vs-teatime', icon: '⚖️', title: 'Lunchtime vs Teatime', description: 'Compare the two main draws side by side' },
     ],
   },
   {
     label: 'Predictions',
     icon: '🎯',
     items: [
+      { href: '/brunchtime-predictions', icon: '🥐', title: 'Brunchtime Predictions', description: 'For today\'s 10:49 AM draw' },
       { href: '/lunchtime-predictions', icon: '☀️', title: 'Lunchtime Predictions', description: 'For today\'s 12:49 PM draw' },
+      { href: '/drivetime-predictions', icon: '🚗', title: 'Drivetime Predictions', description: 'For today\'s 4:49 PM draw' },
       { href: '/teatime-predictions', icon: '🌙', title: 'Teatime Predictions', description: 'For today\'s 5:49 PM draw' },
       { href: '/hot-cold-numbers', icon: '🔥', title: 'Hot & Cold Numbers', description: 'Most and least drawn numbers' },
     ],

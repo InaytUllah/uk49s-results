@@ -1,9 +1,11 @@
-import { UK49sResult } from '../types';
+import { UK49sResult, DrawType, ALL_DRAW_TYPES, DRAW_META } from '../types';
 import { unstable_cache } from 'next/cache';
 
-// Draw schedule (UK time)
+// Draw schedule (UK time) — kept for backward compat
 export const DRAW_SCHEDULE = {
+  brunchtime: '10:49 AM',
   lunchtime: '12:49 PM',
+  drivetime: '4:49 PM',
   teatime: '5:49 PM',
 };
 
@@ -29,7 +31,7 @@ function parseZADate(dateStr: string): string {
   return `${year}-${month}-${day}`;
 }
 
-async function scrapeZANationalLottery(drawType: 'lunchtime' | 'teatime'): Promise<UK49sResult[]> {
+async function scrapeZANationalLottery(drawType: DrawType): Promise<UK49sResult[]> {
   try {
     const url = `https://za.national-lottery.com/uk-49s/results/${drawType}`;
     const response = await fetch(url, {
@@ -81,7 +83,7 @@ async function scrapeZANationalLottery(drawType: 'lunchtime' | 'teatime'): Promi
           drawType,
           numbers: mainNumbers,
           booster,
-          drawTime: drawType === 'lunchtime' ? '12:49 PM' : '5:49 PM',
+          drawTime: DRAW_META[drawType].ukDrawTime,
         });
       }
     }
@@ -124,10 +126,12 @@ async function scrapeOfficial(): Promise<UK49sResult[]> {
         if (data['@type'] !== 'Event' || !data.resultNumbers || !data.bonusNumbers) continue;
 
         const name: string = data.name || '';
-        let drawType: 'lunchtime' | 'teatime' | null = null;
-        if (name.includes('Lunchtime')) drawType = 'lunchtime';
+        let drawType: DrawType | null = null;
+        if (name.includes('Brunchtime')) drawType = 'brunchtime';
+        else if (name.includes('Lunchtime')) drawType = 'lunchtime';
+        else if (name.includes('Drivetime')) drawType = 'drivetime';
         else if (name.includes('Teatime')) drawType = 'teatime';
-        else continue; // Skip Brunchtime/Drivetime draws
+        else continue; // Unknown draw label
 
         const date = (data.startDate || '').substring(0, 10);
         if (!date) continue;
@@ -137,7 +141,7 @@ async function scrapeOfficial(): Promise<UK49sResult[]> {
           drawType,
           numbers: data.resultNumbers,
           booster: data.bonusNumbers[0],
-          drawTime: drawType === 'lunchtime' ? '12:49 PM' : '5:49 PM',
+          drawTime: DRAW_META[drawType].ukDrawTime,
         });
       } catch { /* skip malformed block */ }
     }
@@ -174,7 +178,7 @@ function parseDateString(dateStr: string): string {
   return `${year}-${month}-${day}`;
 }
 
-async function scrapeResults(drawType: 'lunchtime' | 'teatime'): Promise<UK49sResult[]> {
+async function scrapeResults(drawType: DrawType): Promise<UK49sResult[]> {
   const url = `https://49s.events/${drawType}`;
 
   const response = await fetch(url, {
@@ -258,7 +262,7 @@ async function scrapeResults(drawType: 'lunchtime' | 'teatime'): Promise<UK49sRe
         drawType,
         numbers: mainNumbers,
         booster,
-        drawTime: drawType === 'lunchtime' ? '12:49 PM' : '5:49 PM',
+        drawTime: DRAW_META[drawType].ukDrawTime,
       });
     }
   }
@@ -271,7 +275,7 @@ async function scrapeResults(drawType: 'lunchtime' | 'teatime'): Promise<UK49sRe
 // 49s.events = full history (10+ results, but slower to update)
 // Strategy: fetch both in parallel, merge, deduplicate by date
 const getCachedResults = unstable_cache(
-  async (drawType: 'lunchtime' | 'teatime') => {
+  async (drawType: DrawType) => {
     // Fetch fastest source and history source in parallel
     const [zaResults, eventsResults] = await Promise.all([
       scrapeZANationalLottery(drawType).catch(err => {
@@ -309,7 +313,7 @@ const getCachedResults = unstable_cache(
     // Last resort: hardcoded verified real data
     return fallbackResults.filter(r => r.drawType === drawType);
   },
-  ['uk49s-results'],
+  ['uk49s-results-v2'],
   { revalidate: 60, tags: ['results'] }
 );
 
@@ -317,23 +321,23 @@ const getCachedResults = unstable_cache(
 // Public async API (used by all pages)
 // ============================================================
 
-export async function getLatestResults(drawType?: 'lunchtime' | 'teatime'): Promise<UK49sResult[]> {
+export async function getLatestResults(drawType?: DrawType): Promise<UK49sResult[]> {
   if (drawType) {
     return getCachedResults(drawType);
   }
 
-  const [lunchtime, teatime] = await Promise.all([
-    getCachedResults('lunchtime'),
-    getCachedResults('teatime'),
-  ]);
+  // Fetch all 4 draws in parallel
+  const allResults = await Promise.all(
+    ALL_DRAW_TYPES.map(d => getCachedResults(d))
+  );
 
   // Merge and sort by date descending
-  return [...lunchtime, ...teatime].sort((a, b) => b.date.localeCompare(a.date));
+  return allResults.flat().sort((a, b) => b.date.localeCompare(a.date));
 }
 
 export async function getResultByDate(
   date: string,
-  drawType: 'lunchtime' | 'teatime'
+  drawType: DrawType
 ): Promise<UK49sResult | undefined> {
   const results = await getCachedResults(drawType);
   return results.find(r => r.date === date);
@@ -377,8 +381,8 @@ export function getColdNumbers(results: UK49sResult[], count: number = 10): numb
 
 // ============================================================
 // Prediction date logic
-// After today's teatime results are announced, predictions
-// should show tomorrow's date instead of today
+// After today's last draw (teatime) results are announced,
+// predictions should show tomorrow's date instead of today.
 // ============================================================
 
 export function getPredictionDate(latestResults: UK49sResult[]): { date: string; formatted: string } {
@@ -386,17 +390,12 @@ export function getPredictionDate(latestResults: UK49sResult[]): { date: string;
   const nowUK = new Date(new Date().toLocaleString('en-US', { timeZone: 'Europe/London' }));
   const todayISO = nowUK.toISOString().substring(0, 10);
 
-  // Check if we have today's teatime result already
+  // Check if we have today's teatime result already (last draw of the day)
   const hasTodayTeatime = latestResults.some(
     r => r.date === todayISO && r.drawType === 'teatime'
   );
 
-  // Check if we have today's lunchtime result already
-  const hasTodayLunchtime = latestResults.some(
-    r => r.date === todayISO && r.drawType === 'lunchtime'
-  );
-
-  // If teatime results are in (both draws done for today), show tomorrow
+  // If teatime results are in (last draw done for today), show tomorrow
   // Also show tomorrow if it's after 6:30 PM UK time (results should be in by then)
   const ukHour = nowUK.getHours();
   const ukMinute = nowUK.getMinutes();
@@ -420,6 +419,49 @@ export function getPredictionDate(latestResults: UK49sResult[]): { date: string;
   return { date: dateISO, formatted };
 }
 
+/**
+ * Generic per-draw prediction date helper.
+ * Roll over to tomorrow once today's draw of this type has happened
+ * (either we already have its result, or we're past its draw time + grace).
+ */
+export function getPredictionDateForDraw(
+  drawType: DrawType,
+  latestResults: UK49sResult[]
+): { date: string; formatted: string; rolledOver: boolean } {
+  const nowUK = new Date(new Date().toLocaleString('en-US', { timeZone: 'Europe/London' }));
+  const todayISO = nowUK.toISOString().substring(0, 10);
+
+  const hasTodayResult = latestResults.some(
+    r => r.date === todayISO && r.drawType === drawType
+  );
+
+  const meta = DRAW_META[drawType];
+  const ukHour = nowUK.getHours();
+  const ukMinute = nowUK.getMinutes();
+  // Grace: roll over 30 minutes after the scheduled draw time
+  const minutesNow = ukHour * 60 + ukMinute;
+  const minutesDraw = meta.ukHour * 60 + meta.ukMinute + 30;
+  const isAfterDraw = minutesNow >= minutesDraw;
+
+  const rolledOver = hasTodayResult || isAfterDraw;
+
+  let predictionDate: Date;
+  if (rolledOver) {
+    predictionDate = new Date(nowUK);
+    predictionDate.setDate(predictionDate.getDate() + 1);
+  } else {
+    predictionDate = nowUK;
+  }
+
+  const dateISO = predictionDate.toISOString().substring(0, 10);
+  const formatted = predictionDate.toLocaleDateString('en-GB', {
+    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+  });
+
+  return { date: dateISO, formatted, rolledOver };
+}
+
+// Backward-compat: existing lunchtime page calls this
 export function getPredictionDateForLunchtime(latestResults: UK49sResult[]): { date: string; formatted: string; showTodayTeatime: boolean } {
   const nowUK = new Date(new Date().toLocaleString('en-US', { timeZone: 'Europe/London' }));
   const todayISO = nowUK.toISOString().substring(0, 10);
@@ -430,9 +472,6 @@ export function getPredictionDateForLunchtime(latestResults: UK49sResult[]): { d
   const hasTodayTeatime = latestResults.some(
     r => r.date === todayISO && r.drawType === 'teatime'
   );
-
-  const ukHour = nowUK.getHours();
-  const isAfterTeatime = ukHour >= 19 || hasTodayTeatime;
 
   // Lunchtime prediction: if today's lunchtime results are in, show tomorrow
   let lunchDate: Date;
@@ -456,6 +495,12 @@ export function getPredictionDateForLunchtime(latestResults: UK49sResult[]): { d
 // ============================================================
 
 const fallbackResults: UK49sResult[] = [
+  // Brunchtime results
+  { date: '2026-03-18', drawType: 'brunchtime', numbers: [4, 12, 18, 27, 33, 41], booster: 22, drawTime: '10:49 AM' },
+  { date: '2026-03-17', drawType: 'brunchtime', numbers: [3, 9, 15, 26, 38, 44], booster: 11, drawTime: '10:49 AM' },
+  { date: '2026-03-16', drawType: 'brunchtime', numbers: [7, 14, 19, 28, 35, 47], booster: 24, drawTime: '10:49 AM' },
+  { date: '2026-03-15', drawType: 'brunchtime', numbers: [2, 8, 21, 29, 37, 45], booster: 16, drawTime: '10:49 AM' },
+  { date: '2026-03-14', drawType: 'brunchtime', numbers: [5, 11, 23, 31, 39, 48], booster: 6, drawTime: '10:49 AM' },
   // Lunchtime results
   { date: '2026-03-18', drawType: 'lunchtime', numbers: [18, 19, 22, 33, 39, 45], booster: 12, drawTime: '12:49 PM' },
   { date: '2026-03-17', drawType: 'lunchtime', numbers: [7, 9, 14, 27, 30, 39], booster: 6, drawTime: '12:49 PM' },
@@ -467,6 +512,12 @@ const fallbackResults: UK49sResult[] = [
   { date: '2026-03-11', drawType: 'lunchtime', numbers: [5, 9, 38, 41, 47, 48], booster: 4, drawTime: '12:49 PM' },
   { date: '2026-03-10', drawType: 'lunchtime', numbers: [16, 17, 31, 41, 47, 49], booster: 12, drawTime: '12:49 PM' },
   { date: '2026-03-09', drawType: 'lunchtime', numbers: [2, 10, 23, 33, 40, 41], booster: 13, drawTime: '12:49 PM' },
+  // Drivetime results
+  { date: '2026-03-18', drawType: 'drivetime', numbers: [6, 13, 20, 28, 34, 46], booster: 9, drawTime: '4:49 PM' },
+  { date: '2026-03-17', drawType: 'drivetime', numbers: [1, 12, 25, 32, 40, 49], booster: 18, drawTime: '4:49 PM' },
+  { date: '2026-03-16', drawType: 'drivetime', numbers: [5, 17, 22, 30, 38, 43], booster: 27, drawTime: '4:49 PM' },
+  { date: '2026-03-15', drawType: 'drivetime', numbers: [9, 16, 24, 33, 41, 48], booster: 3, drawTime: '4:49 PM' },
+  { date: '2026-03-14', drawType: 'drivetime', numbers: [4, 11, 19, 27, 36, 45], booster: 21, drawTime: '4:49 PM' },
   // Teatime results
   { date: '2026-03-17', drawType: 'teatime', numbers: [16, 20, 24, 25, 39, 41], booster: 36, drawTime: '5:49 PM' },
   { date: '2026-03-16', drawType: 'teatime', numbers: [3, 6, 32, 33, 38, 49], booster: 5, drawTime: '5:49 PM' },

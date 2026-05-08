@@ -5,6 +5,7 @@ import Countdown from '@/components/Countdown';
 import UpcomingDraw from '@/components/UpcomingDraw';
 import { getLatestResults } from '@/lib/data/draws';
 import { PAGE_SEO } from '@/lib/data/seo';
+import { ALL_DRAW_TYPES, DRAW_META, DrawType, UK49sResult } from '@/lib/types';
 
 export const metadata: Metadata = {
   title: PAGE_SEO.home.title,
@@ -13,14 +14,34 @@ export const metadata: Metadata = {
 
 export const revalidate = 60; // Revalidate every 1 minute
 
+const HEADING_THEME: Record<DrawType, string> = {
+  brunchtime: 'text-orange-700 dark:text-orange-400',
+  lunchtime: 'text-amber-700 dark:text-amber-400',
+  drivetime: 'text-rose-700 dark:text-rose-400',
+  teatime: 'text-indigo-700 dark:text-indigo-400',
+};
+
+const DOT_THEME: Record<DrawType, string> = {
+  brunchtime: 'bg-orange-500',
+  lunchtime: 'bg-amber-500',
+  drivetime: 'bg-rose-500',
+  teatime: 'bg-indigo-500',
+};
+
 export default async function HomePage() {
   const allResults = await getLatestResults();
-  const latestLunchtime = allResults.find(r => r.drawType === 'lunchtime');
-  const latestTeatime = allResults.find(r => r.drawType === 'teatime');
-  const recentResults = allResults.slice(0, 10);
+  const latestByDraw: Record<DrawType, UK49sResult | undefined> = {
+    brunchtime: allResults.find(r => r.drawType === 'brunchtime'),
+    lunchtime: allResults.find(r => r.drawType === 'lunchtime'),
+    drivetime: allResults.find(r => r.drawType === 'drivetime'),
+    teatime: allResults.find(r => r.drawType === 'teatime'),
+  };
+  const recentResults = allResults.slice(0, 12);
 
   const today = new Date();
   const todayLabel = today.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+
+  const haveAnyResults = ALL_DRAW_TYPES.some(d => latestByDraw[d]);
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
@@ -30,26 +51,31 @@ export default async function HomePage() {
           UK 49s Results Today
         </h1>
         <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-          Latest Lunchtime and Teatime winning numbers for {todayLabel}
+          Latest Brunchtime, Lunchtime, Drivetime and Teatime winning numbers for {todayLabel}
         </p>
       </section>
 
       {/* AEO answer (visually hidden — duplicates the visual ball cards below for AI Overviews) */}
-      {(latestLunchtime || latestTeatime) && (
+      {haveAnyResults && (
         <div className="sr-only">
-          {latestLunchtime && (
-            <p>Today&apos;s UK 49s Lunchtime winning numbers (12:49 PM): {latestLunchtime.numbers.join(', ')}{latestLunchtime.booster !== undefined && `, Booster ${latestLunchtime.booster}`}.</p>
-          )}
-          {latestTeatime && (
-            <p>Today&apos;s UK 49s Teatime winning numbers (5:49 PM): {latestTeatime.numbers.join(', ')}{latestTeatime.booster !== undefined && `, Booster ${latestTeatime.booster}`}.</p>
-          )}
+          {ALL_DRAW_TYPES.map(d => {
+            const r = latestByDraw[d];
+            if (!r) return null;
+            const meta = DRAW_META[d];
+            return (
+              <p key={d}>
+                Today&apos;s UK 49s {meta.label} winning numbers ({meta.ukDrawTime}): {r.numbers.join(', ')}{r.booster !== undefined && `, Booster ${r.booster}`}.
+              </p>
+            );
+          })}
         </div>
       )}
 
       {/* Upcoming Draw Placeholders - show ? balls before results are announced */}
-      <section className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
-        <UpcomingDraw drawType="lunchtime" latestDate={latestLunchtime?.date || ''} />
-        <UpcomingDraw drawType="teatime" latestDate={latestTeatime?.date || ''} />
+      <section className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        {ALL_DRAW_TYPES.map(d => (
+          <UpcomingDraw key={d} drawType={d} latestDate={latestByDraw[d]?.date || ''} />
+        ))}
       </section>
 
       {/* Latest Results — shown FIRST so users see results without scrolling */}
@@ -57,7 +83,7 @@ export default async function HomePage() {
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
           Latest UK 49s Results
         </h2>
-        {!latestLunchtime && !latestTeatime ? (
+        {!haveAnyResults ? (
           <div className="p-8 rounded-xl border-2 border-dashed border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 text-center">
             <p className="text-gray-600 dark:text-gray-400 mb-3">
               Results are being fetched. Check back in a moment, or view past results in our archive.
@@ -68,31 +94,29 @@ export default async function HomePage() {
             </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {latestLunchtime && (
-              <div>
-                <h3 className="text-lg font-semibold text-amber-700 dark:text-amber-400 mb-3">
-                  Lunchtime Result
-                </h3>
-                <ResultCard result={latestLunchtime} featured />
-              </div>
-            )}
-            {latestTeatime && (
-              <div>
-                <h3 className="text-lg font-semibold text-indigo-700 dark:text-indigo-400 mb-3">
-                  Teatime Result
-                </h3>
-                <ResultCard result={latestTeatime} featured />
-              </div>
-            )}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {ALL_DRAW_TYPES.map(d => {
+              const r = latestByDraw[d];
+              if (!r) return null;
+              const meta = DRAW_META[d];
+              return (
+                <div key={d}>
+                  <h3 className={`text-lg font-semibold ${HEADING_THEME[d]} mb-3`}>
+                    {meta.label} Result
+                  </h3>
+                  <ResultCard result={r} featured />
+                </div>
+              );
+            })}
           </div>
         )}
       </section>
 
       {/* Countdown Timers — after results */}
-      <section className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-        <Countdown drawType="lunchtime" />
-        <Countdown drawType="teatime" />
+      <section className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-8">
+        {ALL_DRAW_TYPES.map(d => (
+          <Countdown key={d} drawType={d} />
+        ))}
       </section>
 
       {/* Recent Results Table */}
@@ -149,6 +173,10 @@ export default async function HomePage() {
         </h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
           {[
+            { href: '/brunchtime', title: 'Brunchtime Results' },
+            { href: '/lunchtime', title: 'Lunchtime Results' },
+            { href: '/drivetime', title: 'Drivetime Results' },
+            { href: '/teatime', title: 'Teatime Results' },
             { href: '/odds', title: 'Odds & Payouts' },
             { href: '/faq', title: 'FAQ' },
             { href: '/numbers', title: 'Number Stats (1-49)' },
@@ -185,15 +213,14 @@ export default async function HomePage() {
             <div>
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">UK 49s Results Today</h3>
               <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                We post <strong className="text-gray-900 dark:text-white">UK 49s results today</strong> for both the <Link href="/lunchtime" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">Lunchtime</Link> and <Link href="/teatime" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">Teatime</Link> draws within minutes of each draw.
-                Lunchtime numbers go up after 12:49 PM UK time, Teatime after 5:49 PM. Bookmark this page if you want to check the winning numbers quickly. We also keep a full <Link href="/history" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">archive of past results</Link> going back several weeks.
+                We post <strong className="text-gray-900 dark:text-white">UK 49s results today</strong> for all four daily draws — <Link href="/brunchtime" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">Brunchtime</Link>, <Link href="/lunchtime" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">Lunchtime</Link>, <Link href="/drivetime" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">Drivetime</Link>, and <Link href="/teatime" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">Teatime</Link> — within minutes of each draw. Brunchtime numbers go up after 10:49 AM, Lunchtime after 12:49 PM, Drivetime after 4:49 PM, and Teatime after 5:49 PM (UK time). Bookmark this page if you want to check the winning numbers quickly. We also keep a full <Link href="/history" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">archive of past results</Link> going back several weeks.
               </p>
             </div>
 
             <div>
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">UK 49s Draw Times</h3>
               <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-3">
-                There are two draws every single day, 7 days a week, including weekends and bank holidays:
+                There are four draws every single day, 7 days a week, including weekends and bank holidays:
               </p>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm border-collapse">
@@ -201,23 +228,25 @@ export default async function HomePage() {
                     <tr className="bg-gray-50 dark:bg-gray-700/50">
                       <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700">Draw</th>
                       <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700">UK Time</th>
-                      <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700">SA Time</th>
                       <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700">Frequency</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td className="py-2 px-4 border border-gray-200 dark:border-gray-700"><span className="inline-flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-amber-500"></span> <strong className="text-gray-900 dark:text-white">Lunchtime</strong></span></td>
-                      <td className="py-2 px-4 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400">12:49 PM</td>
-                      <td className="py-2 px-4 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400">2:49 PM</td>
-                      <td className="py-2 px-4 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400">Daily</td>
-                    </tr>
-                    <tr className="bg-gray-50 dark:bg-gray-700/30">
-                      <td className="py-2 px-4 border border-gray-200 dark:border-gray-700"><span className="inline-flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-indigo-500"></span> <strong className="text-gray-900 dark:text-white">Teatime</strong></span></td>
-                      <td className="py-2 px-4 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400">5:49 PM</td>
-                      <td className="py-2 px-4 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400">7:49 PM</td>
-                      <td className="py-2 px-4 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400">Daily</td>
-                    </tr>
+                    {ALL_DRAW_TYPES.map((d, i) => {
+                      const meta = DRAW_META[d];
+                      return (
+                        <tr key={d} className={i % 2 === 1 ? 'bg-gray-50 dark:bg-gray-700/30' : ''}>
+                          <td className="py-2 px-4 border border-gray-200 dark:border-gray-700">
+                            <span className="inline-flex items-center gap-1.5">
+                              <span className={`w-2 h-2 rounded-full ${DOT_THEME[d]}`}></span>
+                              <strong className="text-gray-900 dark:text-white">{meta.label}</strong>
+                            </span>
+                          </td>
+                          <td className="py-2 px-4 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400">{meta.ukDrawTime}</td>
+                          <td className="py-2 px-4 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400">Daily</td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
@@ -315,10 +344,34 @@ export default async function HomePage() {
             mainEntity: [
               {
                 '@type': 'Question',
+                name: 'How many UK 49s draws happen each day?',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: 'There are four UK 49s draws every day: Brunchtime at 10:49 AM, Lunchtime at 12:49 PM, Drivetime at 4:49 PM, and Teatime at 5:49 PM (UK time). Each draw is independent.',
+                },
+              },
+              {
+                '@type': 'Question',
+                name: 'What time is the UK 49s Brunchtime draw?',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: 'The UK 49s Brunchtime draw takes place every day at 10:49 AM UK time.',
+                },
+              },
+              {
+                '@type': 'Question',
                 name: 'What time is the UK 49s Lunchtime draw?',
                 acceptedAnswer: {
                   '@type': 'Answer',
                   text: 'The UK 49s Lunchtime draw takes place every day at 12:49 PM UK time.',
+                },
+              },
+              {
+                '@type': 'Question',
+                name: 'What time is the UK 49s Drivetime draw?',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: 'The UK 49s Drivetime draw takes place every day at 4:49 PM UK time.',
                 },
               },
               {
@@ -350,7 +403,7 @@ export default async function HomePage() {
                 name: 'How do I check UK 49s results?',
                 acceptedAnswer: {
                   '@type': 'Answer',
-                  text: 'You can check the latest UK 49s results on uk49sresults.co.uk. Results are updated within minutes of each Lunchtime (12:49 PM) and Teatime (5:49 PM) draw.',
+                  text: 'You can check the latest UK 49s results on uk49sresults.co.uk. Results are updated within minutes of each Brunchtime, Lunchtime, Drivetime and Teatime draw.',
                 },
               },
               {
@@ -359,14 +412,6 @@ export default async function HomePage() {
                 acceptedAnswer: {
                   '@type': 'Answer',
                   text: 'UK 49s odds vary depending on how many numbers you bet on. Picking 1 number from 6 gives odds of about 7.33/1, while picking 5 numbers from 6 has odds of about 96,454/1.',
-                },
-              },
-              {
-                '@type': 'Question',
-                name: 'Can I play UK 49s online?',
-                acceptedAnswer: {
-                  '@type': 'Answer',
-                  text: 'UK 49s is a fixed-odds betting game available through licensed bookmakers in the UK and South Africa. You can place bets online through authorised betting operators.',
                 },
               },
               {

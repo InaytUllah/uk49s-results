@@ -2,16 +2,16 @@
 
 import { useState, useMemo } from 'react';
 import LotteryBalls from '@/components/LotteryBalls';
-import type { UK49sResult } from '@/lib/types';
+import type { UK49sResult, DrawType } from '@/lib/types';
+import { ALL_DRAW_TYPES, DRAW_META } from '@/lib/types';
 
 interface Props {
   results: UK49sResult[];
-  lunchtimeResults: UK49sResult[];
-  teatimeResults: UK49sResult[];
+  resultsByDraw: Record<DrawType, UK49sResult[]>;
 }
 
 type WindowSize = 10 | 20 | 50 | 100 | 0;
-type DrawScope = 'all' | 'lunchtime' | 'teatime';
+type DrawScope = 'all' | DrawType;
 type Tab = 'hot' | 'cold' | 'overdue';
 
 function frequency(results: UK49sResult[]): Map<number, number> {
@@ -42,16 +42,16 @@ function gapSinceLastDrawn(results: UK49sResult[]): Map<number, number> {
   return gaps;
 }
 
-export default function HotColdExplorer({ results, lunchtimeResults, teatimeResults }: Props) {
+export default function HotColdExplorer({ results, resultsByDraw }: Props) {
   const [windowSize, setWindowSize] = useState<WindowSize>(20);
   const [scope, setScope] = useState<DrawScope>('all');
   const [tab, setTab] = useState<Tab>('hot');
 
   const filtered = useMemo(() => {
-    const base = scope === 'lunchtime' ? lunchtimeResults : scope === 'teatime' ? teatimeResults : results;
+    const base = scope === 'all' ? results : resultsByDraw[scope];
     if (windowSize === 0) return base;
     return base.slice(0, windowSize);
-  }, [results, lunchtimeResults, teatimeResults, scope, windowSize]);
+  }, [results, resultsByDraw, scope, windowSize]);
 
   const sortedHot = useMemo(() => {
     const f = frequency(filtered);
@@ -129,7 +129,7 @@ export default function HotColdExplorer({ results, lunchtimeResults, teatimeResu
       {/* Scope selector */}
       <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-6 items-center">
         <span className="text-[10px] sm:text-xs font-semibold text-gray-500 dark:text-gray-400 mr-1 w-full sm:w-auto">DRAW:</span>
-        {(['all', 'lunchtime', 'teatime'] as DrawScope[]).map(s => (
+        {(['all', ...ALL_DRAW_TYPES] as DrawScope[]).map(s => (
           <button
             key={s}
             type="button"
@@ -140,7 +140,7 @@ export default function HotColdExplorer({ results, lunchtimeResults, teatimeResu
                 : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
             }`}
           >
-            {s === 'all' ? 'Both' : s === 'lunchtime' ? 'Lunchtime' : 'Teatime'}
+            {s === 'all' ? 'All' : DRAW_META[s].shortLabel}
           </button>
         ))}
       </div>

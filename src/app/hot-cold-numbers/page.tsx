@@ -4,6 +4,7 @@ import LotteryBalls from '@/components/LotteryBalls';
 import { getLatestResults, getHotNumbers, getColdNumbers, calculateFrequency } from '@/lib/data/draws';
 import { PAGE_SEO, ogMeta } from '@/lib/data/seo';
 import { breadcrumbSchema, webPageSchema } from '@/lib/schema';
+import { ALL_DRAW_TYPES, DRAW_META, DrawType, UK49sResult } from '@/lib/types';
 import HotColdExplorer from './HotColdExplorer';
 
 export const metadata: Metadata = {
@@ -15,17 +16,63 @@ export const metadata: Metadata = {
 
 export const revalidate = 60;
 
+const PER_DRAW_THEME: Record<DrawType, {
+  heading: string;
+  bg: string;
+  border: string;
+  text: string;
+}> = {
+  brunchtime: {
+    heading: 'text-orange-700 dark:text-orange-400',
+    bg: 'bg-orange-50 dark:bg-orange-950/20',
+    border: 'border-orange-200 dark:border-orange-800',
+    text: 'text-orange-700 dark:text-orange-400',
+  },
+  lunchtime: {
+    heading: 'text-amber-700 dark:text-amber-400',
+    bg: 'bg-amber-50 dark:bg-amber-950/20',
+    border: 'border-amber-200 dark:border-amber-800',
+    text: 'text-amber-700 dark:text-amber-400',
+  },
+  drivetime: {
+    heading: 'text-rose-700 dark:text-rose-400',
+    bg: 'bg-rose-50 dark:bg-rose-950/20',
+    border: 'border-rose-200 dark:border-rose-800',
+    text: 'text-rose-700 dark:text-rose-400',
+  },
+  teatime: {
+    heading: 'text-indigo-700 dark:text-indigo-400',
+    bg: 'bg-indigo-50 dark:bg-indigo-950/20',
+    border: 'border-indigo-200 dark:border-indigo-800',
+    text: 'text-indigo-700 dark:text-indigo-400',
+  },
+};
+
 export default async function HotColdPage() {
   const allResults = await getLatestResults();
-  const lunchtimeResults = allResults.filter(r => r.drawType === 'lunchtime');
-  const teatimeResults = allResults.filter(r => r.drawType === 'teatime');
+
+  const resultsByDraw: Record<DrawType, UK49sResult[]> = {
+    brunchtime: allResults.filter(r => r.drawType === 'brunchtime'),
+    lunchtime: allResults.filter(r => r.drawType === 'lunchtime'),
+    drivetime: allResults.filter(r => r.drawType === 'drivetime'),
+    teatime: allResults.filter(r => r.drawType === 'teatime'),
+  };
 
   const hotAll = getHotNumbers(allResults, 10);
   const coldAll = getColdNumbers(allResults, 10);
-  const hotLunch = getHotNumbers(lunchtimeResults, 7);
-  const coldLunch = getColdNumbers(lunchtimeResults, 7);
-  const hotTea = getHotNumbers(teatimeResults, 7);
-  const coldTea = getColdNumbers(teatimeResults, 7);
+
+  const hotByDraw: Record<DrawType, number[]> = {
+    brunchtime: getHotNumbers(resultsByDraw.brunchtime, 7),
+    lunchtime: getHotNumbers(resultsByDraw.lunchtime, 7),
+    drivetime: getHotNumbers(resultsByDraw.drivetime, 7),
+    teatime: getHotNumbers(resultsByDraw.teatime, 7),
+  };
+  const coldByDraw: Record<DrawType, number[]> = {
+    brunchtime: getColdNumbers(resultsByDraw.brunchtime, 7),
+    lunchtime: getColdNumbers(resultsByDraw.lunchtime, 7),
+    drivetime: getColdNumbers(resultsByDraw.drivetime, 7),
+    teatime: getColdNumbers(resultsByDraw.teatime, 7),
+  };
 
   const freqAll = calculateFrequency(allResults);
   const sortedFreq = [...freqAll.entries()].sort((a, b) => b[1] - a[1]);
@@ -39,24 +86,23 @@ export default async function HotColdPage() {
         49s Hot and Cold Numbers Today
       </h1>
       <p className="text-gray-600 dark:text-gray-400 mb-2">
-        UK 49s hot and cold numbers for Lunchtime and Teatime draws, updated daily from recent results.
+        UK 49s hot and cold numbers for all four daily draws — Brunchtime, Lunchtime, Drivetime and Teatime — updated daily from recent results.
       </p>
       <p className="text-sm text-gray-500 dark:text-gray-400 mb-8">
         <time dateTime={now.toISOString()}>Updated {updatedLabel}</time> · Based on {allResults.length} recent draws
       </p>
 
-      {/* AEO answer (sr-only — duplicates visual cards below for AI Overviews/snippets) */}
+      {/* AEO answer (sr-only) */}
       <div className="sr-only">
         <p>
-          The top 5 hottest UK 49s numbers today are {hotAll.slice(0, 5).join(', ')}. The coldest are {coldAll.slice(0, 5).join(', ')}. Based on {lunchtimeResults.length} Lunchtime and {teatimeResults.length} Teatime draws.
+          The top 5 hottest UK 49s numbers today are {hotAll.slice(0, 5).join(', ')}. The coldest are {coldAll.slice(0, 5).join(', ')}. Based on {ALL_DRAW_TYPES.map(d => `${resultsByDraw[d].length} ${DRAW_META[d].label}`).join(', ')} draws.
         </p>
       </div>
 
       {/* Interactive explorer with windows + overdue tab */}
       <HotColdExplorer
         results={allResults}
-        lunchtimeResults={lunchtimeResults}
-        teatimeResults={teatimeResults}
+        resultsByDraw={resultsByDraw}
       />
 
       {/* Overall Hot & Cold */}
@@ -78,30 +124,23 @@ export default async function HotColdPage() {
       <section className="mb-10">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">By Draw Type</h2>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Lunchtime */}
-          <div className="space-y-4">
-            <h3 className="text-xl font-bold text-amber-700 dark:text-amber-400">Lunchtime</h3>
-            <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-xl p-4">
-              <p className="text-sm font-semibold text-amber-700 dark:text-amber-400 mb-3">Hot</p>
-              <LotteryBalls numbers={hotLunch} size="sm" animated={false} />
-            </div>
-            <div className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4">
-              <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-3">Cold</p>
-              <LotteryBalls numbers={coldLunch} size="sm" animated={false} />
-            </div>
-          </div>
-          {/* Teatime */}
-          <div className="space-y-4">
-            <h3 className="text-xl font-bold text-indigo-700 dark:text-indigo-400">Teatime</h3>
-            <div className="bg-indigo-50 dark:bg-indigo-950/20 border border-indigo-200 dark:border-indigo-800 rounded-xl p-4">
-              <p className="text-sm font-semibold text-indigo-700 dark:text-indigo-400 mb-3">Hot</p>
-              <LotteryBalls numbers={hotTea} size="sm" animated={false} />
-            </div>
-            <div className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4">
-              <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-3">Cold</p>
-              <LotteryBalls numbers={coldTea} size="sm" animated={false} />
-            </div>
-          </div>
+          {ALL_DRAW_TYPES.map(drawType => {
+            const meta = DRAW_META[drawType];
+            const theme = PER_DRAW_THEME[drawType];
+            return (
+              <div key={drawType} className="space-y-4">
+                <h3 className={`text-xl font-bold ${theme.heading}`}>{meta.label}</h3>
+                <div className={`${theme.bg} border ${theme.border} rounded-xl p-4`}>
+                  <p className={`text-sm font-semibold ${theme.text} mb-3`}>Hot</p>
+                  <LotteryBalls numbers={hotByDraw[drawType]} size="sm" animated={false} />
+                </div>
+                <div className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4">
+                  <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-3">Cold</p>
+                  <LotteryBalls numbers={coldByDraw[drawType]} size="sm" animated={false} />
+                </div>
+              </div>
+            );
+          })}
         </div>
       </section>
 
@@ -146,17 +185,22 @@ export default async function HotColdPage() {
       {/* Prediction CTAs */}
       <section className="mb-10">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Use Hot Numbers in Predictions</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <Link href="/lunchtime-predictions" className="block bg-amber-50 dark:bg-amber-950/20 border-2 border-amber-200 dark:border-amber-800 rounded-xl p-5 hover:shadow-lg transition-shadow">
-            <p className="text-sm font-semibold text-amber-600 dark:text-amber-400 mb-1">12:49 PM Draw</p>
-            <h3 className="text-lg font-bold text-gray-900 dark:text-white">Lunchtime Predictions for Today</h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">3 weighted prediction sets using today&apos;s hottest Lunchtime numbers</p>
-          </Link>
-          <Link href="/teatime-predictions" className="block bg-indigo-50 dark:bg-indigo-950/20 border-2 border-indigo-200 dark:border-indigo-800 rounded-xl p-5 hover:shadow-lg transition-shadow">
-            <p className="text-sm font-semibold text-indigo-600 dark:text-indigo-400 mb-1">5:49 PM Draw</p>
-            <h3 className="text-lg font-bold text-gray-900 dark:text-white">Teatime Predictions for Today</h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">3 weighted prediction sets using today&apos;s hottest Teatime numbers</p>
-          </Link>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {ALL_DRAW_TYPES.map(drawType => {
+            const meta = DRAW_META[drawType];
+            const theme = PER_DRAW_THEME[drawType];
+            return (
+              <Link
+                key={drawType}
+                href={`/${drawType}-predictions`}
+                className={`block ${theme.bg} border-2 ${theme.border} rounded-xl p-5 hover:shadow-lg transition-shadow`}
+              >
+                <p className={`text-sm font-semibold ${theme.text} mb-1`}>{meta.ukDrawTime} Draw</p>
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white">{meta.label} Predictions</h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">3 weighted prediction sets using today&apos;s hottest {meta.label} numbers</p>
+              </Link>
+            );
+          })}
         </div>
       </section>
 
@@ -195,7 +239,7 @@ export default async function HotColdPage() {
             <div>
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Look up individual numbers</h3>
               <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                Click any number in the table above to see its full stats: how often it appears as a main ball vs Booster, when it was last drawn, and whether it shows up more in Lunchtime or Teatime. The{' '}
+                Click any number in the table above to see its full stats: how often it appears as a main ball vs Booster, when it was last drawn, and which of the four draws it shows up in most. The{' '}
                 <Link href="/numbers" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">number stats page</Link> has all 49 numbers in one place.
               </p>
             </div>
@@ -234,22 +278,12 @@ export default async function HotColdPage() {
           {
             '@type': 'Question',
             name: 'What are the UK 49s hot and cold numbers today?',
-            acceptedAnswer: { '@type': 'Answer', text: `The current hot numbers (most frequently drawn) for UK 49s are ${hotAll.slice(0, 5).join(', ')}. The cold numbers (least drawn) are ${coldAll.slice(0, 5).join(', ')}. These are updated daily based on recent Lunchtime and Teatime draw results.` },
-          },
-          {
-            '@type': 'Question',
-            name: 'What are the 49s Lunchtime hot and cold numbers?',
-            acceptedAnswer: { '@type': 'Answer', text: `The hottest Lunchtime numbers are ${hotLunch.slice(0, 5).join(', ')} and the coldest are ${coldLunch.slice(0, 5).join(', ')}. These are based on frequency analysis of the 12:49 PM Lunchtime draw specifically.` },
-          },
-          {
-            '@type': 'Question',
-            name: 'What are the 49s Teatime hot and cold numbers?',
-            acceptedAnswer: { '@type': 'Answer', text: `The hottest Teatime numbers are ${hotTea.slice(0, 5).join(', ')} and the coldest are ${coldTea.slice(0, 5).join(', ')}. These are based on frequency analysis of the 5:49 PM Teatime draw specifically.` },
+            acceptedAnswer: { '@type': 'Answer', text: `The current hot numbers (most frequently drawn) for UK 49s are ${hotAll.slice(0, 5).join(', ')}. The cold numbers (least drawn) are ${coldAll.slice(0, 5).join(', ')}. These are updated daily based on recent results across all four daily draws.` },
           },
           {
             '@type': 'Question',
             name: 'How are UK 49s hot and cold numbers calculated?',
-            acceptedAnswer: { '@type': 'Answer', text: 'Hot numbers are those drawn most frequently in recent UK 49s draws. Cold numbers are those drawn least often. We analyse the last 30 days of both Lunchtime and Teatime results. While past frequency does not guarantee future results, many players use this data to inform their number selections.' },
+            acceptedAnswer: { '@type': 'Answer', text: 'Hot numbers are those drawn most frequently in recent UK 49s draws. Cold numbers are those drawn least often. We analyse Brunchtime, Lunchtime, Drivetime and Teatime results separately so you can see per-draw frequency. While past frequency does not guarantee future results, many players use this data to inform their number selections.' },
           },
           {
             '@type': 'Question',

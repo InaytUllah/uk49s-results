@@ -2,7 +2,8 @@
 
 import { useState, useMemo } from 'react';
 import LotteryBalls from '@/components/LotteryBalls';
-import type { UK49sResult } from '@/lib/types';
+import type { UK49sResult, DrawType } from '@/lib/types';
+import { ALL_DRAW_TYPES, DRAW_META } from '@/lib/types';
 
 interface Match {
   result: UK49sResult;
@@ -14,11 +15,20 @@ interface Props {
   results: UK49sResult[];
 }
 
+type DrawScope = 'all' | DrawType;
+
+const BADGE_THEME: Record<DrawType, string> = {
+  brunchtime: 'bg-orange-100 text-orange-800 dark:bg-orange-900/50 dark:text-orange-300',
+  lunchtime: 'bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300',
+  drivetime: 'bg-rose-100 text-rose-800 dark:bg-rose-900/50 dark:text-rose-300',
+  teatime: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/50 dark:text-indigo-300',
+};
+
 export default function NumberCheckerForm({ results }: Props) {
   const [selected, setSelected] = useState<number[]>([]);
   const [includeBooster, setIncludeBooster] = useState(false);
   const [boosterPick, setBoosterPick] = useState<number | null>(null);
-  const [drawType, setDrawType] = useState<'all' | 'lunchtime' | 'teatime'>('all');
+  const [drawType, setDrawType] = useState<DrawScope>('all');
   const [submitted, setSubmitted] = useState(false);
 
   const toggleNumber = (n: number) => {
@@ -133,15 +143,14 @@ export default function NumberCheckerForm({ results }: Props) {
           Step 3 — Which draws?
         </h2>
         <div className="inline-flex flex-wrap rounded-lg border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 overflow-hidden max-w-full">
-          {[
-            { v: 'all', label: 'Both' },
-            { v: 'lunchtime', label: 'Lunchtime' },
-            { v: 'teatime', label: 'Teatime' },
-          ].map(opt => (
+          {([
+            { v: 'all' as const, label: 'All' },
+            ...ALL_DRAW_TYPES.map(d => ({ v: d, label: DRAW_META[d].label })),
+          ]).map(opt => (
             <button
               key={opt.v}
               type="button"
-              onClick={() => setDrawType(opt.v as 'all' | 'lunchtime' | 'teatime')}
+              onClick={() => setDrawType(opt.v as DrawScope)}
               className={`px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium transition-colors ${
                 drawType === opt.v
                   ? 'bg-emerald-600 text-white'
@@ -205,12 +214,8 @@ export default function NumberCheckerForm({ results }: Props) {
                   >
                     <div className="flex items-center justify-between mb-2 flex-wrap gap-2">
                       <div className="flex items-center gap-2">
-                        <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
-                          m.result.drawType === 'lunchtime'
-                            ? 'bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300'
-                            : 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/50 dark:text-indigo-300'
-                        }`}>
-                          {m.result.drawType === 'lunchtime' ? 'Lunchtime' : 'Teatime'}
+                        <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${BADGE_THEME[m.result.drawType]}`}>
+                          {DRAW_META[m.result.drawType].label}
                         </span>
                         <time dateTime={m.result.date} className="text-sm text-gray-600 dark:text-gray-400">
                           {new Date(m.result.date + 'T00:00:00').toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })}

@@ -11,7 +11,7 @@ export default function Footer() {
           <div className="lg:col-span-2">
             <h3 className="text-white font-semibold text-lg mb-4">UK49s Results</h3>
             <p className="text-sm leading-relaxed">
-              Your trusted source for the latest UK 49s Lunchtime and Teatime results. Updated daily with winning numbers, statistics, and analysis.
+              Your trusted source for the latest UK 49s results — Brunchtime, Lunchtime, Drivetime and Teatime — updated daily with winning numbers, statistics, and analysis.
             </p>
             <div className="flex items-center gap-4 mt-4">
               <Link href="/about" className="text-sm hover:text-white transition-colors">About Us</Link>
@@ -24,10 +24,14 @@ export default function Footer() {
           <nav aria-label="Footer results and predictions">
             <h3 className="text-white font-semibold mb-4">Results &amp; Predictions</h3>
             <ul className="space-y-1 text-sm">
+              <li><Link href="/brunchtime" className="block py-1.5 hover:text-white transition-colors focus:outline-none focus-visible:text-white focus-visible:underline">Brunchtime Results</Link></li>
               <li><Link href="/lunchtime" className="block py-1.5 hover:text-white transition-colors focus:outline-none focus-visible:text-white focus-visible:underline">Lunchtime Results</Link></li>
+              <li><Link href="/drivetime" className="block py-1.5 hover:text-white transition-colors focus:outline-none focus-visible:text-white focus-visible:underline">Drivetime Results</Link></li>
               <li><Link href="/teatime" className="block py-1.5 hover:text-white transition-colors focus:outline-none focus-visible:text-white focus-visible:underline">Teatime Results</Link></li>
               <li><Link href="/history" className="block py-1.5 hover:text-white transition-colors focus:outline-none focus-visible:text-white focus-visible:underline">Past Results</Link></li>
+              <li><Link href="/brunchtime-predictions" className="block py-1.5 hover:text-white transition-colors focus:outline-none focus-visible:text-white focus-visible:underline">Brunchtime Predictions</Link></li>
               <li><Link href="/lunchtime-predictions" className="block py-1.5 hover:text-white transition-colors focus:outline-none focus-visible:text-white focus-visible:underline">Lunchtime Predictions</Link></li>
+              <li><Link href="/drivetime-predictions" className="block py-1.5 hover:text-white transition-colors focus:outline-none focus-visible:text-white focus-visible:underline">Drivetime Predictions</Link></li>
               <li><Link href="/teatime-predictions" className="block py-1.5 hover:text-white transition-colors focus:outline-none focus-visible:text-white focus-visible:underline">Teatime Predictions</Link></li>
               <li><Link href="/blog" className="block py-1.5 hover:text-white transition-colors focus:outline-none focus-visible:text-white focus-visible:underline">Blog &amp; Predictions</Link></li>
               <li><Link href="/articles" className="block py-1.5 hover:text-white transition-colors focus:outline-none focus-visible:text-white focus-visible:underline">Guides &amp; Strategy</Link></li>
@@ -61,8 +65,16 @@ export default function Footer() {
             <h3 className="text-white font-semibold mb-3 mt-6">Draw Times (UK)</h3>
             <div className="space-y-2 text-sm">
               <div className="flex items-center gap-2">
+                <span aria-hidden="true" className="w-3 h-3 rounded-full bg-orange-500"></span>
+                <span>Brunchtime: 10:49 AM</span>
+              </div>
+              <div className="flex items-center gap-2">
                 <span aria-hidden="true" className="w-3 h-3 rounded-full bg-amber-500"></span>
                 <span>Lunchtime: 12:49 PM</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span aria-hidden="true" className="w-3 h-3 rounded-full bg-rose-500"></span>
+                <span>Drivetime: 4:49 PM</span>
               </div>
               <div className="flex items-center gap-2">
                 <span aria-hidden="true" className="w-3 h-3 rounded-full bg-indigo-500"></span>

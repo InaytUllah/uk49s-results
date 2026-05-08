@@ -4,6 +4,7 @@ import Link from 'next/link';
 import LotteryBalls from '@/components/LotteryBalls';
 import { getLatestResults, calculateFrequency } from '@/lib/data/draws';
 import { SITE_NAME, SITE_URL, ogMeta } from '@/lib/data/seo';
+import { ALL_DRAW_TYPES, DRAW_META, DrawType, UK49sResult } from '@/lib/types';
 
 export const revalidate = 60;
 
@@ -24,7 +25,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   return {
     title: `Number ${num} - UK 49s Statistics & History | ${SITE_NAME}`,
-    description: `Number ${num} frequency analysis for UK 49s. See how often number ${num} appears in Lunchtime and Teatime draws, last drawn dates, and prediction data.`,
+    description: `Number ${num} frequency analysis for UK 49s. See how often number ${num} appears across Brunchtime, Lunchtime, Drivetime and Teatime draws, last drawn dates, and prediction data.`,
     alternates: {
       canonical: `${SITE_URL}/numbers/${num}`,
     },
@@ -34,7 +35,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     },
     ...ogMeta(
       `Number ${num} - UK 49s Statistics & History`,
-      `Number ${num} frequency analysis for UK 49s. See how often number ${num} appears in Lunchtime and Teatime draws.`,
+      `Number ${num} frequency analysis for UK 49s across all four daily draws.`,
       `/numbers/${num}`,
     ),
   };
@@ -46,6 +47,43 @@ function getNumberStatus(count: number, avgCount: number): { label: string; colo
   return { label: 'Neutral', color: 'text-gray-700 dark:text-gray-400', bgColor: 'bg-gray-100 dark:bg-gray-800' };
 }
 
+const PER_DRAW_THEME: Record<DrawType, {
+  cardBg: string;
+  cardBorder: string;
+  cardText: string;
+  bar: string;
+  badge: string;
+}> = {
+  brunchtime: {
+    cardBg: 'bg-orange-50 dark:bg-orange-950/20',
+    cardBorder: 'border-orange-200 dark:border-orange-800',
+    cardText: 'text-orange-700 dark:text-orange-400',
+    bar: 'bg-gradient-to-r from-orange-500 to-orange-600',
+    badge: 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400',
+  },
+  lunchtime: {
+    cardBg: 'bg-amber-50 dark:bg-amber-950/20',
+    cardBorder: 'border-amber-200 dark:border-amber-800',
+    cardText: 'text-amber-700 dark:text-amber-400',
+    bar: 'bg-gradient-to-r from-amber-500 to-amber-600',
+    badge: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
+  },
+  drivetime: {
+    cardBg: 'bg-rose-50 dark:bg-rose-950/20',
+    cardBorder: 'border-rose-200 dark:border-rose-800',
+    cardText: 'text-rose-700 dark:text-rose-400',
+    bar: 'bg-gradient-to-r from-rose-500 to-rose-600',
+    badge: 'bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400',
+  },
+  teatime: {
+    cardBg: 'bg-indigo-50 dark:bg-indigo-950/20',
+    cardBorder: 'border-indigo-200 dark:border-indigo-800',
+    cardText: 'text-indigo-700 dark:text-indigo-400',
+    bar: 'bg-gradient-to-r from-indigo-500 to-indigo-600',
+    badge: 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400',
+  },
+};
+
 export default async function NumberPage({ params }: PageProps) {
   const { number } = await params;
   const num = parseInt(number, 10);
@@ -55,21 +93,32 @@ export default async function NumberPage({ params }: PageProps) {
   }
 
   const allResults = await getLatestResults();
-  const lunchtimeResults = allResults.filter(r => r.drawType === 'lunchtime');
-  const teatimeResults = allResults.filter(r => r.drawType === 'teatime');
+
+  const resultsByDraw: Record<DrawType, UK49sResult[]> = {
+    brunchtime: allResults.filter(r => r.drawType === 'brunchtime'),
+    lunchtime: allResults.filter(r => r.drawType === 'lunchtime'),
+    drivetime: allResults.filter(r => r.drawType === 'drivetime'),
+    teatime: allResults.filter(r => r.drawType === 'teatime'),
+  };
 
   const freqAll = calculateFrequency(allResults);
-  const freqLunch = calculateFrequency(lunchtimeResults);
-  const freqTea = calculateFrequency(teatimeResults);
+  const countByDraw: Record<DrawType, number> = {
+    brunchtime: calculateFrequency(resultsByDraw.brunchtime).get(num) || 0,
+    lunchtime: calculateFrequency(resultsByDraw.lunchtime).get(num) || 0,
+    drivetime: calculateFrequency(resultsByDraw.drivetime).get(num) || 0,
+    teatime: calculateFrequency(resultsByDraw.teatime).get(num) || 0,
+  };
 
   const totalDraws = allResults.length;
   const countAll = freqAll.get(num) || 0;
-  const countLunch = freqLunch.get(num) || 0;
-  const countTea = freqTea.get(num) || 0;
 
   const percentageAll = totalDraws > 0 ? ((countAll / totalDraws) * 100).toFixed(1) : '0.0';
-  const percentageLunch = lunchtimeResults.length > 0 ? ((countLunch / lunchtimeResults.length) * 100).toFixed(1) : '0.0';
-  const percentageTea = teatimeResults.length > 0 ? ((countTea / teatimeResults.length) * 100).toFixed(1) : '0.0';
+  const percentageByDraw: Record<DrawType, string> = {
+    brunchtime: resultsByDraw.brunchtime.length > 0 ? ((countByDraw.brunchtime / resultsByDraw.brunchtime.length) * 100).toFixed(1) : '0.0',
+    lunchtime: resultsByDraw.lunchtime.length > 0 ? ((countByDraw.lunchtime / resultsByDraw.lunchtime.length) * 100).toFixed(1) : '0.0',
+    drivetime: resultsByDraw.drivetime.length > 0 ? ((countByDraw.drivetime / resultsByDraw.drivetime.length) * 100).toFixed(1) : '0.0',
+    teatime: resultsByDraw.teatime.length > 0 ? ((countByDraw.teatime / resultsByDraw.teatime.length) * 100).toFixed(1) : '0.0',
+  };
 
   // Calculate average count for hot/cold status
   const allCounts = [...freqAll.values()];
@@ -93,7 +142,7 @@ export default async function NumberPage({ params }: PageProps) {
     '@context': 'https://schema.org',
     '@type': 'Article',
     headline: `Number ${num} - UK 49s Statistics & History`,
-    description: `Number ${num} frequency analysis for UK 49s. See how often number ${num} appears in Lunchtime and Teatime draws.`,
+    description: `Number ${num} frequency analysis for UK 49s across all four daily draws.`,
     author: { '@type': 'Organization', name: SITE_NAME },
     publisher: { '@type': 'Organization', name: SITE_NAME },
     mainEntityOfPage: `${SITE_URL}/numbers/${num}`,
@@ -134,19 +183,21 @@ export default async function NumberPage({ params }: PageProps) {
       </div>
 
       {/* Stats Cards */}
-      <section className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+      <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
         <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 text-center">
           <p className="text-2xl font-bold text-gray-900 dark:text-white">{countAll}</p>
           <p className="text-sm text-gray-500 dark:text-gray-400">Total Draws</p>
         </div>
-        <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-xl p-4 text-center">
-          <p className="text-2xl font-bold text-amber-700 dark:text-amber-400">{countLunch}</p>
-          <p className="text-sm text-gray-500 dark:text-gray-400">Lunchtime</p>
-        </div>
-        <div className="bg-indigo-50 dark:bg-indigo-950/20 border border-indigo-200 dark:border-indigo-800 rounded-xl p-4 text-center">
-          <p className="text-2xl font-bold text-indigo-700 dark:text-indigo-400">{countTea}</p>
-          <p className="text-sm text-gray-500 dark:text-gray-400">Teatime</p>
-        </div>
+        {ALL_DRAW_TYPES.map(d => {
+          const meta = DRAW_META[d];
+          const theme = PER_DRAW_THEME[d];
+          return (
+            <div key={d} className={`${theme.cardBg} border ${theme.cardBorder} rounded-xl p-4 text-center`}>
+              <p className={`text-2xl font-bold ${theme.cardText}`}>{countByDraw[d]}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">{meta.shortLabel}</p>
+            </div>
+          );
+        })}
         <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 text-center">
           <p className="text-2xl font-bold text-gray-900 dark:text-white">#{rank}</p>
           <p className="text-sm text-gray-500 dark:text-gray-400">Rank</p>
@@ -169,30 +220,24 @@ export default async function NumberPage({ params }: PageProps) {
               />
             </div>
           </div>
-          <div>
-            <div className="flex justify-between text-sm mb-1">
-              <span className="text-gray-600 dark:text-gray-400">Lunchtime ({percentageLunch}%)</span>
-              <span className="font-semibold text-amber-700 dark:text-amber-400">{countLunch} draws</span>
-            </div>
-            <div className="w-full bg-gray-100 dark:bg-gray-700 rounded-full h-4">
-              <div
-                className="h-4 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 transition-all"
-                style={{ width: `${maxCount > 0 ? (countLunch / maxCount) * 100 : 0}%` }}
-              />
-            </div>
-          </div>
-          <div>
-            <div className="flex justify-between text-sm mb-1">
-              <span className="text-gray-600 dark:text-gray-400">Teatime ({percentageTea}%)</span>
-              <span className="font-semibold text-indigo-700 dark:text-indigo-400">{countTea} draws</span>
-            </div>
-            <div className="w-full bg-gray-100 dark:bg-gray-700 rounded-full h-4">
-              <div
-                className="h-4 rounded-full bg-gradient-to-r from-indigo-500 to-indigo-600 transition-all"
-                style={{ width: `${maxCount > 0 ? (countTea / maxCount) * 100 : 0}%` }}
-              />
-            </div>
-          </div>
+          {ALL_DRAW_TYPES.map(d => {
+            const meta = DRAW_META[d];
+            const theme = PER_DRAW_THEME[d];
+            return (
+              <div key={d}>
+                <div className="flex justify-between text-sm mb-1">
+                  <span className="text-gray-600 dark:text-gray-400">{meta.label} ({percentageByDraw[d]}%)</span>
+                  <span className={`font-semibold ${theme.cardText}`}>{countByDraw[d]} draws</span>
+                </div>
+                <div className="w-full bg-gray-100 dark:bg-gray-700 rounded-full h-4">
+                  <div
+                    className={`h-4 rounded-full ${theme.bar} transition-all`}
+                    style={{ width: `${maxCount > 0 ? (countByDraw[d] / maxCount) * 100 : 0}%` }}
+                  />
+                </div>
+              </div>
+            );
+          })}
         </div>
       </section>
 
@@ -206,11 +251,13 @@ export default async function NumberPage({ params }: PageProps) {
               const dateFormatted = new Date(result.date + 'T12:00:00').toLocaleDateString('en-GB', {
                 weekday: 'short', year: 'numeric', month: 'short', day: 'numeric',
               });
+              const meta = DRAW_META[result.drawType];
+              const theme = PER_DRAW_THEME[result.drawType];
               return (
                 <div key={i} className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center gap-3">
                   <div className="flex items-center gap-3 min-w-0">
-                    <span className={`text-xs font-semibold px-2 py-1 rounded ${result.drawType === 'lunchtime' ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400' : 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400'}`}>
-                      {result.drawType === 'lunchtime' ? 'Lunch' : 'Tea'}
+                    <span className={`text-xs font-semibold px-2 py-1 rounded ${theme.badge}`}>
+                      {meta.shortLabel}
                     </span>
                     <span className="text-sm text-gray-600 dark:text-gray-400">{dateFormatted}</span>
                     {isBooster && (
@@ -262,9 +309,11 @@ export default async function NumberPage({ params }: PageProps) {
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">About Number {num} in UK 49s</h2>
               <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
                 Number <strong className="text-gray-900 dark:text-white">{num}</strong> has been drawn <strong className="text-gray-900 dark:text-white">{countAll} time{countAll !== 1 ? 's' : ''}</strong> across
-                all recent UK 49s draws, appearing in <strong className="text-gray-900 dark:text-white">{percentageAll}%</strong> of draws. In <Link href="/lunchtime" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">Lunchtime</Link>{' '}
-                draws specifically, it has appeared {countLunch} time{countLunch !== 1 ? 's' : ''},
-                while in <Link href="/teatime" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">Teatime</Link> draws it has been drawn {countTea} time{countTea !== 1 ? 's' : ''}.
+                all recent UK 49s draws, appearing in <strong className="text-gray-900 dark:text-white">{percentageAll}%</strong> of draws. Per-draw breakdown:{' '}
+                <Link href="/brunchtime" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">Brunchtime</Link> {countByDraw.brunchtime},{' '}
+                <Link href="/lunchtime" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">Lunchtime</Link> {countByDraw.lunchtime},{' '}
+                <Link href="/drivetime" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">Drivetime</Link> {countByDraw.drivetime},{' '}
+                <Link href="/teatime" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">Teatime</Link> {countByDraw.teatime}.
               </p>
             </div>
 

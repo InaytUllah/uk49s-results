@@ -1,9 +1,10 @@
 import LotteryBalls from '@/components/LotteryBalls';
-import type { UK49sResult } from '@/lib/types';
+import type { UK49sResult, DrawType } from '@/lib/types';
+import { DRAW_META } from '@/lib/types';
 import { generateDailyPredictions } from '@/lib/data/predictions';
 
 interface Props {
-  drawType: 'lunchtime' | 'teatime';
+  drawType: DrawType;
   drawResults: UK49sResult[];
   hotNumbers: number[];
   coldNumbers: number[];
@@ -11,7 +12,7 @@ interface Props {
 }
 
 export default function HitTracker({ drawType, drawResults, hotNumbers, coldNumbers, seedOffsetStart }: Props) {
-  const drawLabel = drawType === 'lunchtime' ? 'Lunchtime' : 'Teatime';
+  const drawLabel = DRAW_META[drawType].label;
   const recent = drawResults.slice(0, 7);
 
   let totalSetsChecked = 0;
