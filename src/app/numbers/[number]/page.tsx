@@ -6,7 +6,8 @@ import { getLatestResults, calculateFrequency } from '@/lib/data/draws';
 import { SITE_NAME, SITE_URL, ogMeta } from '@/lib/data/seo';
 import { ALL_DRAW_TYPES, DRAW_META, DrawType, UK49sResult } from '@/lib/types';
 
-export const revalidate = 60;
+// Number stats change slowly. 1h revalidate is plenty.
+export const revalidate = 3600;
 
 interface PageProps {
   params: Promise<{ number: string }>;

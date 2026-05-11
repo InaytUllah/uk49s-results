@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   ...ogMeta(PAGE_SEO.drivetime.title, PAGE_SEO.drivetime.description, '/drivetime'),
 };
 
-export const revalidate = 60;
+export const revalidate = 300;
 
 export default async function DrivetimePage() {
   const results = await getLatestResults('drivetime');

@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   ...ogMeta(PAGE_SEO.brunchtime.title, PAGE_SEO.brunchtime.description, '/brunchtime'),
 };
 
-export const revalidate = 60;
+export const revalidate = 300;
 
 export default async function BrunchtimePage() {
   const results = await getLatestResults('brunchtime');

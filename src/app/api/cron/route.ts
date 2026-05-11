@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
+import { ALL_DRAW_TYPES } from '@/lib/types';
 import { notifyGoogleIndexing, buildNotificationUrls, buildDailyNotificationUrls } from '@/lib/api/google-indexing';
 
 export const dynamic = 'force-dynamic';
@@ -16,10 +17,19 @@ export async function GET(request: Request) {
   const isFullSubmission = url.searchParams.get('full') === 'true';
 
   try {
-    revalidatePath('/', 'layout');
+    // Only revalidate the pages most likely to change after a draw.
+    // The old code called revalidatePath('/', 'layout') which rebuilt all 167 pages
+    // every cron run (35k ISR writes/day). This targets just the ~14 pages that need it.
+    revalidatePath('/');
+    for (const d of ALL_DRAW_TYPES) {
+      revalidatePath(`/${d}`);
+      revalidatePath(`/${d}-predictions`);
+    }
+    revalidatePath('/predictions');
+    revalidatePath('/hot-cold-numbers');
 
-    // Draw-time crons: ~7 URLs (today's results + smart prediction dates)
-    // Daily full run: core pages + recent results (~15 URLs)
+    // Draw-time crons: ~9 URLs (today's results across 4 draws + prediction hubs)
+    // Daily full run: core pages + recent results
     const urls = isFullSubmission
       ? await buildDailyNotificationUrls()
       : await buildNotificationUrls();
@@ -28,7 +38,7 @@ export async function GET(request: Request) {
 
     return NextResponse.json({
       success: true,
-      message: 'UK 49s results cache revalidated',
+      message: 'UK 49s scraper cache invalidated',
       mode: isFullSubmission ? 'daily-core-pages' : 'draw-update',
       googleIndexing: {
         notified: indexingResult.total,

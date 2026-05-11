@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   ...ogMeta(PAGE_SEO.blog.title, PAGE_SEO.blog.description, '/blog'),
 };
 
-export const revalidate = 60;
+export const revalidate = 300;
 
 interface PredictionPost {
   date: string;

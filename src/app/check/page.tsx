@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   ...ogMeta(pageTitle, pageDesc, '/check'),
 };
 
-export const revalidate = 60;
+export const revalidate = 300;
 
 export default async function CheckPage() {
   const results = await getLatestResults();

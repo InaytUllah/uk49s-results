@@ -4,7 +4,7 @@ import { getLatestResults, calculateFrequency } from '@/lib/data/draws';
 import { PAGE_SEO, SITE_NAME, SITE_URL, ogMeta } from '@/lib/data/seo';
 import { breadcrumbSchema, webPageSchema } from '@/lib/schema';
 
-export const revalidate = 60;
+export const revalidate = 300;
 
 export const metadata: Metadata = {
   title: PAGE_SEO.numbers.title,

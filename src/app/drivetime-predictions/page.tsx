@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   },
 };
 
-export const revalidate = 60;
+export const revalidate = 300;
 
 export default async function DrivetimePredictionsPage() {
   const allResults = await getLatestResults();

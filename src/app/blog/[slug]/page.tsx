@@ -135,7 +135,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export const revalidate = 60;
+// Dated prediction blog posts: content is deterministic per (date, drawType).
+// 24h revalidate is plenty — the cron's tag-invalidation refreshes the underlying
+// data, but blog posts for past dates don't need frequent rebuilds.
+export const revalidate = 86400;
 export const dynamicParams = true;
 
 export async function generateStaticParams() {

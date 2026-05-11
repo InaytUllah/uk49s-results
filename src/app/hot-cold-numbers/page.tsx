@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   ...ogMeta(PAGE_SEO.hotCold.title, PAGE_SEO.hotCold.description, '/hot-cold-numbers'),
 };
 
-export const revalidate = 60;
+export const revalidate = 300;
 
 const PER_DRAW_THEME: Record<DrawType, {
   heading: string;

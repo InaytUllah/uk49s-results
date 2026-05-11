@@ -44,7 +44,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export const revalidate = 60;
+// Dated result pages: numbers don't change once published.
+// 24h revalidate keeps ISR writes near zero.
+export const revalidate = 86400;
 export const dynamicParams = true;
 
 export async function generateStaticParams() {

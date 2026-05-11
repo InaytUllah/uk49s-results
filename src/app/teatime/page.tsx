@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   ...ogMeta(PAGE_SEO.teatime.title, PAGE_SEO.teatime.description, '/teatime'),
 };
 
-export const revalidate = 60;
+export const revalidate = 300;
 
 export default async function TeatimePage() {
   const results = await getLatestResults('teatime');

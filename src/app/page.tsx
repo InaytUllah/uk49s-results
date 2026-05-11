@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   description: PAGE_SEO.home.description,
 };
 
-export const revalidate = 60; // Revalidate every 1 minute
+export const revalidate = 300; // Revalidate every 1 minute
 
 const HEADING_THEME: Record<DrawType, string> = {
   brunchtime: 'text-orange-700 dark:text-orange-400',
