@@ -1,0 +1,53 @@
+name: UK 49s draw-time cron
+
+# Why this exists: Vercel Hobby plan only allows 1 cron/day. We need to ping our
+# /api/cron endpoint around each of the 4 daily UK 49s draw times to refresh
+# results data and submit URLs to Google Indexing API. GitHub Actions runs these
+# for free.
+#
+# Note: GitHub Actions cron uses UTC.
+# UK draw times:
+#   Brunchtime 10:49 UK   ->  9:49 UTC (BST) / 10:49 UTC (GMT)
+#   Lunchtime  12:49 UK   -> 11:49 UTC (BST) / 12:49 UTC (GMT)
+#   Drivetime  16:49 UK   -> 15:49 UTC (BST) / 16:49 UTC (GMT)
+#   Teatime    17:49 UK   -> 16:49 UTC (BST) / 17:49 UTC (GMT)
+#
+# We schedule windows that cover both BST and GMT to handle daylight saving.
+
+on:
+  schedule:
+    # Brunchtime window: 9-11 UTC, every 5 minutes
+    - cron: '*/5 9-11 * * *'
+    # Lunchtime window: 11-13 UTC, every 5 minutes
+    - cron: '*/5 11-13 * * *'
+    # Drivetime + Teatime window: 15-18 UTC, every 5 minutes
+    - cron: '*/5 15-18 * * *'
+    # Daily full submission at 6:07 UTC
+    - cron: '7 6 * * *'
+  workflow_dispatch:  # Manual trigger from GitHub UI
+
+jobs:
+  ping-cron:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Determine endpoint
+        id: endpoint
+        run: |
+          # 6:07 UTC schedule -> daily full submission
+          # Everything else -> draw-time refresh
+          HOUR=$(date -u +%H)
+          MIN=$(date -u +%M)
+          if [ "$HOUR" = "06" ] && [ "$MIN" -le "10" ]; then
+            echo "url=https://uk49sresults.co.uk/api/cron?full=true" >> $GITHUB_OUTPUT
+            echo "mode=daily-full" >> $GITHUB_OUTPUT
+          else
+            echo "url=https://uk49sresults.co.uk/api/cron" >> $GITHUB_OUTPUT
+            echo "mode=draw-update" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Ping cron endpoint (${{ steps.endpoint.outputs.mode }})
+        run: |
+          curl -sS -f \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            "${{ steps.endpoint.outputs.url }}" \
+            | tee /dev/stderr
