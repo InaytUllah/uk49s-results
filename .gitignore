@@ -32,3 +32,6 @@ npm-debug.log*
 next-env.d.ts
 
 .vercel
+
+# Claude Code worktrees (local dev only — never commit)
+.claude/worktrees/
