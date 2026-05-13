@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   },
 };
 
-export const revalidate = 300;
+export const revalidate = 3600; // 1h — cron triggers revalidation on new draws
 
 export default async function TeatimePredictionsPage() {
   const allResults = await getLatestResults();

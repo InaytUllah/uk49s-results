@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   ...ogMeta(PAGE_SEO.blog.title, PAGE_SEO.blog.description, '/blog'),
 };
 
-export const revalidate = 300;
+export const revalidate = 3600; // 1h — cron triggers revalidation on new draws
 
 interface PredictionPost {
   date: string;

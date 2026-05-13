@@ -5,7 +5,7 @@ import { getLatestResults, calculateFrequency, getHotNumbers, getColdNumbers } f
 import { PAGE_SEO, SITE_NAME, SITE_URL, ogMeta } from '@/lib/data/seo';
 import { breadcrumbSchema, webPageSchema } from '@/lib/schema';
 
-export const revalidate = 300;
+export const revalidate = 3600; // 1h — cron triggers revalidation on new draws
 
 export const metadata: Metadata = {
   title: `UK 49s Lunchtime vs Teatime - Which Draw Has Better Odds? | ${SITE_NAME}`,

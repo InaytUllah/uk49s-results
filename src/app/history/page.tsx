@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   ...ogMeta(PAGE_SEO.history.title, PAGE_SEO.history.description, '/history'),
 };
 
-export const revalidate = 300;
+export const revalidate = 3600; // 1h — cron triggers revalidation on new draws
 
 export default async function HistoryPage() {
   const allResults = await getLatestResults();

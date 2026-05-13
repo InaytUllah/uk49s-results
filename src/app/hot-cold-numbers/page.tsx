@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   ...ogMeta(PAGE_SEO.hotCold.title, PAGE_SEO.hotCold.description, '/hot-cold-numbers'),
 };
 
-export const revalidate = 300;
+export const revalidate = 3600; // 1h — cron triggers revalidation on new draws
 
 const PER_DRAW_THEME: Record<DrawType, {
   heading: string;

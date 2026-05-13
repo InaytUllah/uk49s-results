@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   description: PAGE_SEO.home.description,
 };
 
-export const revalidate = 300; // Revalidate every 1 minute
+export const revalidate = 3600; // 1h — cron triggers revalidation on new draws
 
 const HEADING_THEME: Record<DrawType, string> = {
   brunchtime: 'text-orange-700 dark:text-orange-400',

@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   ...ogMeta(PAGE_SEO.lunchtime.title, PAGE_SEO.lunchtime.description, '/lunchtime'),
 };
 
-export const revalidate = 300;
+export const revalidate = 3600; // 1h — cron triggers revalidation on new draws
 
 export default async function LunchtimePage() {
   const results = await getLatestResults('lunchtime');

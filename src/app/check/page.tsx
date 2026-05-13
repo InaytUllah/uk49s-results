@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   ...ogMeta(pageTitle, pageDesc, '/check'),
 };
 
-export const revalidate = 300;
+export const revalidate = 3600; // 1h — cron triggers revalidation on new draws
 
 export default async function CheckPage() {
   const results = await getLatestResults();
