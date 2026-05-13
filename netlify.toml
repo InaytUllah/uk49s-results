@@ -1,0 +1,19 @@
+# Netlify configuration for uk49s-results
+# Migrated from Vercel Hobby (limits too tight for our traffic)
+# Netlify free tier: 100GB bandwidth, 125K function invocations, 300 build mins
+# Cron jobs already run via GitHub Actions, no Netlify scheduled functions needed.
+
+[build]
+  command = "next build"
+  publish = ".next"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# Image optimization — Netlify has its own, works automatically with Next.js Image
+# Edge functions — Netlify handles Next.js middleware/edge runtime via plugin
+
+[functions]
+  # Default function timeout (Netlify free tier: 10s max)
+  # Our scraper calls run in 1-3s normally, safe.
+  node_bundler = "esbuild"
