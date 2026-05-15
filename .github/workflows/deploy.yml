@@ -1,0 +1,83 @@
+name: Build and deploy to Cloudflare Pages
+
+# Bypasses Cloudflare's dashboard build pipeline (which has been flaky for our
+# Next.js static export). Instead, GitHub Actions builds locally and uses
+# wrangler to push the `out/` folder directly to Cloudflare Pages.
+#
+# Triggers:
+#  - Push to main (any code change)
+#  - Scheduled cron during UK 49s draw windows (every 5 min)
+#  - Manual via workflow_dispatch
+#
+# Required GitHub secrets:
+#  - CLOUDFLARE_API_TOKEN  (create at https://dash.cloudflare.com/profile/api-tokens
+#                           with permission: "Cloudflare Pages — Edit")
+#  - CLOUDFLARE_ACCOUNT_ID (40bc87a52b5a97cda284020506728a48)
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    # UK 49s draw windows (UTC) — covers both BST and GMT
+    - cron: '*/5 9-11 * * *'    # Brunchtime
+    - cron: '*/5 11-13 * * *'   # Lunchtime
+    - cron: '*/5 15-18 * * *'   # Drivetime + Teatime
+    - cron: '7 6 * * *'         # Daily indexing nudge
+  workflow_dispatch:
+
+# Avoid two workflow runs racing the same deploy
+concurrency:
+  group: cloudflare-deploy
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build static export
+        run: npm run build
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          # Uses `wrangler pages deploy out --project-name=uk49s-results`.
+          # First push auto-creates the Pages project if it doesn't exist.
+          command: pages deploy out --project-name=uk49s-results --branch=main
+
+  notify-google:
+    # Only run on the daily 6:07 UTC cron, not every push or draw-window run.
+    if: github.event.schedule == '7 6 * * *' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    needs: build-and-deploy
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --omit=dev
+
+      - name: Submit URLs to Google Indexing API
+        env:
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+        run: node scripts/notify-google.mjs
