@@ -29,17 +29,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: `UK 49s Lunchtime Results — ${formattedDate}`,
       description: `${numbersText}Full draw analysis and hot number breakdown.`,
       type: 'article',
-      images: [{
-        url: `${SITE_URL}/api/og?title=${encodeURIComponent(`Lunchtime Results — ${formattedDate}`)}&subtitle=${encodeURIComponent('UK 49s Winning Numbers')}&type=result&numbers=${ogNumbers}&booster=${ogBooster}`,
-        width: 1200,
-        height: 630,
-        alt: `UK 49s Lunchtime Results for ${formattedDate}`,
-      }],
     },
     twitter: {
       card: 'summary_large_image',
       title: `UK 49s Lunchtime Results — ${formattedDate}`,
-      images: [`${SITE_URL}/api/og?title=${encodeURIComponent(`Lunchtime Results — ${formattedDate}`)}&subtitle=${encodeURIComponent('UK 49s Winning Numbers')}&type=result&numbers=${ogNumbers}&booster=${ogBooster}`],
     },
   };
 }
@@ -47,7 +40,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 // Dated result pages: numbers don't change once published.
 // 24h revalidate keeps ISR writes near zero.
 export const revalidate = 86400;
-export const dynamicParams = true;
+// Static export: only pre-generated dates are served. Unknown dates → 404
+// (handled by Cloudflare's static asset routing). Dates that get added between
+// builds appear on the next deploy (every ~5 min during draw windows).
+export const dynamicParams = false;
 
 export async function generateStaticParams() {
   const dates = await getRecentDates();

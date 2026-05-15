@@ -29,17 +29,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: `UK 49s Brunchtime Results — ${formattedDate}`,
       description: `${numbersText}Full draw analysis and hot number breakdown.`,
       type: 'article',
-      images: [{
-        url: `${SITE_URL}/api/og?title=${encodeURIComponent(`Brunchtime Results — ${formattedDate}`)}&subtitle=${encodeURIComponent('UK 49s Winning Numbers')}&type=result&numbers=${ogNumbers}&booster=${ogBooster}`,
-        width: 1200,
-        height: 630,
-        alt: `UK 49s Brunchtime Results for ${formattedDate}`,
-      }],
     },
     twitter: {
       card: 'summary_large_image',
       title: `UK 49s Brunchtime Results — ${formattedDate}`,
-      images: [`${SITE_URL}/api/og?title=${encodeURIComponent(`Brunchtime Results — ${formattedDate}`)}&subtitle=${encodeURIComponent('UK 49s Winning Numbers')}&type=result&numbers=${ogNumbers}&booster=${ogBooster}`],
     },
   };
 }
@@ -48,7 +41,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 // 24h revalidate keeps ISR writes near zero — Brunchtime cron-triggered tag invalidation
 // will refresh today's date as needed.
 export const revalidate = 86400;
-export const dynamicParams = true;
+export const dynamicParams = false;
 
 export async function generateStaticParams() {
   const dates = await getRecentDates();

@@ -1,6 +1,8 @@
 import { ImageResponse } from 'next/og';
 
-// 32x32 favicon (auto-served by Next.js)
+// 32x32 favicon (auto-served by Next.js).
+// `force-static` so it's emitted as a plain PNG under output: 'export'.
+export const dynamic = 'force-static';
 export const size = { width: 32, height: 32 };
 export const contentType = 'image/png';
 

@@ -15,10 +15,7 @@ export const metadata: Metadata = {
     title: 'UK 49s Predictions Today — Brunchtime, Lunchtime, Drivetime & Teatime',
     description: 'Statistical predictions for all four UK 49s draws.',
     type: 'website',
-    images: [{
-      url: `${SITE_URL}/api/og?title=${encodeURIComponent('UK 49s Predictions Today')}&subtitle=${encodeURIComponent('All Four Daily Draws — Statistical Analysis')}&type=prediction`,
-      width: 1200, height: 630,
-    }],
+    // images auto-resolved from src/app/opengraph-image.tsx
   },
 };
 

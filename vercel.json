@@ -1,3 +1,0 @@
-{
-  "comment": "Crons moved to GitHub Actions (.github/workflows/cron.yml) so the project runs on Vercel Hobby (free tier). Hobby allows only 1 cron/day; GitHub Actions runs unlimited crons free."
-}

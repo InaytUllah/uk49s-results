@@ -1,0 +1,33 @@
+# Cloudflare Pages headers config (https://developers.cloudflare.com/pages/configuration/headers/)
+# Replaces next.config.ts headers() since static export doesn't support runtime headers.
+
+/*
+  X-DNS-Prefetch-Control: on
+  Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+  X-Frame-Options: SAMEORIGIN
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+
+# Static HTML pages — Cloudflare CDN can hold a long time; clients refresh on visit
+/*.html
+  Cache-Control: public, max-age=300, s-maxage=300, stale-while-revalidate=86400
+
+# Long-cache static assets (Next.js hashes filenames for cache-busting)
+/_next/static/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/static/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Metadata files Next.js emits without a .png extension — pin Content-Type so
+# Cloudflare doesn't serve them as application/octet-stream (would break social
+# previews and favicons).
+/opengraph-image
+  Content-Type: image/png
+
+/icon
+  Content-Type: image/png
+
+/apple-icon
+  Content-Type: image/png

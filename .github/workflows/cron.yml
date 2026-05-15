@@ -1,53 +1,63 @@
 name: UK 49s draw-time cron
 
-# Why this exists: Vercel Hobby plan only allows 1 cron/day. We need to ping our
-# /api/cron endpoint around each of the 4 daily UK 49s draw times to refresh
-# results data and submit URLs to Google Indexing API. GitHub Actions runs these
-# for free.
+# Architecture: Static export on Cloudflare Pages.
+# This workflow triggers a Cloudflare Pages rebuild around each UK 49s draw
+# time. Cloudflare rebuilds the entire site with fresh data (scraped at build
+# time) and deploys to its CDN. After deploy, we ping Google Indexing API so
+# the new dated result pages get crawled fast.
 #
-# Note: GitHub Actions cron uses UTC.
-# UK draw times:
-#   Brunchtime 10:49 UK   ->  9:49 UTC (BST) / 10:49 UTC (GMT)
-#   Lunchtime  12:49 UK   -> 11:49 UTC (BST) / 12:49 UTC (GMT)
-#   Drivetime  16:49 UK   -> 15:49 UTC (BST) / 16:49 UTC (GMT)
-#   Teatime    17:49 UK   -> 16:49 UTC (BST) / 17:49 UTC (GMT)
+# We poll on the 5-minute floor of GitHub Actions cron during four narrow
+# draw windows (covers both BST and GMT shifts).
 #
-# We schedule windows that cover both BST and GMT to handle daylight saving.
+# Limits we live within:
+#  - Cloudflare Pages free: 500 builds/month
+#  - GitHub Actions free (private repo): 2,000 minutes/month
+#  - Steady state: ~120-150 builds/month, ~600 GitHub minutes/month
 
 on:
   schedule:
-    # Brunchtime window: 9-11 UTC, every 5 minutes
+    # Brunchtime window: 9-11 UTC, every 5 minutes (covers 9:49 BST / 10:49 GMT)
     - cron: '*/5 9-11 * * *'
     # Lunchtime window: 11-13 UTC, every 5 minutes
     - cron: '*/5 11-13 * * *'
     # Drivetime + Teatime window: 15-18 UTC, every 5 minutes
     - cron: '*/5 15-18 * * *'
-    # Daily full submission at 6:07 UTC
+    # Daily indexing nudge at 6:07 UTC
     - cron: '7 6 * * *'
   workflow_dispatch:  # Manual trigger from GitHub UI
 
 jobs:
-  ping-cron:
+  trigger-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Determine endpoint
-        id: endpoint
+      - name: Trigger Cloudflare Pages deploy
         run: |
-          # 6:07 UTC schedule -> daily full submission
-          # Everything else -> draw-time refresh
-          HOUR=$(date -u +%H)
-          MIN=$(date -u +%M)
-          if [ "$HOUR" = "06" ] && [ "$MIN" -le "10" ]; then
-            echo "url=https://uk49sresults.co.uk/api/cron?full=true" >> $GITHUB_OUTPUT
-            echo "mode=daily-full" >> $GITHUB_OUTPUT
-          else
-            echo "url=https://uk49sresults.co.uk/api/cron" >> $GITHUB_OUTPUT
-            echo "mode=draw-update" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Ping cron endpoint (${{ steps.endpoint.outputs.mode }})
-        run: |
-          curl -sS -f \
-            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
-            "${{ steps.endpoint.outputs.url }}" \
+          # Fire the deploy hook. Cloudflare queues a build; we don't wait for
+          # it to finish here — the build happens in Cloudflare's CI, free.
+          curl -sS -f -X POST "${{ secrets.CLOUDFLARE_DEPLOY_HOOK }}" \
             | tee /dev/stderr
+          echo ""
+          echo "Triggered Cloudflare Pages deploy at $(date -u)"
+
+  notify-google:
+    runs-on: ubuntu-latest
+    # Only do Google Indexing pings after the 6:07 UTC daily run — the
+    # draw-time runs just deploy, Google will pick up new pages on its own
+    # crawl schedule within hours.
+    if: github.event.schedule == '7 6 * * *' || github.event_name == 'workflow_dispatch'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci --omit=dev || npm install --omit=dev
+
+      - name: Submit URLs to Google Indexing API
+        env:
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+        run: node scripts/notify-google.mjs

@@ -15,15 +15,10 @@ export const metadata: Metadata = {
     title: 'UK 49s Teatime Predictions Today',
     description: 'Statistical predictions for today\'s UK 49s Teatime draw at 5:49 PM.',
     type: 'article',
-    images: [{
-      url: `${SITE_URL}/api/og?title=${encodeURIComponent('Teatime Predictions Today')}&subtitle=${encodeURIComponent('5:49 PM Draw — Statistical Analysis')}&type=prediction`,
-      width: 1200, height: 630,
-    }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'UK 49s Teatime Predictions Today',
-    images: [`${SITE_URL}/api/og?title=${encodeURIComponent('Teatime Predictions Today')}&subtitle=${encodeURIComponent('5:49 PM Draw — Statistical Analysis')}&type=prediction`],
   },
 };
 

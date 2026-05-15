@@ -1,82 +1,23 @@
 import type { NextConfig } from "next";
 
-const securityHeaders = [
-  {
-    key: 'X-DNS-Prefetch-Control',
-    value: 'on',
-  },
-  {
-    key: 'Strict-Transport-Security',
-    value: 'max-age=63072000; includeSubDomains; preload',
-  },
-  {
-    key: 'X-Frame-Options',
-    value: 'SAMEORIGIN',
-  },
-  {
-    key: 'X-Content-Type-Options',
-    value: 'nosniff',
-  },
-  {
-    key: 'Referrer-Policy',
-    value: 'origin-when-cross-origin',
-  },
-  {
-    key: 'Permissions-Policy',
-    value: 'camera=(), microphone=(), geolocation=()',
-  },
-];
+// Static export config for Cloudflare Pages (free tier — truly unlimited bandwidth).
+// All pages are pre-rendered at build time. Data freshness comes from rebuild
+// cadence (GitHub Actions cron triggers a Cloudflare deploy ~5 min after each
+// draw window). No server functions = zero overage risk.
+//
+// Headers and redirects can't be configured here in static export mode — they
+// live in public/_headers and public/_redirects (Cloudflare Pages format).
 
 const nextConfig: NextConfig = {
-  async redirects() {
-    return [
-      {
-        source: '/:path*',
-        has: [{ type: 'host', value: 'uk49s-results.vercel.app' }],
-        destination: 'https://uk49sresults.co.uk/:path*',
-        permanent: true,
-      },
-    ];
+  output: 'export',
+  images: {
+    // Static export can't use Next.js Image Optimization (no server).
+    // Cloudflare serves the original images as-is.
+    unoptimized: true,
   },
-  async headers() {
-    return [
-      {
-        // Apply security headers to all routes
-        source: '/(.*)',
-        headers: securityHeaders,
-      },
-      {
-        // Dynamic pages that show results - short cache
-        source: '/(lunchtime|teatime|predictions|hot-cold-numbers|history|numbers|lunchtime-vs-teatime)',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, s-maxage=60, stale-while-revalidate=30',
-          },
-        ],
-      },
-      {
-        // Homepage - always fresh
-        source: '/',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, s-maxage=60, stale-while-revalidate=30',
-          },
-        ],
-      },
-      {
-        // API/cron endpoint - never cache
-        source: '/api/:path*',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'no-store, no-cache, must-revalidate',
-          },
-        ],
-      },
-    ];
-  },
+  // Trailing slash makes Cloudflare's static asset routing more predictable
+  // (e.g. /lunchtime/ instead of /lunchtime).
+  trailingSlash: true,
 };
 
 export default nextConfig;

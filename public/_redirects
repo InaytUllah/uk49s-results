@@ -1,0 +1,16 @@
+# Cloudflare Pages redirects (https://developers.cloudflare.com/pages/configuration/redirects/)
+# Replaces next.config.ts redirects() since static export doesn't support runtime redirects.
+
+# Old Vercel preview URL → canonical custom domain
+https://uk49s-results.vercel.app/*  https://uk49sresults.co.uk/:splat  301!
+
+# Legacy blog result URLs → canonical dated result pages (kept in sync with blog/[slug]/page.tsx)
+# These were already handled by the runtime permanentRedirect() in the Next.js page,
+# but static export can't run server logic. We list common patterns here.
+/blog/uk-49s-lunchtime-results-:date/   /lunchtime/results/:date/   308
+/blog/uk-49s-teatime-results-:date/     /teatime/results/:date/     308
+/blog/uk-49s-brunchtime-results-:date/  /brunchtime/results/:date/  308
+/blog/uk-49s-drivetime-results-:date/   /drivetime/results/:date/   308
+
+# Old combined-draw prediction posts → lunchtime version (preserves SEO authority)
+/blog/uk-49s-predictions-:date/   /blog/uk-49s-lunchtime-predictions-:date/   308

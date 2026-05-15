@@ -16,15 +16,10 @@ export const metadata: Metadata = {
     title: 'UK 49s Brunchtime Predictions Today',
     description: 'Statistical predictions for today\'s UK 49s Brunchtime draw at 10:49 AM.',
     type: 'article',
-    images: [{
-      url: `${SITE_URL}/api/og?title=${encodeURIComponent('Brunchtime Predictions Today')}&subtitle=${encodeURIComponent('10:49 AM Draw — Statistical Analysis')}&type=prediction`,
-      width: 1200, height: 630,
-    }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'UK 49s Brunchtime Predictions Today',
-    images: [`${SITE_URL}/api/og?title=${encodeURIComponent('Brunchtime Predictions Today')}&subtitle=${encodeURIComponent('10:49 AM Draw — Statistical Analysis')}&type=prediction`],
   },
 };
 

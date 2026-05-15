@@ -1,6 +1,9 @@
 import { ImageResponse } from 'next/og';
 
-// 180x180 PNG used for iOS "Add to Home Screen"
+// 180x180 PNG used for iOS "Add to Home Screen".
+// `force-static` is required under output: 'export' so the icon is emitted
+// once at build time as a plain PNG.
+export const dynamic = 'force-static';
 export const size = { width: 180, height: 180 };
 export const contentType = 'image/png';
 

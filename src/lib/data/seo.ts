@@ -10,6 +10,12 @@ export function generateTitle(page: string): string {
 /**
  * Generate standard OG + Twitter metadata from title, description, and path.
  * Use in page metadata: ...ogMeta('UK 49s Lunchtime Results', 'desc', '/lunchtime')
+ *
+ * Note: We intentionally don't set `images` here. Next.js auto-detects
+ * src/app/opengraph-image.tsx and uses it as the default OG image for every
+ * route — which works at build time under static export (zero runtime cost).
+ * Individual pages can still override by placing their own opengraph-image.tsx
+ * in their route folder.
  */
 export function ogMeta(title: string, description: string, path: string) {
   return {
@@ -18,17 +24,11 @@ export function ogMeta(title: string, description: string, path: string) {
       description,
       type: 'website' as const,
       url: `${SITE_URL}${path}`,
-      images: [{
-        url: `${SITE_URL}/api/og?title=${encodeURIComponent(title)}&subtitle=${encodeURIComponent(description.slice(0, 80))}`,
-        width: 1200,
-        height: 630,
-      }],
     },
     twitter: {
       card: 'summary_large_image' as const,
       title,
       description,
-      images: [`${SITE_URL}/api/og?title=${encodeURIComponent(title)}&subtitle=${encodeURIComponent(description.slice(0, 80))}`],
     },
   };
 }

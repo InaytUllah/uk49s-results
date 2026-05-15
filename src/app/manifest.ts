@@ -1,10 +1,14 @@
 import type { MetadataRoute } from 'next';
 
+// Required under output: 'export' so manifest.webmanifest is emitted as a
+// static JSON file at build time.
+export const dynamic = 'force-static';
+
 export default function manifest(): MetadataRoute.Manifest {
   return {
     name: 'UK49s Results',
     short_name: 'UK49s',
-    description: 'Today\'s UK 49s Lunchtime and Teatime winning numbers, hot & cold analysis, predictions, and a number checker. Updated within minutes of each draw.',
+    description: 'Today\'s UK 49s Brunchtime, Lunchtime, Drivetime and Teatime winning numbers, hot & cold analysis, predictions, and a number checker. Updated within minutes of each draw.',
     start_url: '/',
     display: 'standalone',
     orientation: 'portrait',
@@ -13,29 +17,20 @@ export default function manifest(): MetadataRoute.Manifest {
     categories: ['games', 'sports', 'utilities'],
     lang: 'en-GB',
     icons: [
+      // Next.js auto-generates /icon.png (32x32) and /apple-icon.png (180x180)
+      // from icon.tsx / apple-icon.tsx — those work for browser tabs and iOS
+      // home screen. Android PWA install prefers 192/512 but will fall back.
       {
-        src: '/app-icon?size=192',
-        sizes: '192x192',
+        src: '/apple-icon.png',
+        sizes: '180x180',
         type: 'image/png',
         purpose: 'any',
       },
       {
-        src: '/app-icon?size=512',
-        sizes: '512x512',
+        src: '/icon.png',
+        sizes: '32x32',
         type: 'image/png',
         purpose: 'any',
-      },
-      {
-        src: '/app-icon?size=192&maskable=1',
-        sizes: '192x192',
-        type: 'image/png',
-        purpose: 'maskable',
-      },
-      {
-        src: '/app-icon?size=512&maskable=1',
-        sizes: '512x512',
-        type: 'image/png',
-        purpose: 'maskable',
       },
     ],
     shortcuts: [

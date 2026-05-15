@@ -1,6 +1,5 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { permanentRedirect } from 'next/navigation';
 import LotteryBalls from '@/components/LotteryBalls';
 import { getLatestResults, getHotNumbers, getColdNumbers, getPredictionDate, getPredictionDateForDraw, calculateFrequency } from '@/lib/data/draws';
 import { generateDailyPredictions, generatePrediction as generatePredictionShared, STRATEGY_META } from '@/lib/data/predictions';
@@ -122,24 +121,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: `Statistical analysis and prediction sets for the ${meta.ukDrawTime} ${meta.label} draw.`,
       type: 'article',
       url: selfUrl,
-      images: [{
-        url: `${SITE_URL}/api/og?title=${encodeURIComponent(`${meta.label} Predictions — ${formattedDate}`)}&subtitle=${encodeURIComponent(`${meta.ukDrawTime} Draw — Statistical Analysis`)}&type=prediction`,
-        width: 1200, height: 630,
-      }],
     },
     twitter: {
       card: 'summary_large_image',
       title: `UK 49s ${meta.label} Predictions — ${formattedDate}`,
-      images: [`${SITE_URL}/api/og?title=${encodeURIComponent(`${meta.label} Predictions — ${formattedDate}`)}&subtitle=${encodeURIComponent(`${meta.ukDrawTime} Draw — Statistical Analysis`)}&type=prediction`],
     },
   };
 }
 
-// Dated prediction blog posts: content is deterministic per (date, drawType).
-// 24h revalidate is plenty — the cron's tag-invalidation refreshes the underlying
-// data, but blog posts for past dates don't need frequent rebuilds.
-export const revalidate = 86400;
-export const dynamicParams = true;
+// Static export: every slug we want indexed must be pre-generated below.
+// Legacy result URLs (e.g. /blog/uk-49s-lunchtime-results-DATE) redirect to
+// canonical /lunchtime/results/DATE via public/_redirects at the Cloudflare
+// edge — those don't need Next pages at all.
+export const dynamicParams = false;
 
 export async function generateStaticParams() {
   const results = await getLatestResults();
@@ -176,17 +170,16 @@ export default async function BlogPostPage({ params }: Props) {
     );
   }
 
-  // 308 PERMANENT redirect — passes link equity. (Plain redirect() returns
-  // 307 temporary, which Google does NOT treat as a permanent move and does
-  // not transfer ranking signal.)
-  if (parsed.type === 'result') {
-    permanentRedirect(`/${parsed.drawType}/results/${parsed.date}`);
-  }
-
-  // Old combined-draw prediction URLs (pre-split). Permanent redirect to
-  // the lunchtime version so the dated URL preserves its ranking authority.
-  if (parsed.type === 'prediction-combined') {
-    permanentRedirect(`/blog/uk-49s-lunchtime-predictions-${parsed.date}`);
+  // Result-style and old-combined-prediction slugs are handled by
+  // public/_redirects at the Cloudflare edge (308 permanent). If we somehow
+  // reach this code path with one (e.g. legacy build artefact), bail out.
+  if (parsed.type === 'result' || parsed.type === 'prediction-combined') {
+    return (
+      <div className="max-w-4xl mx-auto px-4 py-8 text-center">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Post moved</h1>
+        <Link href="/blog" className="text-emerald-600 hover:text-emerald-700">Back to Blog</Link>
+      </div>
+    );
   }
 
   // ======== DRAW-SPECIFIC PREDICTION POST ========

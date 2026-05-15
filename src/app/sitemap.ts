@@ -4,6 +4,9 @@ import { SITE_URL } from '@/lib/data/seo';
 import { articles } from '@/lib/articles/data';
 import { ALL_DRAW_TYPES } from '@/lib/types';
 
+// Required under output: 'export' so sitemap.xml is generated at build time.
+export const dynamic = 'force-static';
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [dates, allResults] = await Promise.all([
     getRecentDates(),

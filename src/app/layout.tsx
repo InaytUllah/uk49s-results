@@ -17,20 +17,13 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_GB',
     siteName: 'UK49s Results',
-    images: [
-      {
-        url: `${SITE_URL}/api/og?title=${encodeURIComponent('UK 49s Results Today')}&subtitle=${encodeURIComponent('Lunchtime & Teatime Winning Numbers')}`,
-        width: 1200,
-        height: 630,
-        alt: 'UK 49s Results - Lunchtime & Teatime Winning Numbers',
-      },
-    ],
+    // images: auto-detected from src/app/opengraph-image.tsx (built once at deploy time)
   },
   twitter: {
     card: 'summary_large_image',
     title: PAGE_SEO.home.title,
     description: PAGE_SEO.home.description,
-    images: [`${SITE_URL}/api/og?title=${encodeURIComponent('UK 49s Results Today')}&subtitle=${encodeURIComponent('Lunchtime & Teatime Winning Numbers')}`],
+    // images: auto-detected from src/app/opengraph-image.tsx
   },
   robots: {
     index: true,
