@@ -50,15 +50,22 @@ jobs:
       - name: Build static export
         run: npm run build
 
+      - name: Ensure Pages project exists
+        # wrangler pages deploy does NOT auto-create; we have to do it ourselves.
+        # continue-on-error lets every run past the first one (when the project
+        # already exists) succeed without failure.
+        continue-on-error: true
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages project create uk49s-results --production-branch=main
+
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          # `wrangler pages deploy` will read pages_build_output_dir from
-          # wrangler.toml and auto-create the project on first deploy.
-          # --commit-dirty=true silences the "git working tree is dirty" warning
-          # which is normal in CI (npm ci writes lockfile state).
           command: pages deploy --project-name=uk49s-results --branch=main --commit-dirty=true
 
   notify-google:
