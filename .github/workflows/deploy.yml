@@ -55,9 +55,11 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          # Uses `wrangler pages deploy out --project-name=uk49s-results`.
-          # First push auto-creates the Pages project if it doesn't exist.
-          command: pages deploy out --project-name=uk49s-results --branch=main
+          # `wrangler pages deploy` will read pages_build_output_dir from
+          # wrangler.toml and auto-create the project on first deploy.
+          # --commit-dirty=true silences the "git working tree is dirty" warning
+          # which is normal in CI (npm ci writes lockfile state).
+          command: pages deploy --project-name=uk49s-results --branch=main --commit-dirty=true
 
   notify-google:
     # Only run on the daily 6:07 UTC cron, not every push or draw-window run.

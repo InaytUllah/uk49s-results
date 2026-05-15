@@ -1,17 +1,7 @@
-# Cloudflare Workers config for the unified Workers + Static Assets pipeline.
-# This is what Cloudflare's "Workers Builds" (the successor to classic Pages)
-# uses to deploy our static export.
-#
-# We don't ship any Worker code — `directory = "./out"` tells Cloudflare to
-# serve files from Next.js's static export as plain assets. Zero functions,
-# zero runtime cost. Lives entirely on Cloudflare's CDN.
+# Cloudflare Pages wrangler.toml (Pages-specific format, not Workers).
+# Required field for Pages: pages_build_output_dir
+# https://developers.cloudflare.com/pages/functions/wrangler-configuration/
 
 name = "uk49s-results"
 compatibility_date = "2025-01-01"
-
-# Static assets only — no Worker entrypoint
-[assets]
-directory = "./out"
-# `not_found_handling` = `404-page` makes Cloudflare serve out/404.html on
-# unknown URLs (matches the Next.js not-found.tsx output).
-not_found_handling = "404-page"
+pages_build_output_dir = "./out"
