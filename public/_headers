@@ -9,9 +9,17 @@
   Referrer-Policy: origin-when-cross-origin
   Permissions-Policy: camera=(), microphone=(), geolocation=()
 
-# Static HTML pages — Cloudflare CDN can hold a long time; clients refresh on visit
+# Static HTML pages — keep edge cache short so freshly-deployed draw results
+# show up quickly after each rebuild. The /api/draws.json Pages Function also
+# fills the gap by serving live numbers client-side every 20s, but cutting
+# this from 300s → 60s tightens the "visited the page directly" case too.
 /*.html
-  Cache-Control: public, max-age=300, s-maxage=300, stale-while-revalidate=86400
+  Cache-Control: public, max-age=60, s-maxage=60, stale-while-revalidate=300
+
+# The live-draws Pages Function response — must not be cached aggressively
+# by the browser (Function already sets its own short s-maxage at the edge).
+/api/draws.json
+  Cache-Control: public, max-age=10, s-maxage=30, stale-while-revalidate=60
 
 # Long-cache static assets (Next.js hashes filenames for cache-busting)
 /_next/static/*
