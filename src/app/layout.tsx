@@ -82,14 +82,15 @@ export default function RootLayout({
         <meta name="theme-color" content="#059669" />
         <meta name="color-scheme" content="light" />
         {/* Google AdSense — site verification + ad serving.
-            Loaded with strategy="afterInteractive" so it doesn't block first paint;
-            AdSense crawlers will still see the tag in the static HTML for ownership
-            verification (Cloudflare Pages serves the rendered <head> as-is). */}
-        <Script
+            Rendered as a raw <script> tag (not via next/script) because the
+            AdSense crawler scans HTML for the literal <script src="...adsbygoogle.js?client=ca-pub-..."
+            tag during ownership verification. next/script with strategy="afterInteractive"
+            emits a <link rel="preload"> in the static HTML and only injects the actual
+            <script> tag client-side after hydration — which the AdSense bot never sees. */}
+        <script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3181574544840559"
           crossOrigin="anonymous"
-          strategy="afterInteractive"
         />
         {/* Google Analytics */}
         <Script
