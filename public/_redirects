@@ -14,3 +14,50 @@ https://uk49s-results.vercel.app/*  https://uk49sresults.co.uk/:splat  301!
 
 # Old combined-draw prediction posts → lunchtime version (preserves SEO authority)
 /blog/uk-49s-predictions-:date/   /blog/uk-49s-lunchtime-predictions-:date/   308
+
+# ---------------------------------------------------------------------------
+# Unrecoverable historical dated pages → evergreen hubs (preserve link equity,
+# kill the 404s). The live sources only go back ~10 draws, so result data for
+# 2026-03-16 .. 2026-05-19 cannot be re-published truthfully. Rather than 404
+# (or fabricate numbers), redirect those specific old dates to their draw hub.
+#
+# SAFETY: each pattern has a literal date-prefix, so it can ONLY match dates in
+# March, April, or May 1-19 — it can NEVER match the live data (>= 2026-05-20)
+# or any future month (those are persisted and render 200). No maintenance needed.
+# ---------------------------------------------------------------------------
+
+# Dated result pages (old) → draw hub
+/brunchtime/results/2026-03-*   /brunchtime/   301
+/brunchtime/results/2026-04-*   /brunchtime/   301
+/brunchtime/results/2026-05-0*  /brunchtime/   301
+/brunchtime/results/2026-05-1*  /brunchtime/   301
+/lunchtime/results/2026-03-*    /lunchtime/    301
+/lunchtime/results/2026-04-*    /lunchtime/    301
+/lunchtime/results/2026-05-0*   /lunchtime/    301
+/lunchtime/results/2026-05-1*   /lunchtime/    301
+/drivetime/results/2026-03-*    /drivetime/    301
+/drivetime/results/2026-04-*    /drivetime/    301
+/drivetime/results/2026-05-0*   /drivetime/    301
+/drivetime/results/2026-05-1*   /drivetime/    301
+/teatime/results/2026-03-*      /teatime/      301
+/teatime/results/2026-04-*      /teatime/      301
+/teatime/results/2026-05-0*     /teatime/      301
+/teatime/results/2026-05-1*     /teatime/      301
+
+# Dated prediction posts (old) → evergreen prediction hub
+/blog/uk-49s-brunchtime-predictions-2026-03-*   /brunchtime-predictions/   301
+/blog/uk-49s-brunchtime-predictions-2026-04-*   /brunchtime-predictions/   301
+/blog/uk-49s-brunchtime-predictions-2026-05-0*  /brunchtime-predictions/   301
+/blog/uk-49s-brunchtime-predictions-2026-05-1*  /brunchtime-predictions/   301
+/blog/uk-49s-lunchtime-predictions-2026-03-*    /lunchtime-predictions/    301
+/blog/uk-49s-lunchtime-predictions-2026-04-*    /lunchtime-predictions/    301
+/blog/uk-49s-lunchtime-predictions-2026-05-0*   /lunchtime-predictions/    301
+/blog/uk-49s-lunchtime-predictions-2026-05-1*   /lunchtime-predictions/    301
+/blog/uk-49s-drivetime-predictions-2026-03-*    /drivetime-predictions/    301
+/blog/uk-49s-drivetime-predictions-2026-04-*    /drivetime-predictions/    301
+/blog/uk-49s-drivetime-predictions-2026-05-0*   /drivetime-predictions/    301
+/blog/uk-49s-drivetime-predictions-2026-05-1*   /drivetime-predictions/    301
+/blog/uk-49s-teatime-predictions-2026-03-*      /teatime-predictions/      301
+/blog/uk-49s-teatime-predictions-2026-04-*      /teatime-predictions/      301
+/blog/uk-49s-teatime-predictions-2026-05-0*     /teatime-predictions/      301
+/blog/uk-49s-teatime-predictions-2026-05-1*     /teatime-predictions/      301

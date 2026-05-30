@@ -140,8 +140,10 @@ export async function generateStaticParams() {
   const dates = [...new Set(results.map(r => r.date))].sort((a, b) => b.localeCompare(a));
   const predDate = getPredictionDate(results);
 
-  // Collect today/tomorrow/most-recent dates per draw
-  const dateSet = new Set<string>([predDate.date, ...dates.slice(0, 5)]);
+  // Generate a dated post for every date in our (now persisted) history plus the
+  // upcoming prediction date. This keeps previously-indexed dated posts returning
+  // 200 instead of 404ing once they roll out of the live ~10-draw scrape window.
+  const dateSet = new Set<string>([predDate.date, ...dates]);
   for (const drawType of ALL_DRAW_TYPES) {
     dateSet.add(getPredictionDateForDraw(drawType, results).date);
   }

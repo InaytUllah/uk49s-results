@@ -1,5 +1,13 @@
 import { UK49sResult, DrawType, ALL_DRAW_TYPES, DRAW_META } from '../types';
 import { unstable_cache } from 'next/cache';
+import historyData from './results-history.json';
+
+// Committed, ever-growing archive of real scraped draws. The live sources only
+// return the last ~10 draws, so without this every dated page would 404 once it
+// rolled out of that window (hundreds of indexed URLs lost). We merge this in as
+// the base layer so every date we have ever published keeps rendering 200.
+// Updated by scripts/update-history.mjs (runs in CI before build; never deletes).
+const RESULTS_HISTORY = historyData as UK49sResult[];
 
 // Draw schedule (UK time) — kept for backward compat
 export const DRAW_SCHEDULE = {
@@ -288,13 +296,19 @@ const getCachedResults = unstable_cache(
       }),
     ]);
 
-    // Merge: za.national-lottery.com results take priority (faster updates)
+    // Merge order (later overwrites earlier on same date):
+    //   1. committed history  — the accumulated long tail (keeps old dates 200)
+    //   2. 49s.events         — recent window
+    //   3. za.national-lottery — freshest, most accurate latest result
     const merged = new Map<string, UK49sResult>();
+    for (const r of RESULTS_HISTORY) {
+      if (r.drawType === drawType) merged.set(r.date, r);
+    }
     for (const r of eventsResults) {
       merged.set(r.date, r);
     }
     for (const r of zaResults) {
-      merged.set(r.date, r); // Overwrites 49s.events if same date
+      merged.set(r.date, r); // Overwrites 49s.events / history if same date
     }
 
     if (merged.size > 0) {

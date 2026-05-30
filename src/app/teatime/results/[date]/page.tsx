@@ -94,6 +94,30 @@ export default async function TeatimeResultPage({ params }: Props) {
     ],
   } : null;
 
+  // Breadcrumb trail (always) + NewsArticle (only when we have the draw).
+  // Purely additive structured data — eligible for rich results, cannot demote.
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+      { '@type': 'ListItem', position: 2, name: 'Teatime', item: `${SITE_URL}/teatime` },
+      { '@type': 'ListItem', position: 3, name: `Results ${formattedDate}`, item: `${SITE_URL}/teatime/results/${date}` },
+    ],
+  };
+  const articleSchema = result ? {
+    '@context': 'https://schema.org',
+    '@type': 'NewsArticle',
+    headline: `UK 49s Teatime Results — ${formattedDate}`,
+    description: `UK 49s Teatime winning numbers for ${formattedDate}: ${result.numbers.join(', ')} with Booster ${result.booster}.`,
+    datePublished: date,
+    dateModified: date,
+    author: { '@type': 'Organization', name: SITE_NAME, url: SITE_URL },
+    publisher: { '@type': 'Organization', name: SITE_NAME, url: SITE_URL },
+    mainEntityOfPage: { '@type': 'WebPage', '@id': `${SITE_URL}/teatime/results/${date}` },
+  } : null;
+  const extraSchemas = [breadcrumbSchema, ...(articleSchema ? [articleSchema] : [])];
+
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       {faqSchema && (
@@ -102,6 +126,10 @@ export default async function TeatimeResultPage({ params }: Props) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
         />
       )}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(extraSchemas) }}
+      />
 
       <nav className="text-sm text-gray-500 dark:text-gray-400 mb-6">
         <Link href="/" className="hover:text-emerald-600">Home</Link>

@@ -72,7 +72,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // long-tail. Different intents, both should rank.
   const predictionBlogPages = ALL_DRAW_TYPES.flatMap(drawType => {
     const info = getPredictionDateForDraw(drawType, allResults);
-    const drawDates = [...new Set([info.date, ...uniqueDates.slice(0, 5)])];
+    // Mirror blog/[slug] generateStaticParams (every persisted date is generated)
+    // so the sitemap never lists a URL that isn't built — no orphan/404 entries.
+    const drawDates = [...new Set([info.date, ...uniqueDates])];
     return drawDates.map(date => ({
       url: `${SITE_URL}/blog/uk-49s-${drawType}-predictions-${date}`,
       lastModified: now,
