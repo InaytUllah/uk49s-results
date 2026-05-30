@@ -28,6 +28,20 @@
     "drawTime": "12:49 PM"
   },
   {
+    "date": "2026-05-30",
+    "drawType": "teatime",
+    "numbers": [
+      3,
+      12,
+      17,
+      19,
+      33,
+      46
+    ],
+    "booster": 44,
+    "drawTime": "5:49 PM"
+  },
+  {
     "date": "2026-05-29",
     "drawType": "brunchtime",
     "numbers": [
