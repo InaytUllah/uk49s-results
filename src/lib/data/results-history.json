@@ -15,6 +15,20 @@
   },
   {
     "date": "2026-06-11",
+    "drawType": "drivetime",
+    "numbers": [
+      1,
+      14,
+      28,
+      30,
+      31,
+      40
+    ],
+    "booster": 29,
+    "drawTime": "4:49 PM"
+  },
+  {
+    "date": "2026-06-11",
     "drawType": "lunchtime",
     "numbers": [
       12,
@@ -26,6 +40,20 @@
     ],
     "booster": 42,
     "drawTime": "12:49 PM"
+  },
+  {
+    "date": "2026-06-11",
+    "drawType": "teatime",
+    "numbers": [
+      14,
+      20,
+      21,
+      36,
+      40,
+      44
+    ],
+    "booster": 45,
+    "drawTime": "5:49 PM"
   },
   {
     "date": "2026-06-10",
