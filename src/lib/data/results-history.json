@@ -1,6 +1,20 @@
 [
   {
     "date": "2026-06-18",
+    "drawType": "brunchtime",
+    "numbers": [
+      4,
+      20,
+      31,
+      42,
+      43,
+      47
+    ],
+    "booster": 11,
+    "drawTime": "10:49 AM"
+  },
+  {
+    "date": "2026-06-18",
     "drawType": "lunchtime",
     "numbers": [
       3,
